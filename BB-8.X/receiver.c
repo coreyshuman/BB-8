@@ -1,8 +1,37 @@
+/********************************************************************
+ FileName:      receiver.c
+ Dependencies:  See INCLUDES section
+ Processor:		PIC32 USB Microcontrollers
+ Hardware:		Designed for use on UBW32 "Bit Whacker"
+                           development boards.
+ Complier:  	XC32 (for PIC32)
+
+ Driver captures up to 8 channels of RC pulse-width modulation.
+
+ THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
+ WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
+ TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
+ IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
+ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+
+********************************************************************
+ File Description:
+
+ Change History:
+  Rev   Description                                Name and date
+  ----  -----------------------------------------  ----------------
+  1.0   Initial release                            Corey Shuman 5/26/15
+
+
+********************************************************************/
+
 #include <plib.h>
 #include "HardwareProfile.h"
 
-// Receiver.c
-// Read and process radio receiver pulses
+// Resolution of 10us, so interrupt every 10us
+#define RX_TIMER_PERIOD   800
+#define RX_USEC_PER_CYCLE  10
 
 volatile WORD rcValue[RX_INPUT_COUNT];
 volatile WORD rcTemp[RX_INPUT_COUNT];
@@ -196,7 +225,7 @@ void __attribute((interrupt(ipl3), vector(_TIMER_2_VECTOR), nomips16)) _T2Interr
     IFS0CLR = _IFS0_T2IF_MASK;
 }
 
-WORD Receiver_GetPulse(unsigned int chan)
+WORD ReceiverGetPulse(WORD chan)
 {
     if(chan < 1 || chan > RX_INPUT_COUNT)
         return 0;

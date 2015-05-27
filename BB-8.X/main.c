@@ -79,6 +79,7 @@
 #include "TCPIP Stack/Tick.h"
 #include "console.h"
 #include "receiver.h"
+#include "motor_controller.h"
 
 /** V A R I A B L E S ********************************************************/
 #if defined(__18CXX)
@@ -153,6 +154,7 @@ int main(void)
         ProcessIO();
         BlinkStatusLED();
         MpuProcess();
+        MotorProcess();
     }//end while
 }//end main
 
@@ -190,6 +192,7 @@ static void InitializeSystem(void)
     INTEnableInterrupts();
 
     IOInit();
+    MotorInit();
     ConsoleInit();
     debug("\r\n********\r\nInitializing Board... \r\n");
     TickInit();
@@ -313,8 +316,8 @@ void BlinkStatusLED(void)
             //int i;
 
                 //val = Receiver_GetPulse(i+1);
-                sprintf(string, "RX: %u %u %u %u\r\n", Receiver_GetPulse(1), Receiver_GetPulse(2), Receiver_GetPulse(3), Receiver_GetPulse(4));
-                debug(string);
+                //sprintf(string, "RX: %u %u %u %u\r\n", Receiver_GetPulse(1), Receiver_GetPulse(2), Receiver_GetPulse(3), Receiver_GetPulse(4));
+                //debug(string);
                 //putrsUSBUSART(string);
                 //putrsUSBUSART("corey shuman this is a long string to test if it has issues...\r\n");
            

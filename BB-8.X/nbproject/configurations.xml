@@ -39,6 +39,7 @@
       <itemPath>time.h</itemPath>
       <itemPath>mpu_support.h</itemPath>
       <itemPath>receiver.h</itemPath>
+      <itemPath>motor_controller.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -67,6 +68,7 @@
       <itemPath>time.c</itemPath>
       <itemPath>mpu_support.c</itemPath>
       <itemPath>receiver.c</itemPath>
+      <itemPath>motor_controller.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

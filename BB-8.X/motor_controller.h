@@ -12,7 +12,13 @@
 extern "C" {
 #endif
 
+    typedef enum {
+        MOTOR_STOP = 0,
+        MOTOR_FORWARD,
+        MOTOR_BACKWARD
+    } MOTOR_STATE;
 
+    void MotorInit(void);
 
 
 #ifdef	__cplusplus

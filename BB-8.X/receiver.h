@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 void ReceiverInit(void);
-WORD Receiver_GetPulse(unsigned int chan);
+WORD ReceiverGetPulse(WORD chan);
 
 
 #ifdef	__cplusplus

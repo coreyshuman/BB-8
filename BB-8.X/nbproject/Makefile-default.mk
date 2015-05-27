@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c "../../../Microchip/TCPIP Stack/Tick.c" "../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c" ../../../Microchip/USB/usb_device.c main.c usb_descriptors.c usb_support.c console.c device_i2c.c time.c mpu_support.c receiver.c
+SOURCEFILES_QUOTED_IF_SPACED=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c "../../../Microchip/TCPIP Stack/Tick.c" "../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c" ../../../Microchip/USB/usb_device.c main.c usb_descriptors.c usb_support.c console.c device_i2c.c time.c mpu_support.c receiver.c motor_controller.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/_ext/1954962658/Tick.o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o ${OBJECTDIR}/_ext/549097302/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/time.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/empl/inv_mpu.o.d ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d ${OBJECTDIR}/_ext/1954962658/Tick.o.d ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d ${OBJECTDIR}/_ext/549097302/usb_device.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/usb_descriptors.o.d ${OBJECTDIR}/usb_support.o.d ${OBJECTDIR}/console.o.d ${OBJECTDIR}/device_i2c.o.d ${OBJECTDIR}/time.o.d ${OBJECTDIR}/mpu_support.o.d ${OBJECTDIR}/receiver.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/_ext/1954962658/Tick.o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o ${OBJECTDIR}/_ext/549097302/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/time.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o ${OBJECTDIR}/motor_controller.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/empl/inv_mpu.o.d ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d ${OBJECTDIR}/_ext/1954962658/Tick.o.d ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d ${OBJECTDIR}/_ext/549097302/usb_device.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/usb_descriptors.o.d ${OBJECTDIR}/usb_support.o.d ${OBJECTDIR}/console.o.d ${OBJECTDIR}/device_i2c.o.d ${OBJECTDIR}/time.o.d ${OBJECTDIR}/mpu_support.o.d ${OBJECTDIR}/receiver.o.d ${OBJECTDIR}/motor_controller.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/_ext/1954962658/Tick.o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o ${OBJECTDIR}/_ext/549097302/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/time.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o
+OBJECTFILES=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/_ext/1954962658/Tick.o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o ${OBJECTDIR}/_ext/549097302/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/time.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o ${OBJECTDIR}/motor_controller.o
 
 # Source Files
-SOURCEFILES=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c ../../../Microchip/TCPIP Stack/Tick.c ../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c ../../../Microchip/USB/usb_device.c main.c usb_descriptors.c usb_support.c console.c device_i2c.c time.c mpu_support.c receiver.c
+SOURCEFILES=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c ../../../Microchip/TCPIP Stack/Tick.c ../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c ../../../Microchip/USB/usb_device.c main.c usb_descriptors.c usb_support.c console.c device_i2c.c time.c mpu_support.c receiver.c motor_controller.c
 
 
 CFLAGS=
@@ -169,6 +169,12 @@ ${OBJECTDIR}/receiver.o: receiver.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/receiver.o 
 	@${FIXDEPS} "${OBJECTDIR}/receiver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/receiver.o.d" -o ${OBJECTDIR}/receiver.o receiver.c   
 	
+${OBJECTDIR}/motor_controller.o: motor_controller.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/motor_controller.o.d 
+	@${RM} ${OBJECTDIR}/motor_controller.o 
+	@${FIXDEPS} "${OBJECTDIR}/motor_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/motor_controller.o.d" -o ${OBJECTDIR}/motor_controller.o motor_controller.c   
+	
 else
 ${OBJECTDIR}/empl/inv_mpu.o: empl/inv_mpu.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/empl 
@@ -247,6 +253,12 @@ ${OBJECTDIR}/receiver.o: receiver.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/receiver.o.d 
 	@${RM} ${OBJECTDIR}/receiver.o 
 	@${FIXDEPS} "${OBJECTDIR}/receiver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/receiver.o.d" -o ${OBJECTDIR}/receiver.o receiver.c   
+	
+${OBJECTDIR}/motor_controller.o: motor_controller.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/motor_controller.o.d 
+	@${RM} ${OBJECTDIR}/motor_controller.o 
+	@${FIXDEPS} "${OBJECTDIR}/motor_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/motor_controller.o.d" -o ${OBJECTDIR}/motor_controller.o motor_controller.c   
 	
 endif
 

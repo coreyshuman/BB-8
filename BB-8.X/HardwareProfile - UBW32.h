@@ -155,11 +155,15 @@
 #define RX_INPUT_8_IO      PORTEbits.RE4
 #define RX_INPUT_8_TRIS     TRISEbits.TRISE4
 
-// Resolution of 10us, so interrupt every 10us
-#define RX_TIMER_PERIOD   800
-#define RX_USEC_PER_CYCLE  10
+
 
 #define TEST_LED_IO     LATAbits.LATA7
 #define TEST_LED_TRIS   TRISAbits.TRISA7
+
+// Motor Controller Definitions
+#define M1_FORWARD_IO           PORTCbits.RC13
+#define M1_FORWARD_TRIS         TRISCbits.TRISC13
+#define M1_BACKWARD_IO          PORTDbits.RD11
+#define M1_BACKWARD_TRIS        TRISDbits.TRISD11
 
 #endif  //HARDWARE_PROFILE_UBW32_H
