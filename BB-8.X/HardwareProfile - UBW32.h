@@ -165,5 +165,13 @@
 #define M1_FORWARD_TRIS         TRISCbits.TRISC13
 #define M1_BACKWARD_IO          PORTDbits.RD11
 #define M1_BACKWARD_TRIS        TRISDbits.TRISD11
+#define M2_FORWARD_IO           PORTCbits.RC14
+#define M2_FORWARD_TRIS         TRISCbits.TRISC14
+#define M2_BACKWARD_IO          PORTDbits.RD12
+#define M2_BACKWARD_TRIS        TRISDbits.TRISD12
+#define M3_FORWARD_IO           PORTDbits.RD13
+#define M3_FORWARD_TRIS         TRISDbits.TRISD13
+#define M3_BACKWARD_IO          PORTDbits.RD4
+#define M3_BACKWARD_TRIS        TRISDbits.TRISD4
 
 #endif  //HARDWARE_PROFILE_UBW32_H
