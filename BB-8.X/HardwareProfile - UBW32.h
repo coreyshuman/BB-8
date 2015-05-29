@@ -144,8 +144,8 @@
 #define RX_INPUT_2_TRIS     TRISCbits.TRISC2
 #define RX_INPUT_3_IO      PORTCbits.RC1
 #define RX_INPUT_3_TRIS     TRISCbits.TRISC1
-#define RX_INPUT_4_IO      PORTEbits.RE7
-#define RX_INPUT_4_TRIS     TRISEbits.TRISE7
+#define RX_INPUT_4_IO      PORTEbits.RE5
+#define RX_INPUT_4_TRIS     TRISEbits.TRISE5
 #define RX_INPUT_5_IO      PORTEbits.RE6
 #define RX_INPUT_5_TRIS     TRISEbits.TRISE6
 #define RX_INPUT_6_IO      PORTEbits.RE5
@@ -161,17 +161,17 @@
 #define TEST_LED_TRIS   TRISAbits.TRISA7
 
 // Motor Controller Definitions
-#define M1_FORWARD_IO           PORTCbits.RC13
+#define M1_FORWARD_IO           LATCbits.LATC13
 #define M1_FORWARD_TRIS         TRISCbits.TRISC13
-#define M1_BACKWARD_IO          PORTDbits.RD11
+#define M1_BACKWARD_IO          LATDbits.LATD11
 #define M1_BACKWARD_TRIS        TRISDbits.TRISD11
-#define M2_FORWARD_IO           PORTCbits.RC14
+#define M2_FORWARD_IO           LATCbits.LATC14
 #define M2_FORWARD_TRIS         TRISCbits.TRISC14
-#define M2_BACKWARD_IO          PORTDbits.RD12
+#define M2_BACKWARD_IO          LATDbits.LATD12
 #define M2_BACKWARD_TRIS        TRISDbits.TRISD12
-#define M3_FORWARD_IO           PORTDbits.RD13
-#define M3_FORWARD_TRIS         TRISDbits.TRISD13
-#define M3_BACKWARD_IO          PORTDbits.RD4
+#define M3_FORWARD_IO           LATDbits.LATD7
+#define M3_FORWARD_TRIS         TRISDbits.TRISD7
+#define M3_BACKWARD_IO          LATDbits.LATD4
 #define M3_BACKWARD_TRIS        TRISDbits.TRISD4
 
 #endif  //HARDWARE_PROFILE_UBW32_H

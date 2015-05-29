@@ -34,7 +34,9 @@
 #include "console.h"
 
 #define MOTOR_TIMER_PERIOD  3200    // 25KHz (80000000 / 25000)
-#define MOTOR_SPEED_MULT    1.6    // 3200/2000
+#define MOTOR_SPEED_MULT    1.52    // 3200/2100
+#define DEADBAND            50      // 0 - 550
+#define SPEED_SCALE         2.2
 
 #define M_180_PI            57.2958 // 180/pi
 
@@ -70,9 +72,10 @@ void MotorProcess(void)
     int i;
     int xPulse = ReceiverGetPulse(1) - 1500;
     int yPulse = ReceiverGetPulse(2) - 1500;
+    int rotation = ReceiverGetPulse(4) - 1500;
     WORD speed;
     WORD angle;
-    WORD speedPulse;
+    int speedPulse;
 
     if(xPulse == 0 && yPulse == 0)
     {
@@ -86,19 +89,29 @@ void MotorProcess(void)
     angle = (WORD)((atan2(xPulse, yPulse) * M_180_PI) + 360) % 360;
 
     char string[50];
-    sprintf(string, "x y s a p: %5d %5d %5u %5u\r\n", xPulse, yPulse, speed, angle);
+    sprintf(string, "x y s a p: %5d %5d %5d %5u %5u\r\n", xPulse, yPulse, rotation, speed, angle);
     debug(string);
 
     for(i=1;i<=3; i++)
     {
-        speedPulse = calcSpeed(angle + 120*(i-1), speed) + 1500;
-        if(speedPulse > 1550 )
+        speedPulse = calcSpeed(angle + 120*(i-1), speed);
+        speedPulse -= rotation;
+
+        if(speedPulse > 550)
+            speedPulse = 550;
+        else if(speedPulse < -550)
+            speedPulse = -550;
+
+        //sprintf(string, "%d: %d\r\n", i, speedPulse);
+        //debug(string);
+               
+        if(speedPulse > DEADBAND )
         {
-            MotorState(i, MOTOR_FORWARD, (speedPulse - 550)*1.5);
+            MotorState(i, MOTOR_FORWARD, speedPulse*SPEED_SCALE + 1000);
         }
-        else if(speedPulse < 1450)
+        else if(speedPulse < -DEADBAND)
         {
-            MotorState(i, MOTOR_BACKWARD, (2450 - speedPulse)*1.5);
+            MotorState(i, MOTOR_BACKWARD, -speedPulse*SPEED_SCALE + 1000);
         }
         else
         {
@@ -149,6 +162,7 @@ void MotorState(BYTE motor, MOTOR_STATE dir, WORD speed)
         {
             M3_FORWARD_IO = 0;
             M3_BACKWARD_IO = 1;
+            //debug("b");
         }
     }
     else
@@ -170,7 +184,7 @@ void MotorState(BYTE motor, MOTOR_STATE dir, WORD speed)
         }
     }
 
-    if(speed >= 1000 && speed <= 2000)
+    if(speed >= 900 && speed <= 2100)
     {
         if(motor == 1)
             SetDCOC1PWM((int)(speed * MOTOR_SPEED_MULT));
