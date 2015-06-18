@@ -96,6 +96,8 @@ enum packet_type_e {
     PACKET_TYPE_COMPASS,
 };
 
+long QUAT[4];
+
 
 void (*mpu_cb)(void)=NULL;
 
@@ -106,6 +108,16 @@ static void setup_gyro(void);
 
 void imu_test1();
 void imu_raw_readings_test();
+
+void get_quat(long *val)
+{
+    int i;
+    for(i=0; i<4; i++)
+    {
+        val[i] = QUAT[i];
+        
+    }
+}
 
 /* These next two functions converts the orientation matrix (see
  * gyro_orientation) to a scalar representation for use by the DMP.
@@ -358,10 +370,15 @@ void send_packet(char packet_type, void *data)
         buf[16] = (char)(ldata[3] >> 8);
         buf[17] = (char)ldata[3];
 
-        printf("q: %02x%02x%02x%02x ", (uint8_t)buf[2], (uint8_t)buf[3], (uint8_t)buf[4], (uint8_t)buf[5]);
-        printf("%02x%02x%02x%02x ", (uint8_t)buf[6], (uint8_t)buf[7], (uint8_t)buf[8], (uint8_t)buf[9]);
-        printf("%02x%02x%02x%02x ", (uint8_t)buf[10], (uint8_t)buf[11], (uint8_t)buf[12], (uint8_t)buf[13]);
-        printf("%02x%02x%02x%02x\r\n", (uint8_t)buf[14], (uint8_t)buf[15], (uint8_t)buf[16], (uint8_t)buf[17]);
+        QUAT[0] = ldata[0];
+        QUAT[1] = ldata[1];
+        QUAT[2] = ldata[2];
+        QUAT[3] = ldata[3];
+
+        //printf("q: %02x%02x%02x%02x ", (uint8_t)buf[2], (uint8_t)buf[3], (uint8_t)buf[4], (uint8_t)buf[5]);
+        //printf("%02x%02x%02x%02x ", (uint8_t)buf[6], (uint8_t)buf[7], (uint8_t)buf[8], (uint8_t)buf[9]);
+        //printf("%02x%02x%02x%02x ", (uint8_t)buf[10], (uint8_t)buf[11], (uint8_t)buf[12], (uint8_t)buf[13]);
+        //printf("%02x%02x%02x%02x\r\n", (uint8_t)buf[14], (uint8_t)buf[15], (uint8_t)buf[16], (uint8_t)buf[17]);
 
         length = 18;
     } else if (packet_type == PACKET_TYPE_TAP) {
@@ -421,9 +438,9 @@ static void handle_input(char c)
 {
     const unsigned char header[3] = "inv";
     unsigned long pedo_packet[2];
-    debug("IN: ");
-    PrintChar(c);
-    debug("\r\n");
+    //debug("IN: ");
+    //PrintChar(c);
+    //debug("\r\n");
     hal.rx.cmd = c;
 
     switch (hal.rx.cmd) {

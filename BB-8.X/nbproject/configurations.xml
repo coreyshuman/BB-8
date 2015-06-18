@@ -69,6 +69,7 @@
       <itemPath>mpu_support.c</itemPath>
       <itemPath>receiver.c</itemPath>
       <itemPath>motor_controller.c</itemPath>
+      <itemPath>quaternion.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

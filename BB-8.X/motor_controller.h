@@ -12,6 +12,13 @@
 extern "C" {
 #endif
 
+    #define MAX_SPEED               550     // max speed in scaled pulses
+    #define DIRECT_MOTOR_CONTROL
+    #define MAX_ANGLE               40      // max frame will rotate before countering motion
+    #define IMU_DEADBAND            10      // degrees of center deadband
+    #define MIN_MOTOR_THRESHOLD     20      // minimum RC input that will trigger motion
+    #define MIN_MOTOR_SPEED         50      // smallest motor speed to output to motors
+
     typedef enum {
         MOTOR_STOP = 0,
         MOTOR_FORWARD,
