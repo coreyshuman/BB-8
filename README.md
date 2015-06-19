@@ -8,7 +8,6 @@ Quick notes on this project:
 - Requires Microchip Legacy Stack for USB drivers
 - Memory allocation is setup to use USB bootloader
 - Implements MPU-9150 9 DOF driver
-- 
 
 Requires:
 - MPLABX IDE v1.95 or greater
