@@ -38,9 +38,11 @@
 
 #define MOTOR_TIMER_PERIOD  3200    // 25KHz (80000000 / 25000)
 #define MOTOR_SPEED_MULT    1.52    // 3200/2100calc
-#define SERVO_SPEED_MULT    2.08    // 3125/1500calc
 #define DEADBAND            50      // 0 - 550
 #define SPEED_SCALE         2.2
+
+#define SERVO_TIMER_PERIOD 25000    // 50 hz (80000000 / 64 / 50)
+#define SERVO_SPEED_MULT    1.25    // (25000*1.5ms/20ms)/1500us (1.5 ms)
 
 #define M_180_PI            57.2958 // 180/pi
 
@@ -69,9 +71,9 @@ void MotorInit(void)
     OpenOC3(OC_ON | OC_TIMER3_SRC | OC_PWM_FAULT_PIN_DISABLE,2560,2560);
     OpenTimer3(T3_ON | T3_PS_1_1, MOTOR_TIMER_PERIOD);
     // head servos
-    OpenOC4(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,3125,3125);
-    OpenOC5(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,3125,3125);
-    OpenTimer2(T2_ON | T2_PS_1_256, 6250);
+    OpenOC4(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
+    OpenOC5(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
+    OpenTimer2(T2_ON | T2_PS_1_64, 25000);
     
 
 }

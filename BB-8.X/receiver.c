@@ -42,7 +42,7 @@ void ReceiverInit(void)
 {
     int i;
     OpenTimer4(T4_ON | T4_PS_1_1, RX_TIMER_PERIOD);
-    ConfigIntTimer4(T4_INT_ON | T4_INT_PRIOR_3 | T4_INT_SUB_PRIOR_3);
+    ConfigIntTimer4(T4_INT_ON | T4_INT_PRIOR_2 | T4_INT_SUB_PRIOR_3);
 
     for(i=0; i<RX_INPUT_COUNT; i++)
     {
@@ -80,7 +80,7 @@ void ReceiverInit(void)
 }
 
 // Interrupt Timer Process
-void __attribute((interrupt(ipl3), vector(_TIMER_4_VECTOR), nomips16)) _T4Interrupt(void)
+void __attribute((interrupt(ipl2), vector(_TIMER_4_VECTOR), nomips16)) _T4Interrupt(void)
 {
     int chan = 0;
 #if RX_INPUT_COUNT >= 1
@@ -222,7 +222,7 @@ void __attribute((interrupt(ipl3), vector(_TIMER_4_VECTOR), nomips16)) _T4Interr
 #endif
 
     // Reset interrupt flag
-    IFS0CLR = _IFS0_T2IF_MASK;
+    IFS0CLR = _IFS0_T4IF_MASK;
 }
 
 WORD ReceiverGetPulse(WORD chan)

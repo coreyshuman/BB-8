@@ -72,10 +72,7 @@ LDLIBSOPTIONS=
 FIXDEPS=fixDeps
 
 .build-conf:  ${BUILD_SUBPROJECTS}
-ifneq ($(INFORMATION_MESSAGE), )
-	@echo $(INFORMATION_MESSAGE)
-endif
-	${MAKE}  -f nbproject/Makefile-default.mk dist/${CND_CONF}/${IMAGE_TYPE}/BB-8.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+	${MAKE} ${MAKE_OPTIONS} -f nbproject/Makefile-default.mk dist/${CND_CONF}/${IMAGE_TYPE}/BB-8.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
 
 MP_PROCESSOR_OPTION=32MX795F512L
 MP_LINKER_FILE_OPTION=,--script="procdef.ld"
@@ -95,185 +92,185 @@ endif
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
 ${OBJECTDIR}/empl/inv_mpu.o: empl/inv_mpu.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/empl" 
+	@${MKDIR} ${OBJECTDIR}/empl 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu.o.d 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu.o 
-	@${FIXDEPS} "${OBJECTDIR}/empl/inv_mpu.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/empl/inv_mpu.o.d" -o ${OBJECTDIR}/empl/inv_mpu.o empl/inv_mpu.c   
+	@${FIXDEPS} "${OBJECTDIR}/empl/inv_mpu.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/empl/inv_mpu.o.d" -o ${OBJECTDIR}/empl/inv_mpu.o empl/inv_mpu.c   
 	
 ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o: empl/inv_mpu_dmp_motion_driver.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/empl" 
+	@${MKDIR} ${OBJECTDIR}/empl 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o 
-	@${FIXDEPS} "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" -o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o empl/inv_mpu_dmp_motion_driver.c   
+	@${FIXDEPS} "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" -o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o empl/inv_mpu_dmp_motion_driver.c   
 	
 ${OBJECTDIR}/_ext/1954962658/Tick.o: ../../../Microchip/TCPIP\ Stack/Tick.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/1954962658" 
+	@${MKDIR} ${OBJECTDIR}/_ext/1954962658 
 	@${RM} ${OBJECTDIR}/_ext/1954962658/Tick.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1954962658/Tick.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1954962658/Tick.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/1954962658/Tick.o.d" -o ${OBJECTDIR}/_ext/1954962658/Tick.o "../../../Microchip/TCPIP Stack/Tick.c"   
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1954962658/Tick.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/1954962658/Tick.o.d" -o ${OBJECTDIR}/_ext/1954962658/Tick.o "../../../Microchip/TCPIP Stack/Tick.c"   
 	
 ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o: ../../../Microchip/USB/CDC\ Device\ Driver/usb_function_cdc.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/382171365" 
+	@${MKDIR} ${OBJECTDIR}/_ext/382171365 
 	@${RM} ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d 
 	@${RM} ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d" -o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o "../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c"   
+	@${FIXDEPS} "${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d" -o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o "../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c"   
 	
 ${OBJECTDIR}/_ext/549097302/usb_device.o: ../../../Microchip/USB/usb_device.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/549097302" 
+	@${MKDIR} ${OBJECTDIR}/_ext/549097302 
 	@${RM} ${OBJECTDIR}/_ext/549097302/usb_device.o.d 
 	@${RM} ${OBJECTDIR}/_ext/549097302/usb_device.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/549097302/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/549097302/usb_device.o.d" -o ${OBJECTDIR}/_ext/549097302/usb_device.o ../../../Microchip/USB/usb_device.c   
+	@${FIXDEPS} "${OBJECTDIR}/_ext/549097302/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/549097302/usb_device.o.d" -o ${OBJECTDIR}/_ext/549097302/usb_device.o ../../../Microchip/USB/usb_device.c   
 	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
-	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c   
+	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c   
 	
 ${OBJECTDIR}/usb_descriptors.o: usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/usb_descriptors.o.d 
 	@${RM} ${OBJECTDIR}/usb_descriptors.o 
-	@${FIXDEPS} "${OBJECTDIR}/usb_descriptors.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/usb_descriptors.o.d" -o ${OBJECTDIR}/usb_descriptors.o usb_descriptors.c   
+	@${FIXDEPS} "${OBJECTDIR}/usb_descriptors.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/usb_descriptors.o.d" -o ${OBJECTDIR}/usb_descriptors.o usb_descriptors.c   
 	
 ${OBJECTDIR}/usb_support.o: usb_support.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/usb_support.o.d 
 	@${RM} ${OBJECTDIR}/usb_support.o 
-	@${FIXDEPS} "${OBJECTDIR}/usb_support.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/usb_support.o.d" -o ${OBJECTDIR}/usb_support.o usb_support.c   
+	@${FIXDEPS} "${OBJECTDIR}/usb_support.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/usb_support.o.d" -o ${OBJECTDIR}/usb_support.o usb_support.c   
 	
 ${OBJECTDIR}/console.o: console.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/console.o.d 
 	@${RM} ${OBJECTDIR}/console.o 
-	@${FIXDEPS} "${OBJECTDIR}/console.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/console.o.d" -o ${OBJECTDIR}/console.o console.c   
+	@${FIXDEPS} "${OBJECTDIR}/console.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/console.o.d" -o ${OBJECTDIR}/console.o console.c   
 	
 ${OBJECTDIR}/device_i2c.o: device_i2c.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/device_i2c.o.d 
 	@${RM} ${OBJECTDIR}/device_i2c.o 
-	@${FIXDEPS} "${OBJECTDIR}/device_i2c.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/device_i2c.o.d" -o ${OBJECTDIR}/device_i2c.o device_i2c.c   
+	@${FIXDEPS} "${OBJECTDIR}/device_i2c.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/device_i2c.o.d" -o ${OBJECTDIR}/device_i2c.o device_i2c.c   
 	
 ${OBJECTDIR}/time.o: time.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/time.o.d 
 	@${RM} ${OBJECTDIR}/time.o 
-	@${FIXDEPS} "${OBJECTDIR}/time.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/time.o.d" -o ${OBJECTDIR}/time.o time.c   
+	@${FIXDEPS} "${OBJECTDIR}/time.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/time.o.d" -o ${OBJECTDIR}/time.o time.c   
 	
 ${OBJECTDIR}/mpu_support.o: mpu_support.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/mpu_support.o.d 
 	@${RM} ${OBJECTDIR}/mpu_support.o 
-	@${FIXDEPS} "${OBJECTDIR}/mpu_support.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/mpu_support.o.d" -o ${OBJECTDIR}/mpu_support.o mpu_support.c   
+	@${FIXDEPS} "${OBJECTDIR}/mpu_support.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/mpu_support.o.d" -o ${OBJECTDIR}/mpu_support.o mpu_support.c   
 	
 ${OBJECTDIR}/receiver.o: receiver.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/receiver.o.d 
 	@${RM} ${OBJECTDIR}/receiver.o 
-	@${FIXDEPS} "${OBJECTDIR}/receiver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/receiver.o.d" -o ${OBJECTDIR}/receiver.o receiver.c   
+	@${FIXDEPS} "${OBJECTDIR}/receiver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/receiver.o.d" -o ${OBJECTDIR}/receiver.o receiver.c   
 	
 ${OBJECTDIR}/motor_controller.o: motor_controller.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/motor_controller.o.d 
 	@${RM} ${OBJECTDIR}/motor_controller.o 
-	@${FIXDEPS} "${OBJECTDIR}/motor_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/motor_controller.o.d" -o ${OBJECTDIR}/motor_controller.o motor_controller.c   
+	@${FIXDEPS} "${OBJECTDIR}/motor_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/motor_controller.o.d" -o ${OBJECTDIR}/motor_controller.o motor_controller.c   
 	
 ${OBJECTDIR}/quaternion.o: quaternion.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/quaternion.o.d 
 	@${RM} ${OBJECTDIR}/quaternion.o 
-	@${FIXDEPS} "${OBJECTDIR}/quaternion.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/quaternion.o.d" -o ${OBJECTDIR}/quaternion.o quaternion.c   
+	@${FIXDEPS} "${OBJECTDIR}/quaternion.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/quaternion.o.d" -o ${OBJECTDIR}/quaternion.o quaternion.c   
 	
 else
 ${OBJECTDIR}/empl/inv_mpu.o: empl/inv_mpu.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/empl" 
+	@${MKDIR} ${OBJECTDIR}/empl 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu.o.d 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu.o 
-	@${FIXDEPS} "${OBJECTDIR}/empl/inv_mpu.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/empl/inv_mpu.o.d" -o ${OBJECTDIR}/empl/inv_mpu.o empl/inv_mpu.c   
+	@${FIXDEPS} "${OBJECTDIR}/empl/inv_mpu.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/empl/inv_mpu.o.d" -o ${OBJECTDIR}/empl/inv_mpu.o empl/inv_mpu.c   
 	
 ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o: empl/inv_mpu_dmp_motion_driver.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/empl" 
+	@${MKDIR} ${OBJECTDIR}/empl 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o 
-	@${FIXDEPS} "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" -o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o empl/inv_mpu_dmp_motion_driver.c   
+	@${FIXDEPS} "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" -o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o empl/inv_mpu_dmp_motion_driver.c   
 	
 ${OBJECTDIR}/_ext/1954962658/Tick.o: ../../../Microchip/TCPIP\ Stack/Tick.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/1954962658" 
+	@${MKDIR} ${OBJECTDIR}/_ext/1954962658 
 	@${RM} ${OBJECTDIR}/_ext/1954962658/Tick.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1954962658/Tick.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1954962658/Tick.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/1954962658/Tick.o.d" -o ${OBJECTDIR}/_ext/1954962658/Tick.o "../../../Microchip/TCPIP Stack/Tick.c"   
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1954962658/Tick.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/1954962658/Tick.o.d" -o ${OBJECTDIR}/_ext/1954962658/Tick.o "../../../Microchip/TCPIP Stack/Tick.c"   
 	
 ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o: ../../../Microchip/USB/CDC\ Device\ Driver/usb_function_cdc.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/382171365" 
+	@${MKDIR} ${OBJECTDIR}/_ext/382171365 
 	@${RM} ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d 
 	@${RM} ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d" -o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o "../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c"   
+	@${FIXDEPS} "${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d" -o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o "../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c"   
 	
 ${OBJECTDIR}/_ext/549097302/usb_device.o: ../../../Microchip/USB/usb_device.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/549097302" 
+	@${MKDIR} ${OBJECTDIR}/_ext/549097302 
 	@${RM} ${OBJECTDIR}/_ext/549097302/usb_device.o.d 
 	@${RM} ${OBJECTDIR}/_ext/549097302/usb_device.o 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/549097302/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/549097302/usb_device.o.d" -o ${OBJECTDIR}/_ext/549097302/usb_device.o ../../../Microchip/USB/usb_device.c   
+	@${FIXDEPS} "${OBJECTDIR}/_ext/549097302/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/_ext/549097302/usb_device.o.d" -o ${OBJECTDIR}/_ext/549097302/usb_device.o ../../../Microchip/USB/usb_device.c   
 	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
-	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c   
+	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c   
 	
 ${OBJECTDIR}/usb_descriptors.o: usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/usb_descriptors.o.d 
 	@${RM} ${OBJECTDIR}/usb_descriptors.o 
-	@${FIXDEPS} "${OBJECTDIR}/usb_descriptors.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/usb_descriptors.o.d" -o ${OBJECTDIR}/usb_descriptors.o usb_descriptors.c   
+	@${FIXDEPS} "${OBJECTDIR}/usb_descriptors.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/usb_descriptors.o.d" -o ${OBJECTDIR}/usb_descriptors.o usb_descriptors.c   
 	
 ${OBJECTDIR}/usb_support.o: usb_support.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/usb_support.o.d 
 	@${RM} ${OBJECTDIR}/usb_support.o 
-	@${FIXDEPS} "${OBJECTDIR}/usb_support.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/usb_support.o.d" -o ${OBJECTDIR}/usb_support.o usb_support.c   
+	@${FIXDEPS} "${OBJECTDIR}/usb_support.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/usb_support.o.d" -o ${OBJECTDIR}/usb_support.o usb_support.c   
 	
 ${OBJECTDIR}/console.o: console.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/console.o.d 
 	@${RM} ${OBJECTDIR}/console.o 
-	@${FIXDEPS} "${OBJECTDIR}/console.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/console.o.d" -o ${OBJECTDIR}/console.o console.c   
+	@${FIXDEPS} "${OBJECTDIR}/console.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/console.o.d" -o ${OBJECTDIR}/console.o console.c   
 	
 ${OBJECTDIR}/device_i2c.o: device_i2c.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/device_i2c.o.d 
 	@${RM} ${OBJECTDIR}/device_i2c.o 
-	@${FIXDEPS} "${OBJECTDIR}/device_i2c.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/device_i2c.o.d" -o ${OBJECTDIR}/device_i2c.o device_i2c.c   
+	@${FIXDEPS} "${OBJECTDIR}/device_i2c.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/device_i2c.o.d" -o ${OBJECTDIR}/device_i2c.o device_i2c.c   
 	
 ${OBJECTDIR}/time.o: time.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/time.o.d 
 	@${RM} ${OBJECTDIR}/time.o 
-	@${FIXDEPS} "${OBJECTDIR}/time.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/time.o.d" -o ${OBJECTDIR}/time.o time.c   
+	@${FIXDEPS} "${OBJECTDIR}/time.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/time.o.d" -o ${OBJECTDIR}/time.o time.c   
 	
 ${OBJECTDIR}/mpu_support.o: mpu_support.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/mpu_support.o.d 
 	@${RM} ${OBJECTDIR}/mpu_support.o 
-	@${FIXDEPS} "${OBJECTDIR}/mpu_support.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/mpu_support.o.d" -o ${OBJECTDIR}/mpu_support.o mpu_support.c   
+	@${FIXDEPS} "${OBJECTDIR}/mpu_support.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/mpu_support.o.d" -o ${OBJECTDIR}/mpu_support.o mpu_support.c   
 	
 ${OBJECTDIR}/receiver.o: receiver.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/receiver.o.d 
 	@${RM} ${OBJECTDIR}/receiver.o 
-	@${FIXDEPS} "${OBJECTDIR}/receiver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/receiver.o.d" -o ${OBJECTDIR}/receiver.o receiver.c   
+	@${FIXDEPS} "${OBJECTDIR}/receiver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/receiver.o.d" -o ${OBJECTDIR}/receiver.o receiver.c   
 	
 ${OBJECTDIR}/motor_controller.o: motor_controller.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/motor_controller.o.d 
 	@${RM} ${OBJECTDIR}/motor_controller.o 
-	@${FIXDEPS} "${OBJECTDIR}/motor_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/motor_controller.o.d" -o ${OBJECTDIR}/motor_controller.o motor_controller.c   
+	@${FIXDEPS} "${OBJECTDIR}/motor_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/motor_controller.o.d" -o ${OBJECTDIR}/motor_controller.o motor_controller.c   
 	
 ${OBJECTDIR}/quaternion.o: quaternion.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
+	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/quaternion.o.d 
 	@${RM} ${OBJECTDIR}/quaternion.o 
-	@${FIXDEPS} "${OBJECTDIR}/quaternion.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/quaternion.o.d" -o ${OBJECTDIR}/quaternion.o quaternion.c   
+	@${FIXDEPS} "${OBJECTDIR}/quaternion.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I".." -I"." -MMD -MF "${OBJECTDIR}/quaternion.o.d" -o ${OBJECTDIR}/quaternion.o quaternion.c   
 	
 endif
 
