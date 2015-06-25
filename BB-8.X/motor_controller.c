@@ -37,7 +37,8 @@
 
 
 #define MOTOR_TIMER_PERIOD  3200    // 25KHz (80000000 / 25000)
-#define MOTOR_SPEED_MULT    1.52    // 3200/2100
+#define MOTOR_SPEED_MULT    1.52    // 3200/2100calc
+#define SERVO_SPEED_MULT    2.08    // 3125/1500calc
 #define DEADBAND            50      // 0 - 550
 #define SPEED_SCALE         2.2
 
@@ -67,6 +68,11 @@ void MotorInit(void)
     OpenOC2(OC_ON | OC_TIMER3_SRC | OC_PWM_FAULT_PIN_DISABLE,2560,2560);
     OpenOC3(OC_ON | OC_TIMER3_SRC | OC_PWM_FAULT_PIN_DISABLE,2560,2560);
     OpenTimer3(T3_ON | T3_PS_1_1, MOTOR_TIMER_PERIOD);
+    // head servos
+    OpenOC4(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,3125,3125);
+    OpenOC5(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,3125,3125);
+    OpenTimer2(T2_ON | T2_PS_1_256, 6250);
+    
 
 }
 
@@ -83,11 +89,19 @@ void MotorProcess(void)
     double qd[4];
     char string[50];
     double pry[3];
+    int servo1, servo2;
 
     // get RC data, scaled from -500 to +500
     xPulse = ReceiverGetPulse(1) - 1500;
     yPulse = ReceiverGetPulse(2) - 1500;
     rotation = ReceiverGetPulse(4) - 1500;
+
+    // update head servo - direct passthrough
+    servo1 = ReceiverGetPulse(1);
+    servo2 = ReceiverGetPulse(5);
+
+    SetDCOC4PWM((int)(servo1 * SERVO_SPEED_MULT));
+    SetDCOC5PWM((int)(servo2 * SERVO_SPEED_MULT));
 
     // get IMU data, quaternion format
     get_quat(q);

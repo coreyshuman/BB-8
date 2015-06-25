@@ -136,7 +136,7 @@
 #endif
 
 // Radio Receiver Definitions
-#define RX_INPUT_COUNT 8
+#define RX_INPUT_COUNT 5
 
 #define RX_INPUT_1_IO      PORTCbits.RC3
 #define RX_INPUT_1_TRIS     TRISCbits.TRISC3
@@ -146,14 +146,14 @@
 #define RX_INPUT_3_TRIS     TRISCbits.TRISC1
 #define RX_INPUT_4_IO      PORTEbits.RE5
 #define RX_INPUT_4_TRIS     TRISEbits.TRISE5
-#define RX_INPUT_5_IO      PORTEbits.RE6
-#define RX_INPUT_5_TRIS     TRISEbits.TRISE6
-#define RX_INPUT_6_IO      PORTEbits.RE5
-#define RX_INPUT_6_TRIS     TRISEbits.TRISE5
-#define RX_INPUT_7_IO      PORTGbits.RG15
-#define RX_INPUT_7_TRIS     TRISGbits.TRISG15
-#define RX_INPUT_8_IO      PORTEbits.RE4
-#define RX_INPUT_8_TRIS     TRISEbits.TRISE4
+#define RX_INPUT_5_IO      PORTGbits.RG15
+#define RX_INPUT_5_TRIS     TRISGbits.TRISG15
+#define RX_INPUT_6_IO      PORTEbits.RE4
+#define RX_INPUT_6_TRIS     TRISEbits.TRISE4
+#define RX_INPUT_7_IO      PORTEbits.RE3
+#define RX_INPUT_7_TRIS     TRISEbits.TRISE3
+#define RX_INPUT_8_IO      PORTEbits.RE2
+#define RX_INPUT_8_TRIS     TRISEbits.TRISE2
 
 
 
@@ -171,7 +171,7 @@
 #define M2_BACKWARD_TRIS        TRISDbits.TRISD12
 #define M3_FORWARD_IO           LATDbits.LATD7
 #define M3_FORWARD_TRIS         TRISDbits.TRISD7
-#define M3_BACKWARD_IO          LATDbits.LATD4
-#define M3_BACKWARD_TRIS        TRISDbits.TRISD4
+#define M3_BACKWARD_IO          LATDbits.LATD5
+#define M3_BACKWARD_TRIS        TRISDbits.TRISD5
 
 #endif  //HARDWARE_PROFILE_UBW32_H

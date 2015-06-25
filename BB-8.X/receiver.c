@@ -41,8 +41,8 @@ volatile char rcLastState[RX_INPUT_COUNT];
 void ReceiverInit(void)
 {
     int i;
-    OpenTimer2(T2_ON | T2_PS_1_1, RX_TIMER_PERIOD);
-    ConfigIntTimer2(T2_INT_ON | T2_INT_PRIOR_3 | T2_INT_SUB_PRIOR_3);
+    OpenTimer4(T4_ON | T4_PS_1_1, RX_TIMER_PERIOD);
+    ConfigIntTimer4(T4_INT_ON | T4_INT_PRIOR_3 | T4_INT_SUB_PRIOR_3);
 
     for(i=0; i<RX_INPUT_COUNT; i++)
     {
@@ -80,7 +80,7 @@ void ReceiverInit(void)
 }
 
 // Interrupt Timer Process
-void __attribute((interrupt(ipl3), vector(_TIMER_2_VECTOR), nomips16)) _T2Interrupt(void)
+void __attribute((interrupt(ipl3), vector(_TIMER_4_VECTOR), nomips16)) _T4Interrupt(void)
 {
     int chan = 0;
 #if RX_INPUT_COUNT >= 1
