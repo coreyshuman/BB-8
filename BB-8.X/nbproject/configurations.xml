@@ -40,6 +40,7 @@
       <itemPath>mpu_support.h</itemPath>
       <itemPath>receiver.h</itemPath>
       <itemPath>motor_controller.h</itemPath>
+      <itemPath>servo_controller.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -70,6 +71,7 @@
       <itemPath>receiver.c</itemPath>
       <itemPath>motor_controller.c</itemPath>
       <itemPath>quaternion.c</itemPath>
+      <itemPath>servo_controller.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

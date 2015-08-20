@@ -41,8 +41,7 @@
 #define DEADBAND            50      // 0 - 550
 #define SPEED_SCALE         2.2
 
-#define SERVO_TIMER_PERIOD 25000    // 50 hz (80000000 / 64 / 50)
-#define SERVO_SPEED_MULT    1.25    // (25000*1.5ms/20ms)/1500us (1.5 ms)
+
 
 #define M_180_PI            57.2958 // 180/pi
 
@@ -50,9 +49,15 @@
 void MotorState(BYTE motor, MOTOR_STATE dir, WORD speed);
 WORD calcSpeed(WORD angle, WORD speed);
 
+// global variables
+double pry_offset[3];
+double pry[3];
+
 // setup timers and initialize motors to off
 void MotorInit(void)
 {
+    int i;
+
     M1_FORWARD_TRIS = OUTPUT_PIN;
     M1_FORWARD_IO = 0;
     M1_BACKWARD_TRIS = OUTPUT_PIN;
@@ -70,12 +75,12 @@ void MotorInit(void)
     OpenOC2(OC_ON | OC_TIMER3_SRC | OC_PWM_FAULT_PIN_DISABLE,2560,2560);
     OpenOC3(OC_ON | OC_TIMER3_SRC | OC_PWM_FAULT_PIN_DISABLE,2560,2560);
     OpenTimer3(T3_ON | T3_PS_1_1, MOTOR_TIMER_PERIOD);
-    // head servos
-    OpenOC4(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
-    OpenOC5(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
-    OpenTimer2(T2_ON | T2_PS_1_64, 25000);
-    
 
+    
+    for(i=0; i<3; i++)
+    {
+        pry_offset[i] = 0;
+    }
 }
 
 void MotorProcess(void)
@@ -90,20 +95,15 @@ void MotorProcess(void)
     long q[4];
     double qd[4];
     char string[50];
-    double pry[3];
-    int servo1, servo2;
+    
+    
 
     // get RC data, scaled from -500 to +500
     xPulse = ReceiverGetPulse(1) - 1500;
     yPulse = ReceiverGetPulse(2) - 1500;
     rotation = ReceiverGetPulse(4) - 1500;
 
-    // update head servo - direct passthrough
-    servo1 = ReceiverGetPulse(1);
-    servo2 = ReceiverGetPulse(5);
-
-    SetDCOC4PWM((int)(servo1 * SERVO_SPEED_MULT));
-    SetDCOC5PWM((int)(servo2 * SERVO_SPEED_MULT));
+    
 
     // get IMU data, quaternion format
     get_quat(q);
@@ -148,10 +148,13 @@ void MotorProcess(void)
         double mag = sqrt(qd[0]*qd[0] + qd[1]*qd[1] + qd[2]*qd[2] + qd[3]*qd[3]);
         //sprintf(string, "mag: %f\r\n", mag);
         //debug(string);
-        qd[0] = qd[0] / mag;
-        qd[1] = qd[1] / mag;
-        qd[2] = qd[2] / mag;
-        qd[3] = qd[3] / mag;
+        if(mag > 0)
+        {
+            qd[0] = qd[0] / mag;
+            qd[1] = qd[1] / mag;
+            qd[2] = qd[2] / mag;
+            qd[3] = qd[3] / mag;
+        }
 
 
         // adjust signs of quat
@@ -174,25 +177,28 @@ void MotorProcess(void)
 #ifdef DIRECT_MOTOR_CONTROL
     // One idea for merging motor control and imu data, all proportional
     // first convert roll and pitch to scale -500 to +500
+    double val[3];
     for(i=0;i<2;i++)
     {
-        if(pry[i] > IMU_DEADBAND)
+
+        val[i] = pry[i] - pry_offset[i];
+        if(val[i] > IMU_DEADBAND)
         {
-            pry[i] = (pry[i]-IMU_DEADBAND) * MAX_SPEED / MAX_ANGLE;
+            val[i] = (val[i]-IMU_DEADBAND) * MAX_SPEED / MAX_ANGLE;
         }
-        else if(pry[i] < -IMU_DEADBAND)
+        else if(val[i] < -IMU_DEADBAND)
         {
-            pry[i] = (pry[i]+IMU_DEADBAND) * MAX_SPEED / MAX_ANGLE;
+            val[i] = (val[i]+IMU_DEADBAND) * MAX_SPEED / MAX_ANGLE;
         }
         else
         {
-            pry[i] = 0;
+            val[i] = 0;
         }
     }
 
     // no mixin IMU data with RC data
-    xPulse = xPulse + pry[0];
-    yPulse = yPulse + pry[1];
+    xPulse = xPulse + val[0];
+    yPulse = yPulse + val[1];
 #else
         // other option, use a PID controller
         // TODO
@@ -348,6 +354,16 @@ WORD calcSpeed(WORD angle, WORD speed)
     else
         w = speed;
     
+}
+
+void SetPRYOffset(void)
+{
+    int i;
+
+    for(i=0; i<3; i++)
+    {
+        pry_offset[i] = pry[i];
+    }
 }
 
 /*

@@ -80,6 +80,7 @@
 #include "console.h"
 #include "receiver.h"
 #include "motor_controller.h"
+#include "servo_controller.h"
 
 /** V A R I A B L E S ********************************************************/
 #if defined(__18CXX)
@@ -155,6 +156,7 @@ int main(void)
         BlinkStatusLED();
         MpuProcess();
         MotorProcess();
+        ServoProcess();
     }//end while
 }//end main
 
@@ -205,6 +207,8 @@ static void InitializeSystem(void)
     debug(" MPU_OK");
     ReceiverInit();
     debug(" RX_OK");
+    ServoInit();
+    debug( "SRV_OK");
 
     debug("\r\nInit Complete.\r\n");
 }//end InitializeSystem
@@ -271,17 +275,39 @@ void ProcessIO(void)
 
     //Blink the LEDs according to the USB device status
     BlinkUSBStatus();
+
+    // setup level after 3 seconds of power
+    DWORD currTick = TickGet();
+    static DWORD calibrateTick = 0l;
+    static int calibratedState = 0;
+    if(calibratedState == 0)
+    {
+        calibratedState = 1;
+        calibrateTick = currTick;
+    }
+    else if(calibratedState == 1 && (currTick - calibrateTick >= TICK_SECOND*3))
+    {
+        SetPRYOffset();
+        mLED_2_Toggle();
+        calibratedState = 2;
+    }
+
+    if(!buttonPressed && !sw2)
+    {
+        buttonPressed = 1;
+        SetPRYOffset();
+        mLED_2_Toggle();
+        debug("calibrate ");
+    }
+    
     // User Application USB tasks
     if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1)) return;
 
-    //cts - don't use button
-//    if(!buttonPressed && !sw3)
-//    {
-//        buttonPressed = 1;
-//    }
+    
 
     if(buttonPressed)
     {
+        
         if(stringPrinted == FALSE)
         {
             if(USBUSARTIsTxTrfReady())

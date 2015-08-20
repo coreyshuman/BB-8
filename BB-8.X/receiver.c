@@ -30,8 +30,12 @@
 #include "HardwareProfile.h"
 
 // Resolution of 10us, so interrupt every 10us
-#define RX_TIMER_PERIOD   800
-#define RX_USEC_PER_CYCLE  10
+//#define RX_TIMER_PERIOD   800
+//#define RX_USEC_PER_CYCLE  10
+
+#define RX_USEC_PER_CYCLE  5
+#define RX_TIMER_PERIOD   80000000l / (1000000l / RX_USEC_PER_CYCLE)
+
 
 volatile WORD rcValue[RX_INPUT_COUNT];
 volatile WORD rcTemp[RX_INPUT_COUNT];
