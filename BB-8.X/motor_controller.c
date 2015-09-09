@@ -93,6 +93,8 @@ void MotorProcess(void)
     WORD speed;
     WORD angle;
     int speedPulse;
+    BOOL accelEnabled = FALSE;
+    BOOL accelLastState = FALSE;
     long q[4];
     double qd[4];
     char string[50];
@@ -104,7 +106,29 @@ void MotorProcess(void)
     yPulse = ReceiverGetPulse(2) - 1500;
     rotation = ReceiverGetPulse(4) - 1500;
 
-    
+    if(ReceiverGetPulse(8) > 1500)
+    {
+        accelEnabled = TRUE;
+        mLED_4_On();
+    }
+    else
+    {
+        accelEnabled = FALSE;
+        mLED_4_Off();
+    }
+
+    if(accelEnabled && !accelLastState)
+    {
+        accelLastState = TRUE;
+        mLED_4_On();
+        // reset accel level
+        SetPRYOffset();
+    }
+    else if (!accelEnabled && accelLastState)
+    {
+        accelLastState = FALSE;
+        mLED_4_Off();
+    }
 
     // get IMU data, quaternion format
     get_quat(q);
@@ -200,9 +224,13 @@ void MotorProcess(void)
         }
     }
 
-    // now mixin IMU data with RC data
-    xPulse = xPulse + val[0];
-    yPulse = yPulse + val[1];
+
+    if(accelEnabled)
+    {
+        // now mixin IMU data with RC data
+        xPulse = xPulse + val[0];
+        yPulse = yPulse + val[1];
+    }
 #else
         // other option, use a PID controller
         // TODO

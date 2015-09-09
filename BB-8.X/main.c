@@ -81,6 +81,7 @@
 #include "receiver.h"
 #include "motor_controller.h"
 #include "servo_controller.h"
+#include "OLED_driver.h"
 
 /** V A R I A B L E S ********************************************************/
 #if defined(__18CXX)
@@ -201,6 +202,16 @@ static void InitializeSystem(void)
     debug("Tick_OK");
     UserInit();
     debug(" User_OK");
+    OLED_init();
+    debug(" OLED_INIT");
+    OLED_clear();
+    debug(" OLED_CLR");
+    OLED_logo();
+    debug(" OLED_LOGO");
+    OLED_write(OLED_ADDR);
+    debug(" OLED_WRITE");
+    
+    
     InitializeUSB();
     debug(" USB_OK");
     MpuInit();
@@ -209,8 +220,11 @@ static void InitializeSystem(void)
     debug(" RX_OK");
     ServoInit();
     debug( "SRV_OK");
+     
+
 
     debug("\r\nInit Complete.\r\n");
+
 }//end InitializeSystem
 
 
@@ -275,31 +289,50 @@ void ProcessIO(void)
     BYTE numBytesRead;
 
     //Blink the LEDs according to the USB device status
-    BlinkUSBStatus();
+    //BlinkUSBStatus();
 
-    // setup level after 3 seconds of power
-    DWORD currTick = TickGet();
-    static DWORD calibrateTick = 0l;
-    static int calibratedState = 0;
-    if(calibratedState == 0)
+    //cts test
+    if(ReceiverGetPulse(6) > 1500)
     {
-        calibratedState = 1;
-        calibrateTick = currTick;
+        mLED_3_On();
     }
-    else if(calibratedState == 1 && (currTick - calibrateTick >= TICK_SECOND*3))
+    else
     {
-        SetPRYOffset();
-        mLED_2_Toggle();
-        calibratedState = 2;
+        mLED_3_Off();
     }
 
-    if(!buttonPressed && !sw2)
+    if(ReceiverGetPulse(8) > 1500)
     {
-        buttonPressed = 1;
-        SetPRYOffset();
-        mLED_2_Toggle();
-        debug("calibrate ");
+        mLED_4_On();
     }
+    else
+    {
+        mLED_4_Off();
+    }
+
+//    // setup level after 3 seconds of power
+//    DWORD currTick = TickGet();
+//    static DWORD calibrateTick = 0l;
+//    static int calibratedState = 0;
+//    if(calibratedState == 0)
+//    {
+//        calibratedState = 1;
+//        calibrateTick = currTick;
+//    }
+//    else if(calibratedState == 1 && (currTick - calibrateTick >= TICK_SECOND*3))
+//    {
+//        SetPRYOffset();
+//        mLED_2_Toggle();
+//        calibratedState = 2;
+//    }
+//
+//    if(!buttonPressed && !sw2)
+//    {
+//        buttonPressed = 1;
+//        SetPRYOffset();
+//        mLED_2_Toggle();
+//        debug("calibrate ");
+//    }
     
     // User Application USB tasks
     if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1)) return;

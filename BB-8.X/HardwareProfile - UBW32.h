@@ -136,7 +136,7 @@
 #endif
 
 // Radio Receiver Definitions
-#define RX_INPUT_COUNT 6
+#define RX_INPUT_COUNT 8
 
 #define RX_INPUT_1_IO      PORTCbits.RC3
 #define RX_INPUT_1_TRIS     TRISCbits.TRISC3
@@ -150,10 +150,10 @@
 #define RX_INPUT_5_TRIS     TRISGbits.TRISG15
 #define RX_INPUT_6_IO      PORTEbits.RE4
 #define RX_INPUT_6_TRIS     TRISEbits.TRISE4
-#define RX_INPUT_7_IO      PORTEbits.RE3
-#define RX_INPUT_7_TRIS     TRISEbits.TRISE3
-#define RX_INPUT_8_IO      PORTEbits.RE2
-#define RX_INPUT_8_TRIS     TRISEbits.TRISE2
+#define RX_INPUT_7_IO      PORTGbits.RG13
+#define RX_INPUT_7_TRIS     TRISGbits.TRISG13
+#define RX_INPUT_8_IO      PORTGbits.RG12
+#define RX_INPUT_8_TRIS     TRISGbits.TRISG12
 
 
 
