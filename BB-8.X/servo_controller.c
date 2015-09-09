@@ -35,9 +35,11 @@
 
 #define SERVO_TIMER_PERIOD 25000    // 50 hz (80000000 / 64 / 50)
 #define SERVO_SPEED_MULT    1.25    // (25000*1.5ms/20ms)/1500us (1.5 ms)
+#define PITCH_RATIO         5.56    // (2000us - 1000us) / 180 degrees
 
 int servoAverageValues[2][10];
 BYTE loadingAverageCnt;
+double pitch;
 
 
 void ServoInit(void)
@@ -49,12 +51,13 @@ void ServoInit(void)
     OpenOC5(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
     OpenTimer2(T2_ON | T2_PS_1_64, 25000);
 
+    pitch = 0;
     loadingAverageCnt = 0;
     for(i=0; i<2; i++)
     {
         for(j=0; j<10; j++)
         {
-            servoAverageValues[i][j] = 0;
+            servoAverageValues[i][j] = 1500;
         }
     }
 }
@@ -63,6 +66,7 @@ void ServoProcess(void)
 {
     int i;
     int servoAverage[2];
+    int temp;
 
     // shift averages
     for(i=10; i>1; i--)
@@ -72,8 +76,16 @@ void ServoProcess(void)
     }
 
     // get values
-    servoAverageValues[0][0] = ReceiverGetPulse(5);
-    servoAverageValues[1][0] = ReceiverGetPulse(6);
+    temp = ReceiverGetPulse(5);
+    if(temp > 900 && temp < 2100)
+    {
+        servoAverageValues[0][0] = temp;
+    }
+    temp = ReceiverGetPulse(6);
+    if(temp > 900 && temp < 2100)
+    {
+        servoAverageValues[1][0] = temp;
+    }
 
     if(loadingAverageCnt < 10)
     {
@@ -92,8 +104,24 @@ void ServoProcess(void)
         servoAverage[0] /= 10;
         servoAverage[1] /= 10;
 
+        // add pitch offset to gimbal
+        servoAverage[0] += pitch * PITCH_RATIO;
+        if(servoAverage[0] > 2000)
+        {
+            servoAverage[0] = 2000;
+        }
+        else if(servoAverage[0] < 1000)
+        {
+            servoAverage[0] = 1000;
+        }
+
         // set servo
         SetDCOC4PWM((int)(servoAverage[0] * SERVO_SPEED_MULT));
         SetDCOC5PWM((int)(servoAverage[1] * SERVO_SPEED_MULT));
     }
+}
+
+void UpdatePitch(double aPitch)
+{
+    pitch = aPitch;
 }

@@ -72,6 +72,7 @@
       <itemPath>motor_controller.c</itemPath>
       <itemPath>quaternion.c</itemPath>
       <itemPath>servo_controller.c</itemPath>
+      <itemPath>exception_handler.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

@@ -33,6 +33,7 @@
 #include "receiver.h"
 #include "mpu_support.h"
 #include "console.h"
+#include "servo_controller.h"
 
 
 
@@ -165,12 +166,15 @@ void MotorProcess(void)
         //debug(string);
 
         // heavy painful quaternion to euler math here
-        pry[1] = atan2(2*qd[0]*qd[1] + 2*qd[2]*qd[3], 1- 2*qd[1]*qd[1] + 2*qd[2]*qd[2]) * M_180_PI;
-        pry[0] = asin(2*qd[0]*qd[2] - 2*qd[1]*qd[3]) * M_180_PI;
-        pry[2] = atan2(2*qd[0]*qd[3] + 2*qd[1]*qd[2], 1 - 2*qd[2]*qd[2] + 2*qd[3]*qd[3]) * M_180_PI;
+        pry[1] = atan2(2*qd[0]*qd[1] + 2*qd[2]*qd[3], 1- 2*qd[1]*qd[1] + 2*qd[2]*qd[2]) * M_180_PI; // pitch
+        pry[0] = asin(2*qd[0]*qd[2] - 2*qd[1]*qd[3]) * M_180_PI; // roll
+        pry[2] = atan2(2*qd[0]*qd[3] + 2*qd[1]*qd[2], 1 - 2*qd[2]*qd[2] + 2*qd[3]*qd[3]) * M_180_PI; // yaw
+
+        // send pitch to servos
+        UpdatePitch(pry[1]);
     }
 
-    sprintf(string, "roll: %3f pitch: %3f yaw: %3f\r\n", pry[1], pry[0], pry[2]);
+    sprintf(string, "pitch: %3f roll: %3f yaw: %3f\r\n", pry[1], pry[0], pry[2]);
     debug(string);
 
     // calculate motor output from RC and IMU data
@@ -196,7 +200,7 @@ void MotorProcess(void)
         }
     }
 
-    // no mixin IMU data with RC data
+    // now mixin IMU data with RC data
     xPulse = xPulse + val[0];
     yPulse = yPulse + val[1];
 #else
@@ -221,7 +225,7 @@ void MotorProcess(void)
     {
         speedPulse = calcSpeed(angle + 120*(i-1), speed);
 
-        // Crappy implementation of rotation. In practice it actually works
+        // Crappy implementation of rotation. In practice it actually
         // works pretty well, but there must be a mathematically better
         // way to do it.
         speedPulse -= rotation;
@@ -259,7 +263,7 @@ void MotorProcess(void)
     
 }
 
-// Update motor 1 state.
+// Update motor state.
 //   MOTOR_STATE dir: MOTOR_STOP, MOTOR_FORWARD, MOTOR_BACKWARD
 //   uint speed: 1000 - 2000
 void MotorState(BYTE motor, MOTOR_STATE dir, WORD speed)
@@ -330,6 +334,13 @@ void MotorState(BYTE motor, MOTOR_STATE dir, WORD speed)
         else if(motor == 3)
             SetDCOC3PWM((int)(speed * MOTOR_SPEED_MULT));
     }
+}
+
+void StopMotors(void)
+{
+    MotorState(1, MOTOR_STOP, 0);
+    MotorState(2, MOTOR_STOP, 0);
+    MotorState(3, MOTOR_STOP, 0);
 }
 
 WORD calcSpeed(WORD angle, WORD speed)

@@ -241,6 +241,7 @@ void UserInit(void)
 
     //Initialize all of the LED pins
     mInitAllLEDs();
+    
 
     //Initialize the pushbuttons
     mInitAllSwitches();
