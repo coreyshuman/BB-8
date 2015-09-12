@@ -14,12 +14,13 @@ extern "C" {
 
     //#define OLED 0x78
 #define OLED_ADDR 0x3C
-#define I2C1_CLOCK_FREQ 200000
+#define I2C1_CLOCK_FREQ 400000
 
-void  OLED_init();
+void OLED_init();
 void OLED_clear();
 void OLED_logo();
 void OLED_write(int address);
+void OLED_text(int x, int y, char* textptr, int size);
 
 
 #ifdef	__cplusplus

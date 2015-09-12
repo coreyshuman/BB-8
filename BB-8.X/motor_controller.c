@@ -34,6 +34,7 @@
 #include "mpu_support.h"
 #include "console.h"
 #include "servo_controller.h"
+#include "diagnostic.h"
 
 
 
@@ -190,46 +191,48 @@ void MotorProcess(void)
         //debug(string);
 
         // heavy painful quaternion to euler math here
-        pry[1] = atan2(2*qd[0]*qd[1] + 2*qd[2]*qd[3], 1- 2*qd[1]*qd[1] + 2*qd[2]*qd[2]) * M_180_PI; // pitch
-        pry[0] = asin(2*qd[0]*qd[2] - 2*qd[1]*qd[3]) * M_180_PI; // roll
+        pry[0] = atan2(2*qd[0]*qd[1] + 2*qd[2]*qd[3], 1- 2*qd[1]*qd[1] + 2*qd[2]*qd[2]) * M_180_PI; // pitch
+        pry[1] = asin(2*qd[0]*qd[2] - 2*qd[1]*qd[3]) * M_180_PI; // roll
         pry[2] = atan2(2*qd[0]*qd[3] + 2*qd[1]*qd[2], 1 - 2*qd[2]*qd[2] + 2*qd[3]*qd[3]) * M_180_PI; // yaw
 
         // send pitch to servos
-        UpdatePitch(pry[1]);
+        UpdatePitch(pry[0]);
     }
 
-    sprintf(string, "pitch: %3f roll: %3f yaw: %3f\r\n", pry[1], pry[0], pry[2]);
+    sprintf(string, "pitch: %3f roll: %3f yaw: %3f\r\n", pry[0], pry[1], pry[2]);
     debug(string);
+    
 
     // calculate motor output from RC and IMU data
 #ifdef DIRECT_MOTOR_CONTROL
     // One idea for merging motor control and imu data, all proportional
     // first convert roll and pitch to scale -500 to +500
     double val[3];
+    double pulse[3];
     for(i=0;i<2;i++)
     {
 
         val[i] = pry[i] - pry_offset[i];
         if(val[i] > IMU_DEADBAND)
         {
-            val[i] = (val[i]-IMU_DEADBAND) * MAX_SPEED / MAX_ANGLE;
+            pulse[i] = (val[i]-IMU_DEADBAND) * MAX_SPEED / MAX_ANGLE;
         }
         else if(val[i] < -IMU_DEADBAND)
         {
-            val[i] = (val[i]+IMU_DEADBAND) * MAX_SPEED / MAX_ANGLE;
+            pulse[i] = (val[i]+IMU_DEADBAND) * MAX_SPEED / MAX_ANGLE;
         }
         else
         {
-            val[i] = 0;
+            pulse[i] = 0;
         }
     }
-
+    PrintAccelToOled(val);
 
     if(accelEnabled)
     {
         // now mixin IMU data with RC data
-        xPulse = xPulse + val[0];
-        yPulse = yPulse + val[1];
+        xPulse = xPulse + pulse[1];
+        yPulse = yPulse + pulse[0];
     }
 #else
         // other option, use a PID controller

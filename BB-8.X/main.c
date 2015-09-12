@@ -82,6 +82,7 @@
 #include "motor_controller.h"
 #include "servo_controller.h"
 #include "OLED_driver.h"
+#include "diagnostic.h"
 
 /** V A R I A B L E S ********************************************************/
 #if defined(__18CXX)
@@ -93,7 +94,7 @@ volatile BOOL buttonPressed;
 volatile BYTE buttonCount;
 
 /** P R I V A T E  P R O T O T Y P E S ***************************************/
-static void InitializeSystem(void);
+void InitializeSystem(void);
 void IOInit(void);
 void ProcessIO(void);
 void USBDeviceTasks(void);
@@ -158,6 +159,7 @@ int main(void)
         MpuProcess();
         MotorProcess();
         ServoProcess();
+        DiagProcess();
     }//end while
 }//end main
 
@@ -182,7 +184,7 @@ int main(void)
  *
  * Note:            None
  *******************************************************************/
-static void InitializeSystem(void)
+void InitializeSystem(void)
 {
     #if defined(__32MX460F512L__)|| defined(__32MX795F512L__)
     // Configure the PIC32 core for the best performance
@@ -210,6 +212,7 @@ static void InitializeSystem(void)
     debug(" OLED_LOGO");
     OLED_write(OLED_ADDR);
     debug(" OLED_WRITE");
+    DiagInit();
     
     
     InitializeUSB();
