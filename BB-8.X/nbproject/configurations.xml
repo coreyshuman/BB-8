@@ -43,6 +43,7 @@
       <itemPath>servo_controller.h</itemPath>
       <itemPath>OLED_driver.h</itemPath>
       <itemPath>diagnostic.h</itemPath>
+      <itemPath>audio_controller.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -77,6 +78,7 @@
       <itemPath>exception_handler.c</itemPath>
       <itemPath>OLED_driver.c</itemPath>
       <itemPath>diagnostic.c</itemPath>
+      <itemPath>audio_controller.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

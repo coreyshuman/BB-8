@@ -34,3 +34,6 @@
 # Build folders
 build/
 dist/
+
+# private folders
+private/

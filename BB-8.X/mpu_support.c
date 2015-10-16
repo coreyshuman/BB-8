@@ -198,14 +198,9 @@ void MpuInit(void)
 
     mpu_i2c_init();
     i2c_read(MPU_ADDRESS, MPUREG_WHO_AM_I, 1, (BYTE *)&data);
-    debug("\r\nI2C Status: ");
-    PrintChar(data);
-    debug("\r\n");
 
     mpu_interrupt_setup(NULL);
-    debug("int1.");
     INTEnable(INT_INT1, INT_DISABLED);
-    debug("int2.");
 
     /* Get/set hardware configuration. Start gyro. */
     /* Wake up all sensors. */

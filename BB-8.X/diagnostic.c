@@ -43,12 +43,15 @@ enum SM_DIAG {
 
 } sm;
 
+DWORD debugMap;
+
 static double pry[3];
 
 void OledReceiverBar(int idx, int val);
 
 void DiagInit(void)
 {
+    debugMap = 0ul;
     pry[0] = pry[1] = pry[2] = 0;
     sm = SM_DIAG_CLEAR;
     OLED_clear();

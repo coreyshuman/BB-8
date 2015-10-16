@@ -36,8 +36,15 @@ void ThrowException(char * msg)
 
 void ThrowError(char * module, char * msg)
 {
-    UART_puts(module);
-    UART_putchar(':');
-    UART_puts(msg);
-    UART_Newline();
+    if(debug)
+    {
+        UART_puts(module);
+        UART_putchar(':');
+        UART_puts(msg);
+        UART_Newline();
+    }
+    else
+    {
+        UART_puts("err\r\n");
+    }
 }

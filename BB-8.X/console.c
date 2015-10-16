@@ -53,13 +53,13 @@ char UART_RX_GetByte(void)
 
 unsigned char UART_RX_GetCount(void)
 {
-    if(UART_RX_StartPtr < UART_RX_EndPtr)
+    if(UART_RX_StartPtr <= UART_RX_EndPtr)
     {
         return (UART_RX_EndPtr - UART_RX_StartPtr);
     }
     else
     {
-        (64 - UART_RX_EndPtr + UART_RX_StartPtr);
+        return (64 - UART_RX_EndPtr + UART_RX_StartPtr);
     }
 }
 
@@ -73,6 +73,27 @@ void ConsolePut(BYTE c)
 //    {
 //	putUSBUSART(&c,1);
 //    }
+}
+
+void debug(char* str, ...)
+{
+    va_list arglist;
+    char PrintStr[128];
+
+    int NumChars,i;
+
+    va_start(arglist,str);
+
+    NumChars = vsnprintf(PrintStr,128, str,arglist);
+
+    va_end(arglist);
+
+    // Now send it out the serial port one byte at a time
+    if(NumChars > 0 && NumChars < 128)
+    {
+        for(i=0; i<NumChars; i++)
+            ConsolePut(PrintStr[i]);
+    }
 }
 
 //override standard printf output

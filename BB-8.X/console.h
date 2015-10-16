@@ -17,11 +17,11 @@ void PrintChar(char);
 void PrintDec(char);
 void ConsolePutROMString(const char* str);
 #define Printf(x) ConsolePutROMString((const char*)x)
-#define debug(x) ConsolePutROMString((const char*)x)
 
 void UART_RX_PutByte(char c);
 char UART_RX_GetByte(void);
 unsigned char UART_RX_GetCount(void);
+void debug(char* str, ...);
 
 //#define res(x) Printf(#x);Printf(": ");PrintChar(x);Printf("\r\n")
 //#define res(x) printf("%s: %d\r\n", #x, x);

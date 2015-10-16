@@ -83,6 +83,7 @@
 #include "servo_controller.h"
 #include "OLED_driver.h"
 #include "diagnostic.h"
+#include "audio_controller.h"
 
 /** V A R I A B L E S ********************************************************/
 #if defined(__18CXX)
@@ -160,6 +161,7 @@ int main(void)
         MotorProcess();
         ServoProcess();
         DiagProcess();
+        AudioProcess();
     }//end while
 }//end main
 
@@ -223,7 +225,8 @@ void InitializeSystem(void)
     debug(" RX_OK");
     ServoInit();
     debug( "SRV_OK");
-     
+    AudioInit();
+    debug( "AIO_OK");
 
 
     debug("\r\nInit Complete.\r\n");

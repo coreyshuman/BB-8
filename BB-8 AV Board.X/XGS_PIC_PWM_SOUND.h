@@ -44,6 +44,9 @@
 // SOUND_OUT          | RD7 | Pin 55 | Output | Output Compare 8
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "FSIO.h"
+#include "waveformat.h"
+
 
 // sound I/O declarations
 #define SND_PORT		PORTDbits
@@ -54,12 +57,36 @@
 
 #define E_MOD_PWM               "PWMs"
 
+typedef struct _PLAYERINFO {
+    char filename[20];
+    FSFILE * file;
+    WaveFormat wavInfo;
+    DataChunk dataInfo;
+    DWORD bytesRead;
+    DWORD bytesRemaining;
+    DWORD phaseInc;
+    DWORD phaseAcc;
+    DWORD phaseCnt;
+    BYTE volume;
+    // flags
+    BYTE open : 1;
+    BYTE playing : 1;
+    BYTE bufferFlip : 1;
+    BYTE sendEnd : 1;
+    BYTE unusedFlags : 4;
+    BYTE unused[2];
+    // data buffer
+    DWORD buffer[1024];
+} PLAYERINFO;
+
 
 void PWM_Init();
 void PWM_Task();
-int PWM_Open_File(char filename[]);
-int PWM_Play();
-void PWM_Stop();
+int PWM_Open(BYTE chan, char filename[]);
+int PWM_Play(BYTE chan);
+int PWM_Pause(BYTE chan);
+int PWM_Stop(BYTE chan);
+int PWM_Close(BYTE chan);
 
 
 // end multiple inclusions

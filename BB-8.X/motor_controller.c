@@ -199,9 +199,11 @@ void MotorProcess(void)
         UpdatePitch(pry[0]);
     }
 
-    sprintf(string, "pitch: %3f roll: %3f yaw: %3f\r\n", pry[0], pry[1], pry[2]);
-    debug(string);
-    
+
+    //sprintf(string, "pitch: %3f roll: %3f yaw: %3f\r\n", pry[0], pry[1], pry[2]);
+    if(isDiagFilterOn(DBG_MPU)) {
+        debug("pitch: %3f roll: %3f yaw: %3f\r\n", pry[0], pry[1], pry[2]);
+    }
 
     // calculate motor output from RC and IMU data
 #ifdef DIRECT_MOTOR_CONTROL

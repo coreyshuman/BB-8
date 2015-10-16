@@ -55,6 +55,7 @@ _FOSCSEL(FNOSC_FRC & IESO_OFF)		// Start with the fast rc until we switch to PLL
 
 // Global functional instruction rate. This is the instruction rate, not the clock rate. Fcy = 1/2 * Fclock
 unsigned long g_FCY = FCY_NTSC;
+int debug = 0;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PROTOTYPES

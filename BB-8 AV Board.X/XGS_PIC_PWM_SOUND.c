@@ -12,7 +12,7 @@
 
  I/O pin map for sound port
 
-    SOUND_OUT          | RD7 | Pin 55 | Output | Output Compare 8
+    SOUND_OUT          | RD7 | Pin 52 | Output | Output Compare 8
 
  THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
  WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
@@ -43,14 +43,13 @@
 #include <string.h>
 #include <math.h>
 
-// Include SD card
-#include "FSIO.h"
+
 
 // include local XGS API header files
 #include "XGS_PIC_SYSTEM_V010.h"
 #include "XGS_PIC_PWM_SOUND.h"
 #include "XGS_PIC_UART_DRV_V010.h"
-#include "waveformat.h"
+
 #include "exception.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,27 +85,24 @@ int VerifyWaveFormat(WaveFormat info);
 // Clock period = 168 (42954540/256000)
 // Target speed is 256 kHz, rounded to closes period
 
+#define CHANNEL_COUNT           2
 
-WORD PHASE_ACC = 0;
-WORD PHASE_INC = 0;
-WORD PHASE_COUNT = 0;
-DWORD snd_buffer[2048] __attribute__((far));
-long int BYTES_REMAINING = 0;
-WaveFormat WaveInfo;
-DataChunk DataHeader;
-int swi = 0;
-FSFILE * file = NULL;
+PLAYERINFO player[CHANNEL_COUNT] __attribute__((far));
+
+
 int NumRead = 0;
-int Buffed;
-BOOL stream = FALSE;
-volatile BOOL approachingEOF = FALSE;
-volatile int samplesRemaining = 0;
 BOOL fsInitialized = FALSE;
 volatile DWORD tick, tick0, tick1, tick2, tick3;
 
-int PWM_Open_File(char filename[])
+int PWM_Open(BYTE chan, char filename[])
 {
-    if(stream)
+    PLAYERINFO *p;
+    if(chan == 0)
+        chan = 1;
+    if(chan > CHANNEL_COUNT)
+        return FALSE;
+    p = &player[chan-1];
+    if(p->open)
         return FALSE;
 
     if(!fsInitialized)
@@ -116,88 +112,51 @@ int PWM_Open_File(char filename[])
 
     if(fsInitialized)
     {
-        file = FSfopen(filename, "r");
-
-        if(file != NULL)
+        if(strstr(filename,".wav") == 0 && strlen(filename) < sizeof(p->filename)-5)
         {
+            strcat(filename,".wav");
+        }
+
+        strncpy(p->filename, filename, sizeof(p->filename));
+
+        p->file = FSfopen(filename, "r");
+
+        if(p->file != NULL)
+        {
+            p->open = TRUE;
             // read header - discard for now
-            NumRead = FSfread((char*)&WaveInfo,1,sizeof(WaveInfo),file);
-            if(NumRead != sizeof(WaveInfo))
+            NumRead = FSfread((char*)&p->wavInfo,1,sizeof(WaveFormat),p->file);
+            if(NumRead != sizeof(WaveFormat))
             {
-                FSfclose(file);
-                file = NULL;
+                FSfclose(p->file);
+                p->file = NULL;
                 ThrowError(E_MOD_PWM, "FSfread failed");
                 return FALSE;
             }
-            if(!VerifyWaveFormat(WaveInfo))
+            if(!VerifyWaveFormat(p->wavInfo))
             {
-                FSfclose(file);
-                file = NULL;
+                FSfclose(p->file);
+                p->file = NULL;
                 return FALSE;
             }
 
             // clear remaining fmt chunk bytes
-            if(WaveInfo.Subchunk1Size > 16)
+            if(p->wavInfo.Subchunk1Size > 16)
             {
-                FSfseek(file,WaveInfo.Subchunk1Size-16,SEEK_CUR );
+                FSfseek(p->file,p->wavInfo.Subchunk1Size-16,SEEK_CUR );
             }
             // read data chunk
-            NumRead = FSfread((char*)&DataHeader,1,sizeof(DataHeader),file);
-            BYTES_REMAINING = DataHeader.Subchunk2Size;
+            NumRead = FSfread((char*)&p->dataInfo,1,sizeof(DataChunk),p->file);
+            p->bytesRemaining = p->dataInfo.Subchunk2Size;
 
-            NumRead = FSfread(snd_buffer,1,sizeof(snd_buffer),file);
-            if(NumRead < sizeof(snd_buffer))
-            {
-                approachingEOF = TRUE;
-                samplesRemaining = NumRead;
-            }
-            // cts debug
-            int i;
-            long *a;
-            float *f;
+            NumRead = FSfread(p->buffer,1,sizeof(p->buffer),p->file);
+            p->bytesRead += NumRead;
 
-            BYTE *b = &WaveInfo;
-            UART_printf("sizeof(WaveInfo)=%u\r\n", sizeof(WaveInfo));
-            for(i=1; i<=sizeof(WaveInfo); i++)
+            p->phaseInc = (WORD)(PWM_FREQ / p->wavInfo.SampleRate);
+            if(PWM_FREQ % p->wavInfo.SampleRate > 0 && debug)
             {
-                UART_printf("%02x ", *b++);
-                if(i%16 == 0)
-                {
-                    UART_Newline();
-                }
+                UART_puts("Warning: SampleRate not supported\r\n");
             }
-            UART_Newline();
-            b = &DataHeader;
-            UART_printf("sizeof(DataHeader)=%u\r\n", sizeof(DataHeader));
-            for(i=1; i<=sizeof(DataHeader); i++)
-            {
-                UART_printf("%02x ", *b++);
-                if(i%16 == 0)
-                {
-                    UART_Newline();
-                }
-            }
-            UART_Newline();
-            b = &snd_buffer;
-            for(i=1; i<=16*24; i++)
-            {
-                UART_printf("%02x ", *b++);
-                if(i%16 == 0)
-                {
-                    UART_Newline();
-                }
-            }
-            /*
-            for(i=0; i<64; i++)
-            {
-                a = &snd_buffer;
-                f = &snd_buffer;
-                UART_printf("%u: %f (%llx)\r\n", i+1, *(f+i), *(a+i));
-            }
-             * */
-            UART_printf("\r\nsizeof(DWORD)=%u sizeof(float)=%u\r\n", sizeof(DWORD) ,sizeof(float));
-            PHASE_INC = (WORD)(PWM_FREQ / WaveInfo.SampleRate);
-            UART_printf("FREQ: %lu SAMP: %lu PHASE_INC: %u\r\n", PWM_FREQ, WaveInfo.SampleRate, PHASE_INC);
             return TRUE;
         }
         else
@@ -212,79 +171,127 @@ int PWM_Open_File(char filename[])
     return FALSE;
 }
 
-int PWM_Play()
+int PWM_Play(BYTE chan)
 {
-    if(file == NULL)
+    PLAYERINFO *p;
+    if(chan == 0)
+        chan = 1;
+    if(chan > CHANNEL_COUNT)
+        return FALSE;
+    p = &player[chan-1];
+    if(!p->open)
         return FALSE;
 
-    stream = TRUE;
-    T2CONbits.TON = 1; //timer go!
+    p->playing = TRUE;
     return TRUE;
 }
 
-void PWM_Stop()
+int PWM_Pause(BYTE chan)
 {
-    T2CONbits.TON = 0; //timer stop
-    OC8RS = PWM_TIMER_PERIOD/2;
-    stream = FALSE;
-    PHASE_ACC = 0;
-    PHASE_INC = 0;
-    PHASE_COUNT = 0;
-    swi = 0;
-    approachingEOF = FALSE;
+    PLAYERINFO *p;
+    if(chan == 0)
+        chan = 1;
+    if(chan > CHANNEL_COUNT)
+        return FALSE;
+    p = &player[chan-1];
+    if(!p->open)
+        return FALSE;
 
-    if(file != NULL)
+    p->playing = FALSE;
+    return TRUE;
+}
+
+int PWM_Stop(BYTE chan)
+{
+    PLAYERINFO *p;
+    if(chan == 0)
+        chan = 1;
+    if(chan > CHANNEL_COUNT)
+        return FALSE;
+    p = &player[chan-1];
+    if(!p->open)
+        return FALSE;
+    
+    p->playing = FALSE;
+    p->bytesRemaining = p->dataInfo.Subchunk2Size;
+    p->phaseCnt = 0;
+    // next two lines will cause data to load beginning of buffer
+    //  when set to play (set accumulator to end of buffer, will auto wrap)
+    p->phaseAcc = sizeof(p->buffer);
+    p->bufferFlip = 1;
+    // adjust read buffer
+    FSfseek(p->file,-(p->bytesRead),SEEK_CUR );
+    p->bytesRead = 0;
+    return TRUE;
+}
+
+int PWM_Close(BYTE chan)
+{
+    PLAYERINFO *p;
+    if(chan == 0)
+        chan = 1;
+    if(chan > CHANNEL_COUNT)
+        return FALSE;
+    p = &player[chan-1];
+    if(!p->open)
+        return FALSE;
+
+    p->playing = FALSE; // stop first so interrupt doesn't access
+
+    if(p->file != NULL)
     {
-        FSfclose(file);
-        file = NULL;
+        FSfclose(p->file);
     }
 
-    memset(snd_buffer,0,sizeof(snd_buffer));
+    memset(p,0,sizeof(PLAYERINFO));
+    return TRUE;
 }
 
 void PWM_Task()
 {
-    if (stream == FALSE)
-        return;
+    int chan;
+    char str[80];
 
-    if(approachingEOF)
+    PORTDbits.RD5 = 0;
+
+    for(chan = 0; chan<CHANNEL_COUNT; chan++)
     {
-        if(samplesRemaining == 0)
+        PLAYERINFO *p = &player[chan];
+        if(p->sendEnd)
         {
-            PWM_Stop();
+            p->sendEnd = FALSE;
+            sprintf(str, "e %u\r", chan+1);
+            UART_puts(str);
         }
-        return;
-    }
+        if(!p->open || !p->playing)
+            continue;
 
-    if(PHASE_ACC >= sizeof(snd_buffer)/2 && swi == 0)
-    {
-        char str[80];
-        sprintf(str, "%lu %lu %lu %lu %lu\r\n", tick0, tick1, tick2, tick3, tick);
-        UART_puts(str);
         PORTDbits.RD5 = 1;
-        swi = 1;
-        NumRead = FSfread(snd_buffer,1,sizeof(snd_buffer)/2,file);
-        if(NumRead < sizeof(snd_buffer)/2)
+
+        if(p->phaseAcc >= sizeof(p->buffer)/2 && p->bufferFlip == 0)
         {
-            approachingEOF = TRUE;
-            samplesRemaining = NumRead + (sizeof(snd_buffer) - PHASE_ACC) - 1;
+            //sprintf(str, "%lu %lu %lu %lu %lu\r\n", tick0, tick1, tick2, tick3, tick);
+            if(debug)
+            {
+                sprintf(str, "%lu\r\n", tick);
+                UART_puts(str);
+            }
+            p->bufferFlip = 1;
+            NumRead = FSfread(p->buffer,1,sizeof(p->buffer)/2,p->file);
+            p->bytesRead += NumRead;
         }
-    }
-    else if(PHASE_ACC < sizeof(snd_buffer)/2 && swi == 1)
-    {
-        PORTDbits.RD5 = 0;
-        swi = 0;
-        NumRead = FSfread(snd_buffer + (sizeof(snd_buffer)/sizeof(snd_buffer[0]))/2,1,sizeof(snd_buffer)/2,file);
-        if(NumRead < sizeof(snd_buffer)/2)
+        else if(p->phaseAcc < sizeof(p->buffer)/2 && p->bufferFlip == 1)
         {
-            approachingEOF = TRUE;
-            samplesRemaining = NumRead + sizeof(snd_buffer)/2 - PHASE_ACC - 1;
+            p->bufferFlip = 0;
+            NumRead = FSfread(p->buffer + (sizeof(p->buffer)/sizeof(p->buffer[0]))/2,1,sizeof(p->buffer)/2,p->file);
+            p->bytesRead += NumRead;
         }
     }
 }
 
 void PWM_Init(void)
 {
+    int i;
     fsInitialized = FSInit();
     if(!fsInitialized)
     {
@@ -292,7 +299,6 @@ void PWM_Init(void)
     }
 
     TRISDbits.TRISD5 = 0;
-    PORTDbits.RD5 = 1;
     // Make sure that timer 2 is disabled
     T2CONbits.TON = 0; 				// Disable Timer
 
@@ -313,25 +319,33 @@ void PWM_Init(void)
 
     PR2 = PWM_TIMER_PERIOD;			// Load the period value
                                             
-    memset(snd_buffer,0,sizeof(snd_buffer));
+    for(i=0; i<CHANNEL_COUNT; i++)
+    {
+        PLAYERINFO *p = &player[i];
+        memset(p,0,sizeof(PLAYERINFO));
+    }
 
     //T2CONbits.TON = 1;
     IPC1bits.T2IP = 1; 			// Set Timer 2 Interrupt Priority Level
     IFS0bits.T2IF = 0; 			// Clear Timer 2 Interrupt Flag
     IEC0bits.T2IE = 1; 			// Enable Timer 2 interrupt
+
+    T2CONbits.TON = 1; 			// Enable Timer
 }
 
 int VerifyWaveFormat(WaveFormat info)
 {
-    // cts debug
-    UART_printf("ID: %c%c%c%c\r\n",info.ChunkID[0],info.ChunkID[1],info.ChunkID[2],info.ChunkID[3]);
-    UART_printf("For:%c%c%c%c\r\n",info.Format[0],info.Format[1],info.Format[2],info.Format[3]);
-    UART_printf("Fmt: %u\r\n", info.AudioFormat);
-    UART_printf("chn: %u\r\n", info.NumberChannels);
-    UART_printf("srt: %lu\r\n", info.SampleRate);
-    UART_printf("brt: %lu\r\n", info.ByteRate);
-    UART_printf("bal: %u\r\n", info.BlockAlign);
-    UART_printf("bps: %u\r\n", info.BitsPerSample);
+    if(debug)
+    {
+        UART_printf("ID: %c%c%c%c\r\n",info.ChunkID[0],info.ChunkID[1],info.ChunkID[2],info.ChunkID[3]);
+        UART_printf("For:%c%c%c%c\r\n",info.Format[0],info.Format[1],info.Format[2],info.Format[3]);
+        UART_printf("Fmt: %u\r\n", info.AudioFormat);
+        UART_printf("chn: %u\r\n", info.NumberChannels);
+        UART_printf("srt: %lu\r\n", info.SampleRate);
+        UART_printf("brt: %lu\r\n", info.ByteRate);
+        UART_printf("bal: %u\r\n", info.BlockAlign);
+        UART_printf("bps: %u\r\n", info.BitsPerSample);
+    }
 
     if(info.ChunkID[0] != 'R' || info.ChunkID[1] != 'I' || info.ChunkID[2] != 'F' || info.ChunkID[3] != 'F')
     {
@@ -351,9 +365,15 @@ int VerifyWaveFormat(WaveFormat info)
         return FALSE;
     }
 
-    if(info.BitsPerSample != 8 && info.BitsPerSample != 16 && info.BitsPerSample != 32)
+    if(info.AudioFormat == PCM && (info.BitsPerSample != 8 && info.BitsPerSample != 16))
     {
-        ThrowError(E_MOD_PWM, "Only 8, 16, 32 Bits Per Sample Supported");
+        ThrowError(E_MOD_PWM, "Only 8 and 16 Bits PCM Supported");
+        return FALSE;
+    }
+
+    if(info.AudioFormat == FLOAT && (info.BitsPerSample != 32))
+    {
+        ThrowError(E_MOD_PWM, "Only 32 Bit Float Supported");
         return FALSE;
     }
 
@@ -369,104 +389,127 @@ int VerifyWaveFormat(WaveFormat info)
 // Timer 2 ISR steps through file during playback
 void __attribute__((__interrupt__, no_auto_psv)) _T2Interrupt( void )
 {
-    DWORD sample;
+    long sample = 0;
+    long mixedSample = PWM_PERIOD_HALF;
+    int chan;
+    int activeChannels = 0;
 
     // clear interrupt flag right away so timing stays on track
     IFS0bits.T2IF = 0;
 
     tick = TMR2;
 
-    PHASE_COUNT++;
-    tick0 = TMR2 - tick;
-    if(PHASE_COUNT >= PHASE_INC)
+    for(chan=0; chan<CHANNEL_COUNT; chan++)
     {
-        PHASE_ACC += WaveInfo.BlockAlign;
-        BYTES_REMAINING -= WaveInfo.BlockAlign;
-        PHASE_COUNT = 0;
+        PLAYERINFO *p = &player[chan];
+        WaveFormat wav = p->wavInfo;
+        if(!p->open || !p->playing)
+            continue;
 
-        if(approachingEOF)
+        activeChannels ++;
+
+        p->phaseCnt++;
+        if(p->phaseCnt >= p->phaseInc)
         {
-            if(samplesRemaining > 0)
+            p->phaseAcc += wav.BlockAlign;
+            p->bytesRemaining -= wav.BlockAlign;
+            p->phaseCnt = 0;
+        }
+
+        if(p->phaseAcc >= sizeof(p->buffer))
+        {
+            p->phaseAcc = 0;
+        }
+
+        if(p->bytesRemaining == 0)
+        {
+            p->playing = FALSE;
+            p->sendEnd = TRUE;
+        }
+
+        if(wav.AudioFormat == PCM)
+        {
+            switch(wav.BitsPerSample)
             {
-                samplesRemaining -= 1;
-            }
-            else
-            {
-                // stop here - recurring task will handle cleanup
-                IFS0bits.T2IF = 0;
-                return;
+                case 8:
+                    // old code - takes 440 ticks
+                    //sample = snd_buffer[PHASE_ACC/sizeof(snd_buffer[0])] >> (8*(PHASE_ACC % sizeof(snd_buffer[0]))) & 0xFF;
+                    //sample = (long int)((float)sample * PWM_FACTOR_8BIT);
+
+                    // option 2 takes 398
+                    //sample = *((BYTE *)snd_buffer + PHASE_ACC) * PWM_FACTOR_8BIT;
+
+                    // option 3 - less accurate, uses 25 ticks!!!
+                    //sample = *((BYTE *)p->buffer + p->phaseAcc) << 2;
+                    // scale to -32768 -> 32767
+                    sample = (*((BYTE *)p->buffer + p->phaseAcc) -0x80) << 8;
+                    // min:   max:
+
+                    break;
+                case 16:
+                    // option 1 - uses 457 ticks
+                    //sample = ((short)(snd_buffer[PHASE_ACC/sizeof(snd_buffer[0])] >> (8*(PHASE_ACC%sizeof(snd_buffer[0]))) ) & 0xFFFF + 32768ul ) * PWM_FACTOR_16BIT;
+
+                    // option 2 - uses 33 ticks, clips at top end
+                    //sample = ((LONG)*((SHORT *)p->buffer + p->phaseAcc/2) + 0x8000ul) >> 6;
+                    // already at scale -32768 -> 32767
+                    sample = ((LONG)*((SHORT *)p->buffer + p->phaseAcc/2));
+                    break;
+
+//                case 32:
+//                    sample = (unsigned long int)(snd_buffer[PHASE_ACC/sizeof(snd_buffer[0])] + 0xFFFFul) * PWM_FACTOR_32BIT;
+//                    break;
             }
         }
-    }
-
-    if(PHASE_ACC >= sizeof(snd_buffer))
-    {
-        PHASE_ACC = 0;
-    }
-tick1 = TMR2 - tick;
-    if(WaveInfo.AudioFormat == PCM)
-    {
-        switch(WaveInfo.BitsPerSample)
+        else if(wav.AudioFormat == FLOAT)    // FLOAT
         {
-            case 8:
-                tick2 = TMR2 - tick;
-                // old code - takes 440 ticks
-                //sample = snd_buffer[PHASE_ACC/sizeof(snd_buffer[0])] >> (8*(PHASE_ACC % sizeof(snd_buffer[0]))) & 0xFF;
-                //sample = (long int)((float)sample * PWM_FACTOR_8BIT);
+            // option 1 - 278 ticks
+            //sample = (int)((float)snd_buffer[PHASE_ACC/sizeof(snd_buffer[0])] * (float)PWM_TIMER_PERIOD);
 
-                // option 2 takes 398
-                //sample = *((BYTE *)snd_buffer + PHASE_ACC) * PWM_FACTOR_8BIT;
+            //float samplef = *((float *)snd_buffer + PHASE_ACC/4);
+            //UART_printf("%f\r\n", samplef);
 
-                // option 3 - less accurate, uses 25 ticks!!!
-                sample = *((BYTE *)snd_buffer + PHASE_ACC) << 2;
-                if(sample > PWM_TIMER_PERIOD)
-                {
-                    sample = PWM_TIMER_PERIOD;
-                }
-
-
-                tick3 = TMR2 - tick;
-                break;
-            case 16:
-                tick2 = TMR2 - tick;
-                // option 1 - uses 457 ticks
-                //sample = ((short)(snd_buffer[PHASE_ACC/sizeof(snd_buffer[0])] >> (8*(PHASE_ACC%sizeof(snd_buffer[0]))) ) & 0xFFFF + 32768ul ) * PWM_FACTOR_16BIT;
-
-                // option 2 - uses 33 ticks, clips at top end
-                sample = ((LONG)*((SHORT *)snd_buffer + PHASE_ACC/2) + 0x8000ul) >> 6;
-                if(sample > PWM_TIMER_PERIOD)
-                {
-                    sample = PWM_TIMER_PERIOD;
-                }
-
-                tick3 = TMR2 - tick;
-
-                break;
-
-            case 32:
-                sample = (unsigned long int)(snd_buffer[PHASE_ACC/sizeof(snd_buffer[0])] + 0xFFFFul) * PWM_FACTOR_32BIT;
-                break;
+            // option 2 - 267 ticks
+            // scale to -32768 -> 32767
+            sample = (DWORD)(*((float *)p->buffer + p->phaseAcc/4) * (float)0x8000);
+            // adjust from signed to unsigned
+            //sample += PWM_PERIOD_HALF;
         }
+
+        // average samples together
+        if(activeChannels == 1)
+            mixedSample = sample;
+        else
+            mixedSample += sample;
+        if(activeChannels > 1)
+            mixedSample >> 2;
+
+        /*
+        // mixin sample data to final output buffer
+        if(mixedSample < PWM_PERIOD_HALF && sample < PWM_PERIOD_HALF)
+        {
+
+        }
+        if(mixedSample > PWM_PERIOD_HALF && sample > PWM_PERIOD_HALF)
+        {
+
+        }
+        else
+        {
+            mixedSample = mixedSample + sample;
+        }
+        */
     }
-    else if(WaveInfo.AudioFormat == FLOAT)    // FLOAT
+
+    // convert from -32768 -> 32767 scale to 0 -> 918 (aprox)
+    mixedSample += 0x8000;
+    //mixedSample /= 71;
+    mixedSample = mixedSample >> 7;
+    if(mixedSample > PWM_TIMER_PERIOD)
     {
-        tick2 = TMR2 - tick;
-        // option 1 - 278 ticks
-        //sample = (int)((float)snd_buffer[PHASE_ACC/sizeof(snd_buffer[0])] * (float)PWM_TIMER_PERIOD);
-
-        //float samplef = *((float *)snd_buffer + PHASE_ACC/4);
-        //UART_printf("%f\r\n", samplef);
-
-        // option 2 - 267 ticks
-        sample = (DWORD)(*((float *)snd_buffer + PHASE_ACC/4) * (float)PWM_PERIOD_HALF);
-        // adjust from signed to unsigned
-        sample += PWM_PERIOD_HALF;
-
-        tick3 = TMR2 - tick;
+        mixedSample = PWM_TIMER_PERIOD;
     }
-
-
-    OC8RS = sample; // Write Duty Cycle value for next PWM cycle
+    OC8RS = mixedSample; // Write Duty Cycle value for next PWM cycle
 
     tick = TMR2 - tick;
 }
