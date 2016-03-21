@@ -47,7 +47,7 @@
         <targetDevice>PIC24HJ256GP206</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>PICkit3PlatformTool</platformTool>
+        <platformTool>Simulator</platformTool>
         <languageToolchain>C30</languageToolchain>
         <languageToolchainVersion>3_31</languageToolchainVersion>
         <platform>3</platform>
@@ -149,12 +149,6 @@
         <property key="legacy-libc" value="false"/>
         <property key="output-file-format" value="elf"/>
       </C30Global>
-      <PICkit3PlatformTool>
-        <property key="firmware.download.all" value="false"/>
-        <property key="tracecontrol.disablemacros" value="true"/>
-        <property key="tracecontrol.medium" value="0"/>
-        <property key="tracecontrol.select" value="0"/>
-      </PICkit3PlatformTool>
     </conf>
   </confs>
 </configurationDescriptor>

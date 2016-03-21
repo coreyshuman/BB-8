@@ -84,6 +84,7 @@
 #include "OLED_driver.h"
 #include "diagnostic.h"
 #include "audio_controller.h"
+#include "serial_controller.h"
 
 /** V A R I A B L E S ********************************************************/
 #if defined(__18CXX)
@@ -158,6 +159,7 @@ int main(void)
         ProcessIO();
         BlinkStatusLED();
         MpuProcess();
+        SerialProc();
         MotorProcess();
         ServoProcess();
         DiagProcess();
@@ -200,7 +202,8 @@ void InitializeSystem(void)
 
     IOInit();
     MotorInit();
-    ConsoleInit();
+    //ConsoleInit();
+    SerialInit();
     debug("\r\n********\r\nInitializing Board... \r\n");
     TickInit();
     debug("Tick_OK");

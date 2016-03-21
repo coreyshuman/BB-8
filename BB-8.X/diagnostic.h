@@ -10,6 +10,7 @@
 
 #define DBG_MPU         0x00000001
 #define DBG_AUDIO       0x00000002
+#define DBG_SERIAL      0x00000004
 
 
 #define enableDiagFilter(x)      (debugMap |= x)
