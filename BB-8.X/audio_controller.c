@@ -28,7 +28,6 @@
 #include <plib.h>
 #include "HardwareProfile.h"
 #include "TCPIPConfig.h"
-#include "./USB/usb_function_cdc.h"
 #include "TCPIP Stack/Tick.h"
 #include "audio_controller.h"
 #include "console.h"

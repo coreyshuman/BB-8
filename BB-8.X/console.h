@@ -16,10 +16,10 @@ extern "C" {
 void PrintChar(char);
 void PrintDec(char);
 void ConsolePutROMString(const char* str);
-#define Printf(x) ConsolePutROMString((const char*)x)
+#define print(x) ConsolePutROMString((const char*)x)
 
 
-void debug(char* str, ...);
+void debug(const char* str, ...);
 
 //#define res(x) Printf(#x);Printf(": ");PrintChar(x);Printf("\r\n")
 //#define res(x) printf("%s: %d\r\n", #x, x);

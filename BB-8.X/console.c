@@ -11,21 +11,17 @@ char USB_In_Buffer[64];
 char USB_Out_Buffer[64];
 
 
-
+// cts todo - not working
 void ConsolePut(BYTE c)
 {
-     while (!UARTTransmitterIsReady(UART2A));
-       UARTSendDataByte(UART2A, c);
-     while (!UARTTransmissionHasCompleted(UART2A));
-
-//    if(USBUSARTIsTxTrfReady())
-//    {
-//	putUSBUSART(&c,1);
-//    }
+    if(USBUSARTIsTxTrfReady())
+    {
+	putUSBUSART(&c,1);
+    }
 }
 
 // send to USB serial
-void debug(char* str, ...)
+void debug(const char* str, ...)
 {
     va_list arglist;
     char PrintStr[128];
@@ -41,7 +37,7 @@ void debug(char* str, ...)
     // Now send it out the serial port one byte at a time
     if(NumChars > 0 && NumChars < 128)
     {
-        if(USBUSARTIsTxTrfReady())
+       if(USBUSARTIsTxTrfReady())
         {
             putUSBUSART(PrintStr,NumChars);
         }
@@ -73,18 +69,17 @@ void PrintDec(BYTE toPrint)
 
 void ConsolePutROMString(const char* str)
 {
-    BYTE c;
-
-    while( (c = *str++) )
-        ConsolePut(c);
+    if(USBUSARTIsTxTrfReady())
+    {
+        putrsUSBUSART(str);
+    }
 }
 
 void ConsoleWriteBuffer(BYTE *buf, unsigned int length)
 {
-    unsigned int i = 0;
-    while(i<length)
+    if(USBUSARTIsTxTrfReady())
     {
-        ConsolePut(buf[i++]);
+        putUSBUSART(buf,length);
     }
 }
 

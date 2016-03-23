@@ -200,6 +200,9 @@ void InitializeSystem(void)
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
     INTEnableInterrupts();
 
+    InitializeUSB();
+    debug(" USB_OK");
+    
     IOInit();
     MotorInit();
     //ConsoleInit();
@@ -220,8 +223,7 @@ void InitializeSystem(void)
     DiagInit();
     
     
-    InitializeUSB();
-    debug(" USB_OK");
+    
     MpuInit();
     debug(" MPU_OK");
     ReceiverInit();

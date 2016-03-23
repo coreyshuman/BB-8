@@ -37,3 +37,6 @@ dist/
 
 # private folders
 private/
+
+# disassembly folder
+disassembly/

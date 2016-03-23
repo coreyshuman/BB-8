@@ -171,7 +171,7 @@ static inline unsigned short inv_orientation_matrix_to_scalar(
  */
 static void gyro_data_ready_cb(void)
 {
-	Printf("Gyro reading\r\n");
+	print("Gyro reading\r\n");
     hal.new_gyro = 1;
 }
 
@@ -181,13 +181,13 @@ static void tap_cb(unsigned char direction, unsigned char count)
     data[0] = (char)direction;
     data[1] = (char)count;
     send_packet(PACKET_TYPE_TAP, data);
-	Printf("Tap detected\r\n");
+	print("Tap detected\r\n");
 }
 
 static void android_orient_cb(unsigned char orientation)
 {
     send_packet(PACKET_TYPE_ANDROID_ORIENT, &orientation);
-	Printf("Android orient");
+	print("Android orient");
 }
 
 void MpuInit(void)
