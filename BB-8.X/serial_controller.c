@@ -38,7 +38,8 @@
 enum SERIAL_RESPONSE {
     SR_NONE = 0,
     SR_GOOD = 1,
-    SR_ERROR = 2
+    SR_ERROR = 2,
+	SR_PANIC = 3
 };
 
 char UART_RX_Buffer[64];
