@@ -28,6 +28,8 @@
 #include <plib.h>
 #include "HardwareProfile.h"
 #include "motor_controller.h"
+#include "OLED_driver.h"
+#include "diagnostic.h"
 
 static enum {
       EXCEP_IRQ = 0,            // interrupt
@@ -59,6 +61,7 @@ static enum {
 
   void _general_exception_handler(void)
   {
+      char buf[20];
       asm volatile("mfc0 %0,$13" : "=r" (_excep_code));
       asm volatile("mfc0 %0,$14" : "=r" (_excep_addr));
 
@@ -91,6 +94,17 @@ static enum {
 
       // stop motors
       StopMotors();
+
+      // print exception to screen
+      OLED_clear();
+      OLED_text(0, 0, "Exception", 1);
+      snprintf(buf,20, "Addr:0x%0X",_excep_addr );
+      OLED_text(0, 10, buf, 1);
+      snprintf(buf,20, "Type:%d",_excep_code );
+      OLED_text(0, 20, buf, 1);
+      snprintf(buf,20, "Module:%d",debugModule );
+      OLED_text(0, 30, buf, 1);
+      OLED_write(OLED_ADDR);
 
       while (1) {
           // Examine _excep_code to identify the type of exception

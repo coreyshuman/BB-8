@@ -1,5 +1,7 @@
 
+#include "HardwareProfile.h"
 #include "usb_support.h"
+#include "diagnostic.h"
 
 void InitializeUSB(void)
 {
@@ -46,33 +48,33 @@ void InitializeUSB(void)
 
 void ProcessUSB(void)
 {
-    BYTE numBytesRead;
-    if(USBUSARTIsTxTrfReady())
+    SetModule(MOD_USB);
+
+   #if defined(USB_INTERRUPT)
+    if(USB_BUS_SENSE && (USBGetDeviceState() == DETACHED_STATE))
     {
-		numBytesRead = getsUSBUSART(USB_Out_Buffer,64);
-		if(numBytesRead != 0)
-		{
-			BYTE i;
+        USBDeviceAttach();
+    }
+    #endif
 
-			for(i=0;i<numBytesRead;i++)
-			{
-				switch(USB_Out_Buffer[i])
-				{
-					case 0x0A:
-					case 0x0D:
-						USB_In_Buffer[i] = USB_Out_Buffer[i];
-						break;
-					default:
-						USB_In_Buffer[i] = USB_Out_Buffer[i] + 1;
-						break;
-				}
+    #if defined(USB_POLLING)
+        // Check bus status and service USB interrupts.
+        USBDeviceTasks();             // Interrupt or polling method.  If using polling, must call
+                                      // this function periodically.  This function will take care
+                                      // of processing and responding to SETUP transactions
+                                      // (such as during the enumeration process when you first
+                                      // plug in).  USB hosts require that USB devices should accept
+                                      // and process SETUP packets in a timely fashion.  Therefore,
+                                      // when using polling, this function should be called
+                                      // regularly (such as once every 1.8ms or faster** [see
+                                      // inline code comments in usb_device.c for explanation when
+                                      // "or faster" applies])  In most cases, the USBDeviceTasks()
+                                      // function does not take very long to execute (ex: <100
+                                      // instruction cycles) before it returns.
+    #endif
 
-			}
-
-			//putUSBUSART(USB_In_Buffer,numBytesRead);
-		}
-	}
-
+    if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1)) return;
+    
     CDCTxService();
 }
 

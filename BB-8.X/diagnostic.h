@@ -20,12 +20,31 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+enum DIAG_MOD {
+    MOD_INIT = 0,
+    MOD_AUD = 1,
+    MOD_CONS,
+    MOD_DIAG,
+    MOD_MOTOR,
+    MOD_MPU,
+    MOD_OLED,
+    MOD_RECV,
+    MOD_SERIAL,
+    MOD_SERVO,
+    MOD_USB
+
+};
+extern enum DIAG_MOD debugModule;
+#define SetModule(x) (debugModule = x)
 
 extern DWORD debugMap;
+
 
 void DiagInit(void);
 void DiagProcess(void);
 void PrintAccelToOled(double pry[]);
+
+
 
 
 #ifdef	__cplusplus

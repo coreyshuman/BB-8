@@ -1,8 +1,8 @@
 /* 
  * File:   console.h
- * Author: tavish
+ * Author: Corey
  *
- * Created on February 27, 2014, 2:23 PM
+ * Created on March 27, 2016, 2:59 AM
  */
 
 #ifndef CONSOLE_H
@@ -12,17 +12,13 @@
 extern "C" {
 #endif
 
-
-void PrintChar(char);
-void PrintDec(char);
-void ConsolePutROMString(const char* str);
-#define print(x) ConsolePutROMString((const char*)x)
-
-
+void ConsoleInit(void);
+void ConsoleProcess(void);
+void ConsoleSend(const char *buf, unsigned int length);
+void ConsolePut(const char c);
 void debug(const char* str, ...);
 
-//#define res(x) Printf(#x);Printf(": ");PrintChar(x);Printf("\r\n")
-//#define res(x) printf("%s: %d\r\n", #x, x);
+
 #define res(x) x
 
 #ifdef	__cplusplus

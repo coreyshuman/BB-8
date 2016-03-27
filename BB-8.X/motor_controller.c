@@ -100,7 +100,7 @@ void MotorProcess(void)
     double qd[4];
     char string[50];
     
-    
+    SetModule(MOD_MOTOR);
 
     // get RC data, scaled from -500 to +500
     xPulse = ReceiverGetPulse(1) - 1500;

@@ -16,9 +16,6 @@
 extern "C" {
 #endif
 
-char USB_In_Buffer[64];
-char USB_Out_Buffer[64];
-
 void InitializeUSB(void);
 void ProcessUSB(void);
 

@@ -35,6 +35,7 @@
 #include "TCPIPConfig.h"
 #include "OLED_driver.h"
 #include "device_i2c.h"
+#include "diagnostic.h"
 
 #define bit_test(D,i) (D & (0x01ul << i))
 
@@ -166,6 +167,8 @@ void OLED_command(INT slave_addr, int com)
 void OLED_write(INT slave_addr)
 {
     LONG i;
+    SetModule(MOD_OLED);
+
     OLED_command (slave_addr, 0x21) ;
     OLED_command (slave_addr, 0x00);
     OLED_command (slave_addr, 127);

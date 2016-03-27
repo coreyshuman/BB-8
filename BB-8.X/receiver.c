@@ -28,6 +28,7 @@
 
 #include <plib.h>
 #include "HardwareProfile.h"
+#include "diagnostic.h"
 
 // Resolution of 10us, so interrupt every 10us
 //#define RX_TIMER_PERIOD   800
@@ -87,6 +88,9 @@ void ReceiverInit(void)
 void __attribute((interrupt(ipl2), vector(_TIMER_4_VECTOR), nomips16)) _T4Interrupt(void)
 {
     int chan = 0;
+
+    SetModule(MOD_RECV);
+
 #if RX_INPUT_COUNT >= 1
     if(!rcLastState[chan] && RX_INPUT_1_IO)
     {

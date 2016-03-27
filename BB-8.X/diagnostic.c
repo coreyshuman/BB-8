@@ -44,6 +44,7 @@ enum SM_DIAG {
 } sm;
 
 DWORD debugMap;
+enum DIAG_MOD debugModule;
 
 static double pry[3];
 
@@ -64,6 +65,7 @@ void DiagProcess(void)
     static QWORD tick = TICK_SECOND;
     static BOOL diagEnabled = FALSE;
 
+    SetModule(MOD_DIAG);
     if(!diagEnabled && TickGet() - tick >= TICK_SECOND*3)
     {
         OLED_write(OLED_ADDR);

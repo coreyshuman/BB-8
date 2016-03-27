@@ -130,34 +130,12 @@ int main(void)
 
     while(1)
     {
-        #if defined(USB_INTERRUPT)
-            if(USB_BUS_SENSE && (USBGetDeviceState() == DETACHED_STATE))
-            {
-                USBDeviceAttach();
-            }
-        #endif
-
-        #if defined(USB_POLLING)
-		// Check bus status and service USB interrupts.
-        USBDeviceTasks(); // Interrupt or polling method.  If using polling, must call
-        				  // this function periodically.  This function will take care
-        				  // of processing and responding to SETUP transactions
-        				  // (such as during the enumeration process when you first
-        				  // plug in).  USB hosts require that USB devices should accept
-        				  // and process SETUP packets in a timely fashion.  Therefore,
-        				  // when using polling, this function should be called
-        				  // regularly (such as once every 1.8ms or faster** [see
-        				  // inline code comments in usb_device.c for explanation when
-        				  // "or faster" applies])  In most cases, the USBDeviceTasks()
-        				  // function does not take very long to execute (ex: <100
-        				  // instruction cycles) before it returns.
-        #endif
-
-   
-		// Application-specific tasks.
-		// Application related code may be added here, or in the ProcessIO() function.
+        // Application-specific tasks.
+        // Application related code may be added here, or in the ProcessIO() function.
         ProcessIO();
         BlinkStatusLED();
+        ConsoleProcess(); // call consoleproc first to load data for usb
+        ProcessUSB();
         MpuProcess();
         SerialProc();
         MotorProcess();
@@ -200,12 +178,14 @@ void InitializeSystem(void)
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
     INTEnableInterrupts();
 
+    SetModule(MOD_INIT);
+
     InitializeUSB();
-    debug(" USB_OK");
+    //debug(" USB_OK");
     
     IOInit();
     MotorInit();
-    //ConsoleInit();
+    ConsoleInit();
     SerialInit();
     debug("\r\n********\r\nInitializing Board... \r\n");
     TickInit();
@@ -345,8 +325,7 @@ void ProcessIO(void)
 //        debug("calibrate ");
 //    }
     
-    // User Application USB tasks
-    if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1)) return;
+    
 
     
 
@@ -367,7 +346,6 @@ void ProcessIO(void)
         stringPrinted = FALSE;
     }
 
-    ProcessUSB();
 } //end ProcessIO
 
 void BlinkStatusLED(void)
@@ -390,7 +368,7 @@ void BlinkStatusLED(void)
                 //sprintf(string, "RX: %u %u %u %u\r\n", Receiver_GetPulse(1), Receiver_GetPulse(2), Receiver_GetPulse(3), Receiver_GetPulse(4));
                 //debug(string);
                 //putrsUSBUSART(string);
-                //putrsUSBUSART("corey shuman this is a long string to test if it has issues...\r\n");
+                //debug("corey\r\n");
            
         }
     }

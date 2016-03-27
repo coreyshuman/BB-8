@@ -376,7 +376,7 @@ void AudioRxPutByte(char c)
     AUD_UART_RX_EndPtr ++;
     if(AUD_UART_RX_EndPtr >= 64)
         AUD_UART_RX_EndPtr = 0;
-    LATEbits.LATE0 = ~LATEbits.LATE0;
+    //LATEbits.LATE0 = ~LATEbits.LATE0; //cts debug
 }
 
 char AudioRxGetByte(void)
@@ -399,7 +399,6 @@ void __ISR(_UART_3A_VECTOR, ipl5) _UART3AISRHandler(void) {
         while(UARTReceivedDataIsAvailable(UART3A))
         {
             AudioRxPutByte(UARTGetDataByte(UART3A));
-            //ConsolePut(UARTGetDataByte(UART2A));
         }
         // handle overflow flag
         if (mU3AEGetIntFlag()) {
@@ -408,7 +407,7 @@ void __ISR(_UART_3A_VECTOR, ipl5) _UART3AISRHandler(void) {
         }
         // Clear the RX interrupt Flag
         INTClearFlag(INT_U3ARX);
-        LATEbits.LATE1 = ~LATEbits.LATE1;
+        //LATEbits.LATE1 = ~LATEbits.LATE1; //cts debug
     }
 
     // We don't care about TX interrupt

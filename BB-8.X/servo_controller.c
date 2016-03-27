@@ -32,6 +32,7 @@
 #include "receiver.h"
 #include "mpu_support.h"
 #include "console.h"
+#include "diagnostic.h"
 
 #define SERVO_TIMER_PERIOD 25000    // 50 hz (80000000 / 64 / 50)
 #define SERVO_SPEED_MULT    1.25    // (25000*1.5ms/20ms)/1500us (1.5 ms)
@@ -67,6 +68,8 @@ void ServoProcess(void)
     int i;
     int servoAverage[2];
     int temp;
+
+    SetModule(MOD_SERVO);
 
     // shift averages
     for(i=10; i>1; i--)

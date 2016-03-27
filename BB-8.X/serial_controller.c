@@ -26,7 +26,7 @@
 
 ********************************************************************/
 #include <plib.h>
-#include <stdio.h>
+//#include <stdio.h>
 #include "HardwareProfile.h"
 #include "TCPIP Stack/Tick.h"
 #include "serial_controller.h"
@@ -53,7 +53,7 @@ unsigned char UART_RX_GetCount(void);
 void UART_RX_ClearBuffer(void);
 enum SERIAL_RESPONSE SerialGetResponse();
 
-DWORD serTick = 0;
+
 
 int  serIdx = 0;
 char response[20];
@@ -65,10 +65,14 @@ int roll;
 
 
 
+DWORD serTick;
+
 void SerialInit(void)
 {
+    serTick = 0;
+    
     //OpenUART2A(UART_EN, (1 << 12)|UART_TX_ENABLE, (SYS_FREQ/(1<<mOSCGetPBDIV())/16)/BAUD_RATE-1);
-    UARTConfigure(UART2A,UART_ENABLE_PINS_TX_RX_ONLY|UART_ENABLE_HIGH_SPEED);
+    UARTConfigure(UART2A,UART_ENABLE_PINS_TX_RX_ONLY);
     UARTSetFifoMode(UART2A, UART_INTERRUPT_ON_RX_NOT_EMPTY);
     UARTSetLineControl(UART2A, UART_DATA_SIZE_8_BITS | UART_PARITY_NONE | UART_STOP_BITS_1);
     UARTSetDataRate(UART2A, GetPeripheralClock(), SERIAL_BAUD_RATE);
@@ -88,22 +92,23 @@ void SerialInit(void)
 
     // cts debug
     enableDiagFilter(DBG_SERIAL);
+    
 }
 
 void SerialProc(void)
 {
     char output[50];
+
+    SetModule(MOD_SERIAL);
+
     if(TickGet() - serTick > 1*TICK_SECOND)
     {
         serTick = TickGet();
-        //UART_TX_PutByte("c");
-        //sprintf(output, "ser%d", 3);
-        //print(output);
-        debug("tmo\r\n");
-        //putrsUSBUSART("corey");
+        UART_TX_PutByte("U");
+
+        mLED_3_Toggle();
     }
-    return;
-    /*
+    
     enum SERIAL_RESPONSE srx = SerialGetResponse();
 
     if(srx == SR_GOOD)
@@ -141,7 +146,7 @@ void SerialProc(void)
             debug("SER err\r\n");
         }
     }
-     * */
+    
 }
 
 enum SERIAL_RESPONSE SerialGetResponse()

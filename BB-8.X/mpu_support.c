@@ -43,6 +43,7 @@
 #include "console.h"
 #include "time.h"
 #include "HardwareProfile.h"
+#include "diagnostic.h"
 
 //empl
 #include "empl/inv_mpu.h"
@@ -171,7 +172,7 @@ static inline unsigned short inv_orientation_matrix_to_scalar(
  */
 static void gyro_data_ready_cb(void)
 {
-	print("Gyro reading\r\n");
+    //debug("Gyro reading\r\n");
     hal.new_gyro = 1;
 }
 
@@ -181,13 +182,13 @@ static void tap_cb(unsigned char direction, unsigned char count)
     data[0] = (char)direction;
     data[1] = (char)count;
     send_packet(PACKET_TYPE_TAP, data);
-	print("Tap detected\r\n");
+    debug("Tap detected\r\n");
 }
 
 static void android_orient_cb(unsigned char orientation)
 {
     send_packet(PACKET_TYPE_ANDROID_ORIENT, &orientation);
-	print("Android orient");
+    debug("Android orient\r\n");
 }
 
 void MpuInit(void)
@@ -240,11 +241,14 @@ void MpuInit(void)
 void MpuProcess(void)
 {
     unsigned long sensor_timestamp;
+
+    SetModule(MOD_MPU);
+    /*
     while(UART_RX_GetCount())
     {
         handle_input(UART_RX_GetByte());
     }
-
+    */
     if (hal.motion_int_mode) {
         /* Enable motion interrupt. */
         mpu_lp_motion_interrupt(500, 1, 5);
@@ -617,12 +621,13 @@ int mpu_interrupt_setup(void (*cb)(void))
 
 void __ISR(_EXTERNAL_1_VECTOR, ipl1) _INT1Interrupt(void)
 {
-	//not using this callback
-	if(mpu_cb)
-	{
-		mpu_cb();
-	}
-	hal.new_gyro = 1;
-	mLED_2_Toggle();
-	INTClearFlag(INT_INT1);
+    SetModule(MOD_MPU);
+    //not using this callback
+    if(mpu_cb)
+    {
+            mpu_cb();
+    }
+    hal.new_gyro = 1;
+    mLED_2_Toggle();
+    INTClearFlag(INT_INT1);
 }
