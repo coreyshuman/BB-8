@@ -121,10 +121,9 @@ void SerialProc(void)
             yaw = strtol(&response[3], NULL, 16);
             pitch = strtol(&response[6], NULL, 16);
             roll = strtol(&response[9], NULL, 16);
-            sprintf(output, "throttle=%d, yaw=%d, pitch=%d, roll=%d\r\n", throttle, yaw, pitch, roll);
             // debug data
             if(isDiagFilterOn(DBG_SERIAL)) {
-                debug(output);
+                debug("throttle=%d, yaw=%d, pitch=%d, roll=%d\r\n", throttle, yaw, pitch, roll);
             }
         }
         else
@@ -153,11 +152,13 @@ enum SERIAL_RESPONSE SerialGetResponse()
 {
     enum SERIAL_RESPONSE ret = SR_NONE;
     int rx = 0;
+    static DWORD lastResponse = 0;
 
     while(UART_RX_GetCount() > 0)
     {
         response[serIdx] = UART_RX_GetByte();
-        
+        lastResponse = TickGet();
+
         if(isDiagFilterOn(DBG_SERIAL)) {
             mLED_4_Toggle();
             if(response[serIdx] >= 0x20)
@@ -165,10 +166,12 @@ enum SERIAL_RESPONSE SerialGetResponse()
             else
                 debug("[%02X]", response[serIdx]);
         }
+        
         if(response[serIdx] == '\n')
         {
             response[serIdx] = '\0';
             rx = TRUE;
+            serIdx++; // need to increment here before break
             break;
         }
 
@@ -184,10 +187,19 @@ enum SERIAL_RESPONSE SerialGetResponse()
         }
     }
 
+    if(serIdx > 0 && TickGet() - lastResponse > TICK_SECOND / 10) {
+        serIdx = 0;
+        UART_RX_ClearBuffer();
+        if(isDiagFilterOn(DBG_SERIAL)) {
+            debug("SER TMO");
+        }
+    }
+
     if(rx)
     {
         ret = SR_GOOD;
     }
+
     
     return ret;
 }
@@ -224,7 +236,7 @@ unsigned char UART_RX_GetCount(void)
     }
     else
     {
-        return (64 - UART_RX_EndPtr + UART_RX_StartPtr);
+        return (64 - UART_RX_StartPtr + UART_RX_EndPtr);
     }
 }
 

@@ -366,7 +366,7 @@ unsigned char AudioRxGetCount(void)
     }
     else
     {
-        return (64 - AUD_UART_RX_EndPtr + AUD_UART_RX_StartPtr);
+        return (64 - AUD_UART_RX_StartPtr + AUD_UART_RX_EndPtr);
     }
 }
 

@@ -56,7 +56,7 @@ unsigned int ConsoleTxGetCount(void)
     }
     else
     {
-        return (sizeof(Console_Out_Buffer) - Console_TX_End_Pointer + Console_TX_Start_Pointer);
+        return (sizeof(Console_Out_Buffer) - Console_TX_Start_Pointer + Console_TX_End_Pointer);
     }
 }
 
@@ -85,7 +85,7 @@ unsigned int ConsoleRxGetCount(void)
     }
     else
     {
-        return (sizeof(Console_In_Buffer) - Console_RX_End_Pointer + Console_RX_Start_Pointer);
+        return (sizeof(Console_In_Buffer) - Console_RX_Start_Pointer + Console_RX_End_Pointer);
     }
 }
 
