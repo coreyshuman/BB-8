@@ -104,11 +104,11 @@ void SerialProc(void)
     if(TickGet() - serTick > 1*TICK_SECOND)
     {
         serTick = TickGet();
-        UART_TX_PutByte("U");
+        UART_TX_PutByte('U');
 
         mLED_3_Toggle();
     }
-    
+
     enum SERIAL_RESPONSE srx = SerialGetResponse();
 
     if(srx == SR_GOOD)
@@ -154,10 +154,12 @@ enum SERIAL_RESPONSE SerialGetResponse()
     enum SERIAL_RESPONSE ret = SR_NONE;
     int rx = 0;
 
-    while(UART_RX_GetCount() > 0 && serIdx < sizeof(response))
+    while(UART_RX_GetCount() > 0)
     {
         response[serIdx] = UART_RX_GetByte();
+        
         if(isDiagFilterOn(DBG_SERIAL)) {
+            mLED_4_Toggle();
             if(response[serIdx] >= 0x20)
                 debug("(%c)", response[serIdx]);
             else
@@ -239,6 +241,7 @@ void __ISR(_UART_2A_VECTOR, ipl4) _UART2AISRHandler(void) {
             UART_RX_PutByte(UARTGetDataByte(UART2A));
             //ConsolePut(UARTGetDataByte(UART2A));
         }
+        
         // handle overflow flag
         if (mU2AEGetIntFlag()) {
             U2ASTAbits.OERR = 0;

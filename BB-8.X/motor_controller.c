@@ -211,7 +211,7 @@ void MotorProcess(void)
     // first convert roll and pitch to scale -500 to +500
     double val[3];
     double pulse[3];
-    for(i=0;i<2;i++)
+    for(i=0;i<=2;i++)
     {
 
         val[i] = pry[i] - pry_offset[i];

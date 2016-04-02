@@ -55,7 +55,7 @@ void DiagInit(void)
     debugMap = 0ul;
     pry[0] = pry[1] = pry[2] = 0;
     sm = SM_DIAG_CLEAR;
-    OLED_clear();
+    
 }
 
 
@@ -66,8 +66,9 @@ void DiagProcess(void)
     static BOOL diagEnabled = FALSE;
 
     SetModule(MOD_DIAG);
-    if(!diagEnabled && TickGet() - tick >= TICK_SECOND*3)
+    if(!diagEnabled && TickGet() - tick >= TICK_SECOND*5)
     {
+        OLED_clear();
         OLED_write(OLED_ADDR);
         tick = TickGet();
         diagEnabled = TRUE;

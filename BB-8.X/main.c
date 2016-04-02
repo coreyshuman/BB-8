@@ -182,7 +182,7 @@ void InitializeSystem(void)
 
     InitializeUSB();
     //debug(" USB_OK");
-    
+    DiagInit();
     IOInit();
     MotorInit();
     ConsoleInit();
@@ -192,15 +192,9 @@ void InitializeSystem(void)
     debug("Tick_OK");
     UserInit();
     debug(" User_OK");
-    OLED_init();
-    debug(" OLED_INIT");
-    OLED_clear();
-    debug(" OLED_CLR");
-    OLED_logo();
-    debug(" OLED_LOGO");
-    OLED_write(OLED_ADDR);
-    debug(" OLED_WRITE");
-    DiagInit();
+   
+
+
     
     
     
@@ -212,6 +206,15 @@ void InitializeSystem(void)
     debug( "SRV_OK");
     AudioInit();
     debug( "AIO_OK");
+
+    OLED_init();
+    debug(" OLED_INIT");
+    OLED_clear();
+    debug(" OLED_CLR");
+    OLED_logo();
+    debug(" OLED_LOGO");
+    OLED_write(OLED_ADDR);
+    debug(" OLED_WRITE");
 
 
     debug("\r\nInit Complete.\r\n");
