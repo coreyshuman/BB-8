@@ -33,44 +33,86 @@
 #include "console.h"
 #include "diagnostic.h"
 
-
-
-enum SERIAL_RESPONSE {
-    SR_NONE = 0,
-    SR_GOOD = 1,
-    SR_ERROR = 2,
-	SR_PANIC = 3
-};
-
-char UART_RX_Buffer[64];
-BYTE UART_RX_StartPtr;
-BYTE UART_RX_EndPtr;
-
+// Functions
+void SerialReset(void);
+int SerialFindHandler(char* command);
+void SerialExecuteHandler(BYTE handle);
+enum SERIAL_RESPONSE SerialProcessInput(void);
 void UART_TX_PutByte(char c);
 void UART_RX_PutByte(char c);
 char UART_RX_GetByte(void);
 unsigned char UART_RX_GetCount(void);
 void UART_RX_ClearBuffer(void);
-enum SERIAL_RESPONSE SerialGetResponse();
 
 
 
-int  serIdx = 0;
-char response[20];
+// Enums
+enum SERIAL_RESPONSE {
+    SR_NONE = 0,
+    SR_INPROG,
+    SR_GOOD,
+    SR_ERROR_TMO,
+    SR_ERROR_OVF
+};
+
+// Structs
+struct HandlerDef {
+  char command[MAX_COMMAND_LENGTH];
+  BYTE maxArguments;
+  void (*func)(char*[MAX_ARGUMENT_LENGTH], int);
+};
+
+// Constants
+const char DELIM1 = ' ';
+const char DELIM2 = ',';
+const char ENDL = '\n';
+
+// Variables
+char UART_RX_Buffer[64];
+BYTE UART_RX_StartPtr;
+BYTE UART_RX_EndPtr;
+
+DWORD serTimeoutTick;
+
+// serial state variable
+// - state 0 is 'get command'
+// - state 1 - maxarg is 'get argument'
+BYTE serState;
+
+// input command buffers
+int  serIdx;
+char serCommand[MAX_COMMAND_LENGTH];
+char serArguments[MAX_ARGUMENT_COUNT][MAX_ARGUMENT_LENGTH];
+BYTE serArgumentCount;
+
+// variable to hold command handler definitions
+struct HandlerDef serHandlers[MAX_HANDLERS];
+BYTE serHandlerCount;
 
 int throttle;
 int yaw;
 int pitch;
 int roll;
 
+// cts - temporary function
+void ReadTelemetry(char* arg[MAX_ARGUMENT_LENGTH], int argc)
+{
+    if(isDiagFilterOn(DBG_SERIAL)) {
+        debug("RUN READ TELEMETRY\r\n");
+    }
 
-
-DWORD serTick;
+    if(argc == 4)
+    {
+        throttle = strtol(&arg[0], NULL, 16);
+        yaw = strtol(&arg[1], NULL, 16);
+        pitch = strtol(&arg[2], NULL, 16);
+        roll = strtol(&arg[3], NULL, 16);
+        debug("throttle=%d, yaw=%d, pitch=%d, roll=%d\r\n", throttle, yaw, pitch, roll);
+    }
+}
 
 void SerialInit(void)
 {
-    serTick = 0;
-    
     //OpenUART2A(UART_EN, (1 << 12)|UART_TX_ENABLE, (SYS_FREQ/(1<<mOSCGetPBDIV())/16)/BAUD_RATE-1);
     UARTConfigure(UART2A,UART_ENABLE_PINS_TX_RX_ONLY);
     UARTSetFifoMode(UART2A, UART_INTERRUPT_ON_RX_NOT_EMPTY);
@@ -83,127 +125,189 @@ void SerialInit(void)
     INTSetVectorPriority(INT_VECTOR_UART(UART2A), INT_PRIORITY_LEVEL_4);
     INTSetVectorSubPriority(INT_VECTOR_UART(UART2A), INT_SUB_PRIORITY_LEVEL_0);
 
-    // ring buffer init
-    UART_RX_StartPtr = UART_RX_EndPtr = 0;
-
-    //setbuf(stdout, NULL );
+    serHandlerCount = 0;
+    serTimeoutTick = 0;
+    
+    SerialReset();
+    UART_RX_ClearBuffer();
 
     throttle = yaw = pitch = roll = 0;
+
+    SerialAddHandler("tel", 4, ReadTelemetry);
 
     // cts debug
     enableDiagFilter(DBG_SERIAL);
     
 }
 
+
+
+/* Call periodically to run the handler */
 void SerialProc(void)
 {
-    char output[50];
-
     SetModule(MOD_SERIAL);
 
-    if(TickGet() - serTick > 1*TICK_SECOND)
-    {
-        serTick = TickGet();
-        UART_TX_PutByte('U');
-
-        mLED_3_Toggle();
-    }
-
-    enum SERIAL_RESPONSE srx = SerialGetResponse();
+    enum SERIAL_RESPONSE srx = SerialProcessInput();
 
     if(srx == SR_GOOD)
     {
-        // expected input is XX,XX,XX,XX/n
-        if(serIdx == 12)
+        int handle = SerialFindHandler(serCommand);
+        if(handle > -1)
         {
-            response[2] = response[5] = response[8] = 0;
-            throttle = strtol(&response[0], NULL, 16);
-            yaw = strtol(&response[3], NULL, 16);
-            pitch = strtol(&response[6], NULL, 16);
-            roll = strtol(&response[9], NULL, 16);
-            // debug data
             if(isDiagFilterOn(DBG_SERIAL)) {
-                debug("throttle=%d, yaw=%d, pitch=%d, roll=%d\r\n", throttle, yaw, pitch, roll);
+                debug("SER EXEC %d\r\n", handle);
             }
+            SerialExecuteHandler(handle);
         }
         else
         {
-            // debug data
-            
             if(isDiagFilterOn(DBG_SERIAL)) {
-                sprintf(output, "SER len err=%d", serIdx);
-                debug(output);
+                debug("SER EXEC NOT FOUND\r\n");
             }
         }
 
-        serIdx = 0;
+        SerialReset();
     }
-    else if(srx == SR_ERROR)
+    else if(srx == SR_ERROR_TMO)
     {
         // error
         if(isDiagFilterOn(DBG_SERIAL)) {
-            debug("SER err\r\n");
+            debug("SER TMO\r\n");
         }
+        SerialReset();
+    }
+    else if(srx == SR_ERROR_OVF)
+    {
+        // error
+        if(isDiagFilterOn(DBG_SERIAL)) {
+            debug("SER OVF\r\n");
+        }
+        SerialReset();
+        UART_RX_ClearBuffer();
     }
     
 }
 
-enum SERIAL_RESPONSE SerialGetResponse()
+ 
+/* Reads serial input and parses commands and arguments */
+enum SERIAL_RESPONSE SerialProcessInput()
 {
+    char inByte;
     enum SERIAL_RESPONSE ret = SR_NONE;
-    int rx = 0;
-    static DWORD lastResponse = 0;
-
+    
     while(UART_RX_GetCount() > 0)
     {
-        response[serIdx] = UART_RX_GetByte();
-        lastResponse = TickGet();
+        inByte = UART_RX_GetByte();
+        serTimeoutTick = TickGet();
+        ret = SR_INPROG;
 
         if(isDiagFilterOn(DBG_SERIAL)) {
             mLED_4_Toggle();
-            if(response[serIdx] >= 0x20)
-                debug("(%c)", response[serIdx]);
+            if(inByte >= 0x20)
+                debug("(%c)", inByte);
             else
-                debug("[%02X]", response[serIdx]);
+                debug("[%02X]", inByte);
         }
-        
-        if(response[serIdx] == '\n')
+
+        // process deliminators and update state
+        if(inByte == DELIM1 || inByte == DELIM2)
         {
-            response[serIdx] = '\0';
-            rx = TRUE;
-            serIdx++; // need to increment here before break
+            serState ++;
+            serIdx = 0;
+            continue;
+        }
+        else if(inByte == ENDL)
+        {
+            serArgumentCount = serState;
+            if(serArgumentCount > MAX_ARGUMENT_COUNT)
+            {
+                serArgumentCount = MAX_ARGUMENT_COUNT;
+            }
+            ret = SR_GOOD;
             break;
         }
 
-        serIdx ++;
-    }
-
-    if(serIdx >= sizeof(response))
-    {
-        serIdx = 0;
-        UART_RX_ClearBuffer();
-        if(isDiagFilterOn(DBG_SERIAL)) {
-            debug("SER OVF");
+        // store commands and arguments
+        if(serState == 0)
+        {
+            if(serIdx >= MAX_COMMAND_LENGTH)
+            {
+                ret = SR_ERROR_OVF;
+                break;
+            }
+            serCommand[serIdx++] = inByte;
+        }
+        else if(serState <= MAX_ARGUMENT_COUNT)
+        {
+            if(serIdx >= MAX_ARGUMENT_LENGTH)
+            {
+                ret = SR_ERROR_OVF;
+                break;
+            }
+            serArguments[serState - 1][serIdx++] = inByte;
         }
     }
 
-    if(serIdx > 0 && TickGet() - lastResponse > TICK_SECOND / 10) {
-        serIdx = 0;
-        UART_RX_ClearBuffer();
-        if(isDiagFilterOn(DBG_SERIAL)) {
-            debug("SER TMO");
-        }
+    if((serIdx > 0 || serState > 0) && TickGet() - serTimeoutTick > SER_TIMEOUT_INTERVAL) {
+        ret = SR_ERROR_TMO;
     }
-
-    if(rx)
-    {
-        ret = SR_GOOD;
-    }
-
     
     return ret;
 }
 
+/* Called to run a located handler */
+void SerialExecuteHandler(BYTE handle)
+{
+    if(handle >= 0 && handle < MAX_HANDLERS)
+    {
+        serHandlers[handle].func(serArguments, serArgumentCount);
+    }
+}
+
+/* Used to match a command to a handler */
+int SerialFindHandler(char* command)
+{
+    int i;
+    int ret = -1;
+
+    for(i = 0; i < serHandlerCount; i++)
+    {
+        struct HandlerDef *thisHandler = &serHandlers[i];
+
+        if(strncmp(thisHandler->command, command, MAX_COMMAND_LENGTH) == 0)
+        {
+            ret = i;
+            break;
+        }
+    }
+    return ret;
+}
+
+/* Add a command handler function to handler pool */
+int SerialAddHandler(char* command, BYTE maxArguments, void (*func)(char**, int))
+{
+    if(serHandlerCount >= MAX_HANDLERS)
+    {
+        return -1;
+    }
+    struct HandlerDef *thisHandler = &serHandlers[serHandlerCount];
+
+    strncpy(thisHandler->command, command, MAX_COMMAND_LENGTH);
+    thisHandler->maxArguments = maxArguments;
+    thisHandler->func = func;
+    return serHandlerCount++;
+}
+
+void SerialReset()
+{
+    serIdx = 0;
+    serState = 0;
+    serArgumentCount = 0;
+    memset(serCommand, 0, MAX_COMMAND_LENGTH);
+    memset(serArguments, 0, MAX_ARGUMENT_COUNT * (MAX_ARGUMENT_LENGTH));
+}
+
+// CTS TODO - use interrupts for UART TX as well!
 void UART_TX_PutByte(char c)
 {
     while (!UARTTransmitterIsReady(UART2A));
