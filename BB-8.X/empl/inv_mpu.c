@@ -76,7 +76,9 @@ static inline int reg_int_cb(struct int_param_s *int_param)
     return mpu_interrupt_setup(int_param->cb);
 }
 #define log_i(...)     do {} while (0)
-#define log_e(...)     do {} while (0)
+//#define log_e(...)     do {} while (0)
+//cts debug
+#define log_e  debug
 /* labs is already defined by TI's toolchain. */
 /* fabs is for doubles. fabsf is for floats. */
 // #define fabs        fabsf

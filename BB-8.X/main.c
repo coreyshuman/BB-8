@@ -187,25 +187,25 @@ void InitializeSystem(void)
     MotorInit();
     ConsoleInit();
     SerialInit();
-    debug("\r\n********\r\nInitializing Board... \r\n");
     TickInit();
-    debug("Tick_OK");
     UserInit();
-    debug(" User_OK");
-   
+    ProcessUSB(); // connect to USB if available
 
+    /* CTS debug delay bootup*/
+    DWORD bootTick = TickGet();
+    mLED_4_On();
+    while(TickGet() - bootTick < TICK_SECOND * 3) {};
+    mLED_4_Off();
+    debug("\r\n********\r\nInitializing Board... \r\n");
 
-    
-    
-    
     MpuInit();
     debug(" MPU_OK");
     ReceiverInit();
     debug(" RX_OK");
     ServoInit();
-    debug( "SRV_OK");
+    debug( " SRV_OK");
     AudioInit();
-    debug( "AIO_OK");
+    debug( " AUD_OK");
 
     OLED_init();
     debug(" OLED_INIT");
@@ -471,56 +471,6 @@ void BlinkUSBStatus(void)
 
 
 
-
-
-//CTS TODO: need to decouple and move
-/********************************************************************
- * Function:        void USBCB_SOF_Handler(void)
- *
- * PreCondition:    None
- *
- * Input:           None
- *
- * Output:          None
- *
- * Side Effects:    None
- *
- * Overview:        The USB host sends out a SOF packet to full-speed
- *                  devices every 1 ms. This interrupt may be useful
- *                  for isochronous pipes. End designers should
- *                  implement callback routine as necessary.
- *
- * Note:            None
- *******************************************************************/
-void USBCB_SOF_Handler(void)
-{
-    // No need to clear UIRbits.SOFIF to 0 here.
-    // Callback caller is already doing that.
-
-    //This is reverse logic since the pushbutton is active low
-    if(buttonPressed == sw2)
-    {
-        if(buttonCount != 0)
-        {
-            buttonCount--;
-        }
-        else
-        {
-            //This is reverse logic since the pushbutton is active low
-            buttonPressed = !sw2;
-
-            //Wait 100ms before the next press can be generated
-            buttonCount = 100;
-        }
-    }
-    else
-    {
-        if(buttonCount != 0)
-        {
-            buttonCount--;
-        }
-    }
-}
 
 
 /** EOF main.c *************************************************/

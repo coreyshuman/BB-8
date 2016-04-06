@@ -169,9 +169,13 @@
 #define M2_FORWARD_TRIS         TRISCbits.TRISC14
 #define M2_BACKWARD_IO          LATDbits.LATD12
 #define M2_BACKWARD_TRIS        TRISDbits.TRISD12
-#define M3_FORWARD_IO           LATDbits.LATD7
-#define M3_FORWARD_TRIS         TRISDbits.TRISD7
+#define M3_FORWARD_IO           LATDbits.LATD6
+#define M3_FORWARD_TRIS         TRISDbits.TRISD6
 #define M3_BACKWARD_IO          LATDbits.LATD5
 #define M3_BACKWARD_TRIS        TRISDbits.TRISD5
+#define M4_FORWARD_IO           LATDbits.LATD7
+#define M4_FORWARD_TRIS         TRISDbits.TRISD7
+#define M4_BACKWARD_IO          LATFbits.LATF0
+#define M4_BACKWARD_TRIS        TRISFbits.TRISF0
 
 #endif  //HARDWARE_PROFILE_UBW32_H

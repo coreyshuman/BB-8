@@ -70,6 +70,7 @@
 // Hardware I/O pin mappings
 
 // LEDs
+/*
 #define LED0_TRIS			(TRISDbits.TRISD0)	// Ref LED1
 #define LED0_IO				(LATDbits.LATD0)
 #define LED1_TRIS			(TRISDbits.TRISD1)	// Ref LED2
@@ -104,7 +105,7 @@
 // or STACK_USE_UART2TCP_BRIDGE features are enabled.
 #define UARTTX_TRIS			(TRISFbits.TRISF3)
 #define UARTRX_TRIS			(TRISFbits.TRISF2)
-
+*/
 
 // Specify which SPI to use for the ENC28J60 or ENC624J600.  SPI1 is
 // the topmost slot with pin 1 on it.  SPI2 is the middle slot

@@ -463,6 +463,31 @@ void USBCBEP0DataReceived(void)
 }
 #endif
 
+/********************************************************************
+ * Function:        void USBCB_SOF_Handler(void)
+ *
+ * PreCondition:    None
+ *
+ * Input:           None
+ *
+ * Output:          None
+ *
+ * Side Effects:    None
+ *
+ * Overview:        The USB host sends out a SOF packet to full-speed
+ *                  devices every 1 ms. This interrupt may be useful
+ *                  for isochronous pipes. End designers should
+ *                  implement callback routine as necessary.
+ *
+ * Note:            None
+ *******************************************************************/
+void USBCB_SOF_Handler(void)
+{
+    // No need to clear UIRbits.SOFIF to 0 here.
+    // Callback caller is already doing that.
+
+}
+
 /*******************************************************************
  * Function:        BOOL USER_USB_CALLBACK_EVENT_HANDLER(
  *                        USB_EVENT event, void *pdata, WORD size)
