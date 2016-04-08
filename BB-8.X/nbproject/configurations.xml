@@ -45,6 +45,7 @@
       <itemPath>diagnostic.h</itemPath>
       <itemPath>audio_controller.h</itemPath>
       <itemPath>serial_controller.h</itemPath>
+      <itemPath>navigation_controller.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -81,6 +82,7 @@
       <itemPath>diagnostic.c</itemPath>
       <itemPath>audio_controller.c</itemPath>
       <itemPath>serial_controller.c</itemPath>
+      <itemPath>navigation_controller.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

@@ -35,6 +35,7 @@
 #include "OLED_driver.h"
 #include "receiver.h"
 #include "diagnostic.h"
+#include "navigation_controller.h"
 
 enum SM_DIAG {
     SM_DIAG_CLEAR = 0,
@@ -47,6 +48,8 @@ DWORD debugMap;
 enum DIAG_MOD debugModule;
 
 static double pry[3];
+BOOL dArmed;
+BOOL dAccelEnabled;
 
 void OledReceiverBar(int idx, int val);
 
@@ -54,6 +57,8 @@ void DiagInit(void)
 {
     debugMap = 0ul;
     pry[0] = pry[1] = pry[2] = 0;
+    dArmed = FALSE;
+    dAccelEnabled = FALSE;
     sm = SM_DIAG_CLEAR;
     
 }
@@ -87,13 +92,21 @@ void DiagProcess(void)
                 sprintf(str, "P%6.1f", (double)pry[0]);
                 OLED_text(5,0,str,1);
                 sprintf(str, "R%6.1f", (double)pry[1]);
-                OLED_text(5,7,str,1);
+                OLED_text(5,8,str,1);
                 sprintf(str, "Y%6.1f", (double)pry[2]);
-                OLED_text(5,15,str,1);
+                OLED_text(5,16,str,1);
+                if(dArmed)
+                    OLED_text(5,24, "ARMED ",1);
+                else
+                    OLED_text(5,24, "DISARM",1);
+                if(dAccelEnabled)
+                    OLED_text(5,32, "ACCEL ",1);
+                else
+                    OLED_text(5,32, "STATIC",1);
                 // update receiver readings
                 for(i=1; i<=8; i++)
                 {
-                    OledReceiverBar(i,ReceiverGetPulse(i));
+                    OledReceiverBar(i,NavigationGetTelemetry(i));
                 }
                 sm ++;
                 break;
@@ -104,30 +117,32 @@ void DiagProcess(void)
     }
 }
 
-void PrintAccelToOled(double vpry[])
+void PrintAccelToOled(double vpry[], BOOL armed, BOOL accelEnabled)
 {
     pry[0] = vpry[0];
     pry[1] = vpry[1];
     pry[2] = vpry[2];
+    dArmed = armed;
+    dAccelEnabled = accelEnabled;
 }
 
+/* Take value of 0 - 255 and map to 9 bar graph*/
 void OledReceiverBar(int idx, int val)
 {
     char bar[10] = ".........";
 
-    if(val < 950)
+    if(val < 23)
     {
         bar[0] = '<';
     }
-    else if(val > 2050)
+    else if(val > 230)
     {
         bar[8] = '>';
     }
     else
     {
-        val += 55;
-        val /= 111;
-        val -= 9;
+        val /= 23;
+        val -= 1;
         bar[val] = '|';
     }
 

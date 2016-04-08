@@ -35,8 +35,8 @@ void _mon_putc(char c);
 
 const unsigned char CharacterArray[]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
-char Console_In_Buffer[64];
-char Console_Out_Buffer[128];
+char Console_In_Buffer[1024];
+char Console_Out_Buffer[1024];
 char USB_Out_Buffer[sizeof(Console_Out_Buffer)]; // buffer must not change while usb operation is on-going
 unsigned int Console_RX_Start_Pointer;
 unsigned int Console_RX_End_Pointer;
@@ -164,18 +164,18 @@ void ConsolePut(const char c)
 void debug(const char* str, ...)
 {
     va_list arglist;
-    char PrintStr[128];
+    char PrintStr[512];
 
     int NumChars;
 
     va_start(arglist,str);
 
-    NumChars = vsnprintf(PrintStr,128, str,arglist);
+    NumChars = vsnprintf(PrintStr,sizeof(PrintStr), str,arglist);
 
     va_end(arglist);
 
     // Now send it out the serial port one byte at a time
-    if(NumChars > 0 && NumChars < 128)
+    if(NumChars > 0 && NumChars < sizeof(PrintStr))
     {
         ConsoleSend(PrintStr, NumChars);
     }

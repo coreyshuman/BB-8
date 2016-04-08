@@ -85,6 +85,7 @@
 #include "diagnostic.h"
 #include "audio_controller.h"
 #include "serial_controller.h"
+#include "navigation_controller.h"
 
 /** V A R I A B L E S ********************************************************/
 #if defined(__18CXX)
@@ -134,10 +135,11 @@ int main(void)
         // Application related code may be added here, or in the ProcessIO() function.
         ProcessIO();
         BlinkStatusLED();
-        ConsoleProcess(); // call consoleproc first to load data for usb
-        ProcessUSB();
+        ConsoleProcess(); // call consoleproc here to load data for usb
+        ProcessUSB(); // call after consoleproc
         MpuProcess();
-        SerialProc();
+        SerialProcess();
+        NavigationProcess(); // do this before motor and servo proc
         MotorProcess();
         ServoProcess();
         DiagProcess();
@@ -200,13 +202,15 @@ void InitializeSystem(void)
 
     MpuInit();
     debug(" MPU_OK");
-    ReceiverInit();
-    debug(" RX_OK");
+    //ReceiverInit();
+    //debug(" RX_OK");
     ServoInit();
     debug( " SRV_OK");
     AudioInit();
     debug( " AUD_OK");
-
+    NavigationInit();
+    debug(" NAV_OK");
+    
     OLED_init();
     debug(" OLED_INIT");
     OLED_clear();
@@ -215,6 +219,7 @@ void InitializeSystem(void)
     debug(" OLED_LOGO");
     OLED_write(OLED_ADDR);
     debug(" OLED_WRITE");
+
 
 
     debug("\r\nInit Complete.\r\n");

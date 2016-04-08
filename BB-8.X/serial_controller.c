@@ -59,7 +59,7 @@ enum SERIAL_RESPONSE {
 struct HandlerDef {
   char command[MAX_COMMAND_LENGTH];
   BYTE maxArguments;
-  void (*func)(char*[MAX_ARGUMENT_LENGTH], int);
+  void (*func)(char[][MAX_ARGUMENT_LENGTH] , int);
 };
 
 // Constants
@@ -89,28 +89,6 @@ BYTE serArgumentCount;
 struct HandlerDef serHandlers[MAX_HANDLERS];
 BYTE serHandlerCount;
 
-int throttle;
-int yaw;
-int pitch;
-int roll;
-
-// cts - temporary function
-void ReadTelemetry(char* arg[MAX_ARGUMENT_LENGTH], int argc)
-{
-    if(isDiagFilterOn(DBG_SERIAL)) {
-        debug("RUN READ TELEMETRY\r\n");
-    }
-
-    if(argc == 4)
-    {
-        throttle = strtol(&arg[0], NULL, 16);
-        yaw = strtol(&arg[1], NULL, 16);
-        pitch = strtol(&arg[2], NULL, 16);
-        roll = strtol(&arg[3], NULL, 16);
-        debug("throttle=%d, yaw=%d, pitch=%d, roll=%d\r\n", throttle, yaw, pitch, roll);
-    }
-}
-
 void SerialInit(void)
 {
     //OpenUART2A(UART_EN, (1 << 12)|UART_TX_ENABLE, (SYS_FREQ/(1<<mOSCGetPBDIV())/16)/BAUD_RATE-1);
@@ -131,10 +109,6 @@ void SerialInit(void)
     SerialReset();
     UART_RX_ClearBuffer();
 
-    throttle = yaw = pitch = roll = 0;
-
-    SerialAddHandler("tel", 4, ReadTelemetry);
-
     // cts debug
     enableDiagFilter(DBG_SERIAL);
     
@@ -143,7 +117,7 @@ void SerialInit(void)
 
 
 /* Call periodically to run the handler */
-void SerialProc(void)
+void SerialProcess(void)
 {
     SetModule(MOD_SERIAL);
 
@@ -284,7 +258,7 @@ int SerialFindHandler(char* command)
 }
 
 /* Add a command handler function to handler pool */
-int SerialAddHandler(char* command, BYTE maxArguments, void (*func)(char**, int))
+int SerialAddHandler(char* command, BYTE maxArguments, void (*func)(char[][MAX_ARGUMENT_LENGTH], int))
 {
     if(serHandlerCount >= MAX_HANDLERS)
     {

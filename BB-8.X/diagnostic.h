@@ -11,6 +11,7 @@
 #define DBG_MPU         0x00000001
 #define DBG_AUDIO       0x00000002
 #define DBG_SERIAL      0x00000004
+#define DBG_NAV         0x00000008
 
 
 #define enableDiagFilter(x)      (debugMap |= x)
@@ -31,7 +32,8 @@ enum DIAG_MOD {
     MOD_RECV,
     MOD_SERIAL,
     MOD_SERVO,
-    MOD_USB
+    MOD_USB,
+    MOD_NAV
 
 };
 extern enum DIAG_MOD debugModule;
@@ -42,7 +44,7 @@ extern DWORD debugMap;
 
 void DiagInit(void);
 void DiagProcess(void);
-void PrintAccelToOled(double pry[]);
+void PrintAccelToOled(double vpry[], BOOL armed, BOOL accelEnabled);
 
 
 

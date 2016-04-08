@@ -93,7 +93,7 @@ static enum {
       OpenTimer4(T4_OFF | T4_PS_1_1, 1);
 
       // stop motors
-      StopMotors();
+      MotorsStop();
 
       // print exception to screen
       OLED_clear();

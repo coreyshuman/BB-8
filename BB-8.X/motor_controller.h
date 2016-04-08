@@ -12,10 +12,9 @@
 extern "C" {
 #endif
 
-    #define MAX_SPEED               550     // max speed in scaled pulses
-    #define DIRECT_MOTOR_CONTROL
-    #define MAX_ANGLE               30      // max frame will rotate before countering motion
-    #define IMU_DEADBAND            7      // degrees of center deadband
+    
+    
+    
     #define MIN_MOTOR_THRESHOLD     20      // minimum RC input that will trigger motion
     #define MIN_MOTOR_SPEED         50      // smallest motor speed to output to motors
 
@@ -27,8 +26,8 @@ extern "C" {
 
     void MotorInit(void);
     void MotorProcess(void);
-    void SetPRYOffset(void);
-    void StopMotors(void);
+    void MotorsStop(void);
+    void MotorUpdate(BYTE motor, int speed);
 
 
 #ifdef	__cplusplus

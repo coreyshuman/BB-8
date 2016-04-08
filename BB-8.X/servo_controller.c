@@ -124,7 +124,7 @@ void ServoProcess(void)
     }
 }
 
-void UpdatePitch(double aPitch)
+void ServoUpdatePitch(double aPitch)
 {
     pitch = aPitch;
 }

@@ -23,8 +23,8 @@ extern "C" {
     #define MAX_HANDLERS            10
 
     void SerialInit(void);
-    void SerialProc(void);
-    int SerialAddHandler(char* command, BYTE maxArguments, void (*func)(char**, int));
+    void SerialProcess(void);
+    int SerialAddHandler(char* command, BYTE maxArguments, void (*func)(char[][MAX_ARGUMENT_LENGTH], int));
 
 
 #ifdef	__cplusplus

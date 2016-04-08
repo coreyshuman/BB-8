@@ -14,7 +14,7 @@ extern "C" {
 
     void ServoInit(void);
     void ServoProcess(void);
-    void UpdatePitch(double aPitch);
+    void ServoUpdatePitch(double aPitch);
 
 
 #ifdef	__cplusplus
