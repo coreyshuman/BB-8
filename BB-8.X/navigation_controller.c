@@ -45,6 +45,8 @@
 #define SPEED_SCALE         2 // 500 to 1000
 #define MAX_SPEED           500     // max speed in nav scale
 #define NAV_DATA_TIMEOUT    TICK_SECOND/5 // data is only valid for 200ms
+#define PITCH_RATIO         5.56    // (2000us - 1000us) / 180 degrees
+                                    // used to convert 1000 resolution to 180 degrees
 
 // global variables
 // nav command values are range 0 to 255, where 128 is neutral
@@ -55,6 +57,9 @@ DWORD lastNavTick;
 BOOL newNavData;
 double pry_offset[3];
 double pry[3];
+int headAngleValues[2][10];
+int headAngleAverage[2];
+BYTE loadingAverageCnt;
 
 // function definitions
 WORD calcSpeed(WORD angle, WORD speed);
@@ -68,7 +73,7 @@ void SetPRYOffset(void);
 /* init */
 void NavigationInit(void)
 {
-    int i;
+    int i, j;
     navArmed = FALSE;
     lastNavTick = 0;
     newNavData = FALSE;
@@ -83,6 +88,15 @@ void NavigationInit(void)
     {
         pry[i] = 0;
         pry_offset[i] = 0;
+    }
+
+    loadingAverageCnt = 0;
+    for(i=0; i<2; i++)
+    {
+        for(j=0; j<10; j++)
+        {
+            headAngleValues[i][j] = 1500;
+        }
     }
 
     SerialAddHandler("navtel", 4, ReadTelemetry);
@@ -124,8 +138,8 @@ void NavigationProcess(void)
     }
 
     // get nav control data, scaled from -500 to +500
-    xSpeed = (navData[0]-0x80) * NAV_SCALE;
-    ySpeed = (navData[1]-0x80) * NAV_SCALE;
+    xSpeed = (navData[1]-0x80) * NAV_SCALE;
+    ySpeed = (navData[0]-0x80) * NAV_SCALE;
     rotation = (navData[2]-0x80) * NAV_SCALE;
 
     if(navArmed)
@@ -152,6 +166,7 @@ void NavigationProcess(void)
         accelLastState = FALSE;
         mLED_3_Off();
     }
+
 
     // get IMU data, quaternion format
     get_quat(q);
@@ -199,13 +214,66 @@ void NavigationProcess(void)
         pry[1] = asin(2*qd[0]*qd[2] - 2*qd[1]*qd[3]) * M_180_PI; // roll
         pry[2] = atan2(2*qd[0]*qd[3] + 2*qd[1]*qd[2], 1 - 2*qd[2]*qd[2] + 2*qd[3]*qd[3]) * M_180_PI; // yaw
 
-        // send pitch to servos
-        if(accelEnabled) // CTS TODO: may need to reinit when disabled
-            ServoUpdatePitch(pry[0]);
     }
 
     if(isDiagFilterOn(DBG_NAV)) {
         debug("pitch: %3f roll: %3f yaw: %3f\r\n", pry[0], pry[1], pry[2]);
+    }
+
+    // process servo values for head stalk
+    // shift averages
+    for(i=10; i>1; i--)
+    {
+        headAngleValues[0][i-1] = headAngleValues[0][i-2];
+        headAngleValues[1][i-1] = headAngleValues[1][i-2];
+    }
+
+    // get values, scaled from -500 to 500
+    headAngleValues[0][0] = (navData[3]-0x80) * NAV_SCALE;
+    headAngleValues[1][0] = (navData[4]-0x80) * NAV_SCALE;
+    if(headAngleValues[0][0] > 500)
+        headAngleValues[0][0] = 500;
+    else if(headAngleValues[0][0] < -500)
+        headAngleValues[0][0] = -500;
+    if(headAngleValues[1][0] > 500)
+        headAngleValues[1][0] = 500;
+    else if(headAngleValues[1][0] < -500)
+        headAngleValues[1][0] = -500;
+
+    if(loadingAverageCnt < 10)
+    {
+        loadingAverageCnt ++;
+    }
+    else
+    {
+        // calc average
+        headAngleAverage[0] = 0;
+        headAngleAverage[1] = 0;
+        for(i=0; i<10; i++)
+        {
+            headAngleAverage[0] += headAngleValues[0][i];
+            headAngleAverage[1] += headAngleValues[1][i];
+        }
+        headAngleAverage[0] /= 10;
+        headAngleAverage[1] /= 10;
+
+        // adjust for pitch if accel is armed
+        if(accelEnabled)
+        {
+            headAngleAverage[0] += pry[0] * PITCH_RATIO;
+        }
+        
+        if(headAngleAverage[0] > 500)
+        {
+            headAngleAverage[0] = 500;
+        }
+        else if(headAngleAverage[0] < -500)
+        {
+            headAngleAverage[0] = -500;
+        }
+
+        // send value to servos
+        ServoUpdate(headAngleAverage[0]*SPEED_SCALE, headAngleAverage[1]*SPEED_SCALE);
     }
 
     // calculate motor output from RC and IMU data
@@ -258,7 +326,7 @@ void NavigationProcess(void)
     }
     else
     {
-        speed = (int)sqrt(pow(xSpeed,2) + pow(ySpeed,2));
+        speed = (int)sqrt(xSpeed*xSpeed + ySpeed*ySpeed);
     }
 
     angle = (WORD)((atan2(xSpeed, ySpeed) * M_180_PI) + 360) % 360;

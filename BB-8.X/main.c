@@ -220,9 +220,13 @@ void InitializeSystem(void)
     OLED_write(OLED_ADDR);
     debug(" OLED_WRITE");
 
-
-
     debug("\r\nInit Complete.\r\n");
+
+    // enter diagnostic mode if USER button is held down here
+    if(mSwitch2)
+    {
+        while(!DiagnosticTestMode());
+    }
 
 }//end InitializeSystem
 

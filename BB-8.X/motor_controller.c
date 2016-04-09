@@ -86,7 +86,7 @@ void MotorProcess(void)
     int i;
     for(i = 1; i <= 4; i++)
     {
-        WORD speed = motorSpeed[i-1];
+        int speed = motorSpeed[i-1];
         if(speed > MIN_MOTOR_THRESHOLD )
         {
             if(speed < MIN_MOTOR_SPEED)
@@ -129,6 +129,7 @@ void MotorUpdate(BYTE motor, int speed)
 //   uint speed: 0 - 1000
 void MotorState(BYTE motor, MOTOR_STATE dir, WORD speed)
 {
+    //debug("M%d d%d s%d\r\n", motor, dir, speed);
     if(dir == MOTOR_FORWARD)
     {
         if(motor == 1)

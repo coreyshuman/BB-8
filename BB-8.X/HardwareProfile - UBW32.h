@@ -115,8 +115,8 @@
 #define mInitSwitch2()      TRISEbits.TRISE7=1;
 #define mInitSwitch3()      TRISEbits.TRISE6=1;
 #define mInitAllSwitches()  mInitSwitch2();mInitSwitch3();
-#define sw2                 PORTEbits.RE7
-#define sw3                 PORTEbits.RE6
+#define mSwitch2            !PORTEbits.RE7
+#define mSwitch3            !PORTEbits.RE6
 
 /** I/O pin definitions ********************************************/
 #define INPUT_PIN 1

@@ -36,7 +36,11 @@
 #include "receiver.h"
 #include "diagnostic.h"
 #include "navigation_controller.h"
+#include "motor_controller.h"
+#include "usb_support.h"
+#include "console.h"
 
+// enums
 enum SM_DIAG {
     SM_DIAG_CLEAR = 0,
     SM_DIAG_UPDATE,
@@ -44,15 +48,33 @@ enum SM_DIAG {
 
 } sm;
 
+enum DIAGNOSTIC_STATE {
+    DS_INIT = 0,
+    DS_M1F,
+    DS_M1B,
+    DS_M2F,
+    DS_M2B,
+    DS_M3F,
+    DS_M3B,
+    DS_M4F,
+    DS_M4B,
+    DS_ENDWAIT,
+    DS_END
+};
+
+
+// static variables
 DWORD debugMap;
 enum DIAG_MOD debugModule;
-
 static double pry[3];
 BOOL dArmed;
 BOOL dAccelEnabled;
 
+// function declerations
 void OledReceiverBar(int idx, int val);
+void DiagnosticUpdateTestScreen(BOOL showTest, const char* str);
 
+// functions
 void DiagInit(void)
 {
     debugMap = 0ul;
@@ -147,4 +169,122 @@ void OledReceiverBar(int idx, int val)
     }
 
     OLED_text(70,idx*8-9,bar,1);
+}
+
+/* Test mode to walk through hardware tests
+ * Currently tests motors
+ * Test is done when returns true
+ */
+BOOL DiagnosticTestMode(void)
+{
+    int ret = FALSE;
+    static enum DIAGNOSTIC_STATE dsState = DS_INIT;
+    static BOOL dsWait = FALSE;
+    static BOOL btnPressed = TRUE;
+    static DWORD dsTick = 0;
+
+    // delay for debouncing
+    if(TickGet() - dsTick < TICK_SECOND/5)
+        return FALSE;
+
+    dsTick = TickGet();
+
+    ConsoleProcess();
+    ProcessUSB();
+
+    if(!btnPressed && mSwitch2)
+    {
+        btnPressed = TRUE;
+        dsWait = FALSE;
+    }
+    else if(btnPressed && !mSwitch2)
+    {
+        btnPressed = FALSE;
+    }
+
+    if(dsWait)
+        return FALSE;
+
+    switch(dsState)
+    {
+        case DS_INIT:
+            DiagnosticUpdateTestScreen(TRUE, "");
+            dsWait = TRUE;
+            dsState++;
+            break;
+        case DS_M1F:
+            DiagnosticUpdateTestScreen(TRUE, "Motor 1 Forward");
+            MotorUpdate(1, 1000);
+            dsWait = TRUE;
+            dsState++;
+            break;
+         case DS_M1B:
+            DiagnosticUpdateTestScreen(TRUE, "Motor 1 Backward");
+            MotorUpdate(1, -1000);
+            dsWait = TRUE;
+            dsState++;
+            break;
+        case DS_M2F:
+            DiagnosticUpdateTestScreen(TRUE, "Motor 2 Forward");
+            MotorUpdate(1, 0);
+            MotorUpdate(2, 1000);
+            dsWait = TRUE;
+            dsState++;
+            break;
+        case DS_M2B:
+            DiagnosticUpdateTestScreen(TRUE, "Motor 2 Backward");
+            MotorUpdate(2, -1000);
+            dsWait = TRUE;
+            dsState++;
+            break;
+        case DS_M3F:
+            DiagnosticUpdateTestScreen(TRUE, "Motor 3 Forward");
+            MotorUpdate(2, 0);
+            MotorUpdate(3, 1000);
+            dsWait = TRUE;
+            dsState++;
+            break;
+        case DS_M3B:
+            DiagnosticUpdateTestScreen(TRUE, "Motor 3 Backward");
+            MotorUpdate(3, -1000);
+            dsWait = TRUE;
+            dsState++;
+            break;
+        case DS_M4F:
+            DiagnosticUpdateTestScreen(TRUE, "Motor 4 Forward");
+            MotorUpdate(3, 0);
+            MotorUpdate(4, 1000);
+            dsWait = TRUE;
+            dsState++;
+            break;
+        case DS_M4B:
+            DiagnosticUpdateTestScreen(TRUE, "Motor 4 Backward");
+            MotorUpdate(4, -1000);
+            dsWait = TRUE;
+            dsState++;
+            break;
+        case DS_ENDWAIT:
+            DiagnosticUpdateTestScreen(FALSE, "Complete!");
+            MotorsStop();
+            dsWait = TRUE;
+            dsState++;
+            break;
+        case DS_END:
+            ret = TRUE;
+            break;
+    }
+
+    // allow processes that we need for test to run
+    MotorProcess();
+    return ret;
+}
+
+void DiagnosticUpdateTestScreen(BOOL showTest, const char* str)
+{
+    OLED_clear();
+    OLED_text(5,0,"Diagnostic",2);
+    if(showTest)
+        OLED_text(5,24,"Test: ",1);
+    OLED_text(5,32,str,1);
+    OLED_write(OLED_ADDR);
 }

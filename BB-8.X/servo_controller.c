@@ -36,95 +36,40 @@
 
 #define SERVO_TIMER_PERIOD 25000    // 50 hz (80000000 / 64 / 50)
 #define SERVO_SPEED_MULT    1.25    // (25000*1.5ms/20ms)/1500us (1.5 ms)
-#define PITCH_RATIO         5.56    // (2000us - 1000us) / 180 degrees
 
-int servoAverageValues[2][10];
-BYTE loadingAverageCnt;
-double pitch;
+
+
+WORD servoValues[2];     // -1000 to 1000
 
 
 void ServoInit(void)
 {
-    int i,j;
-
     // head servos
     OpenOC4(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
     OpenOC5(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
     OpenTimer2(T2_ON | T2_PS_1_64, 25000);
-
-    pitch = 0;
-    loadingAverageCnt = 0;
-    for(i=0; i<2; i++)
-    {
-        for(j=0; j<10; j++)
-        {
-            servoAverageValues[i][j] = 1500;
-        }
-    }
+    servoValues[0] = 0; // center
+    servoValues[1] = 0; // center
 }
 
 void ServoProcess(void)
 {
-    int i;
-    int servoAverage[2];
-    int temp;
-
     SetModule(MOD_SERVO);
 
-    // shift averages
-    for(i=10; i>1; i--)
-    {
-        servoAverageValues[0][i-1] = servoAverageValues[0][i-2];
-        servoAverageValues[1][i-1] = servoAverageValues[1][i-2];
-    }
+    // scale from -1000,1000 to 1000,2000
+    WORD s1Value = servoValues[0]/2 + 1500;
+    WORD s2Value = servoValues[1]/2 + 1500;
 
-    // get values
-    temp = ReceiverGetPulse(5);
-    if(temp > 900 && temp < 2100)
-    {
-        servoAverageValues[0][0] = temp;
-    }
-    temp = ReceiverGetPulse(6);
-    if(temp > 900 && temp < 2100)
-    {
-        servoAverageValues[1][0] = temp;
-    }
-
-    if(loadingAverageCnt < 10)
-    {
-        loadingAverageCnt ++;
-    }
-    else
-    {
-        // calc average
-        servoAverage[0] = 0;
-        servoAverage[1] = 0;
-        for(i=0; i<10; i++)
-        {
-            servoAverage[0] += servoAverageValues[0][i];
-            servoAverage[1] += servoAverageValues[1][i];
-        }
-        servoAverage[0] /= 10;
-        servoAverage[1] /= 10;
-
-        // add pitch offset to gimbal
-        servoAverage[0] += pitch * PITCH_RATIO;
-        if(servoAverage[0] > 2000)
-        {
-            servoAverage[0] = 2000;
-        }
-        else if(servoAverage[0] < 1000)
-        {
-            servoAverage[0] = 1000;
-        }
-
-        // set servo
-        SetDCOC4PWM((int)(servoAverage[0] * SERVO_SPEED_MULT));
-        SetDCOC5PWM((int)(servoAverage[1] * SERVO_SPEED_MULT));
-    }
+    // set servo
+    SetDCOC4PWM((int)(s1Value * SERVO_SPEED_MULT));
+    SetDCOC5PWM((int)(s2Value * SERVO_SPEED_MULT));
+    
 }
 
-void ServoUpdatePitch(double aPitch)
+void ServoUpdate(WORD s1, WORD s2)
 {
-    pitch = aPitch;
+    if(s1 <= 1000 && s1 >= -1000)
+        servoValues[0] = s1;
+    if(s2 <= 1000 && s2 >= -1000)
+        servoValues[1] = s2;
 }
