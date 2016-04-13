@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c "../../../Microchip/TCPIP Stack/Tick.c" "../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c" ../../../Microchip/USB/usb_device.c main.c usb_descriptors.c usb_support.c console.c device_i2c.c time.c mpu_support.c receiver.c motor_controller.c quaternion.c servo_controller.c exception_handler.c OLED_driver.c diagnostic.c audio_controller.c serial_controller.c navigation_controller.c
+SOURCEFILES_QUOTED_IF_SPACED=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c "../../../Microchip/TCPIP Stack/Tick.c" "../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c" ../../../Microchip/USB/usb_device.c main.c usb_descriptors.c usb_support.c console.c device_i2c.c time.c mpu_support.c receiver.c motor_controller.c quaternion.c servo_controller.c exception_handler.c OLED_driver.c diagnostic.c audio_controller.c serial_controller.c navigation_controller.c lighting_controller.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/_ext/1954962658/Tick.o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o ${OBJECTDIR}/_ext/549097302/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/time.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o ${OBJECTDIR}/motor_controller.o ${OBJECTDIR}/quaternion.o ${OBJECTDIR}/servo_controller.o ${OBJECTDIR}/exception_handler.o ${OBJECTDIR}/OLED_driver.o ${OBJECTDIR}/diagnostic.o ${OBJECTDIR}/audio_controller.o ${OBJECTDIR}/serial_controller.o ${OBJECTDIR}/navigation_controller.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/empl/inv_mpu.o.d ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d ${OBJECTDIR}/_ext/1954962658/Tick.o.d ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d ${OBJECTDIR}/_ext/549097302/usb_device.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/usb_descriptors.o.d ${OBJECTDIR}/usb_support.o.d ${OBJECTDIR}/console.o.d ${OBJECTDIR}/device_i2c.o.d ${OBJECTDIR}/time.o.d ${OBJECTDIR}/mpu_support.o.d ${OBJECTDIR}/receiver.o.d ${OBJECTDIR}/motor_controller.o.d ${OBJECTDIR}/quaternion.o.d ${OBJECTDIR}/servo_controller.o.d ${OBJECTDIR}/exception_handler.o.d ${OBJECTDIR}/OLED_driver.o.d ${OBJECTDIR}/diagnostic.o.d ${OBJECTDIR}/audio_controller.o.d ${OBJECTDIR}/serial_controller.o.d ${OBJECTDIR}/navigation_controller.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/_ext/1954962658/Tick.o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o ${OBJECTDIR}/_ext/549097302/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/time.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o ${OBJECTDIR}/motor_controller.o ${OBJECTDIR}/quaternion.o ${OBJECTDIR}/servo_controller.o ${OBJECTDIR}/exception_handler.o ${OBJECTDIR}/OLED_driver.o ${OBJECTDIR}/diagnostic.o ${OBJECTDIR}/audio_controller.o ${OBJECTDIR}/serial_controller.o ${OBJECTDIR}/navigation_controller.o ${OBJECTDIR}/lighting_controller.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/empl/inv_mpu.o.d ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d ${OBJECTDIR}/_ext/1954962658/Tick.o.d ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o.d ${OBJECTDIR}/_ext/549097302/usb_device.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/usb_descriptors.o.d ${OBJECTDIR}/usb_support.o.d ${OBJECTDIR}/console.o.d ${OBJECTDIR}/device_i2c.o.d ${OBJECTDIR}/time.o.d ${OBJECTDIR}/mpu_support.o.d ${OBJECTDIR}/receiver.o.d ${OBJECTDIR}/motor_controller.o.d ${OBJECTDIR}/quaternion.o.d ${OBJECTDIR}/servo_controller.o.d ${OBJECTDIR}/exception_handler.o.d ${OBJECTDIR}/OLED_driver.o.d ${OBJECTDIR}/diagnostic.o.d ${OBJECTDIR}/audio_controller.o.d ${OBJECTDIR}/serial_controller.o.d ${OBJECTDIR}/navigation_controller.o.d ${OBJECTDIR}/lighting_controller.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/_ext/1954962658/Tick.o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o ${OBJECTDIR}/_ext/549097302/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/time.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o ${OBJECTDIR}/motor_controller.o ${OBJECTDIR}/quaternion.o ${OBJECTDIR}/servo_controller.o ${OBJECTDIR}/exception_handler.o ${OBJECTDIR}/OLED_driver.o ${OBJECTDIR}/diagnostic.o ${OBJECTDIR}/audio_controller.o ${OBJECTDIR}/serial_controller.o ${OBJECTDIR}/navigation_controller.o
+OBJECTFILES=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/_ext/1954962658/Tick.o ${OBJECTDIR}/_ext/382171365/usb_function_cdc.o ${OBJECTDIR}/_ext/549097302/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/time.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o ${OBJECTDIR}/motor_controller.o ${OBJECTDIR}/quaternion.o ${OBJECTDIR}/servo_controller.o ${OBJECTDIR}/exception_handler.o ${OBJECTDIR}/OLED_driver.o ${OBJECTDIR}/diagnostic.o ${OBJECTDIR}/audio_controller.o ${OBJECTDIR}/serial_controller.o ${OBJECTDIR}/navigation_controller.o ${OBJECTDIR}/lighting_controller.o
 
 # Source Files
-SOURCEFILES=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c ../../../Microchip/TCPIP Stack/Tick.c ../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c ../../../Microchip/USB/usb_device.c main.c usb_descriptors.c usb_support.c console.c device_i2c.c time.c mpu_support.c receiver.c motor_controller.c quaternion.c servo_controller.c exception_handler.c OLED_driver.c diagnostic.c audio_controller.c serial_controller.c navigation_controller.c
+SOURCEFILES=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c ../../../Microchip/TCPIP Stack/Tick.c ../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c ../../../Microchip/USB/usb_device.c main.c usb_descriptors.c usb_support.c console.c device_i2c.c time.c mpu_support.c receiver.c motor_controller.c quaternion.c servo_controller.c exception_handler.c OLED_driver.c diagnostic.c audio_controller.c serial_controller.c navigation_controller.c lighting_controller.c
 
 
 CFLAGS=
@@ -223,6 +223,12 @@ ${OBJECTDIR}/navigation_controller.o: navigation_controller.c  nbproject/Makefil
 	@${RM} ${OBJECTDIR}/navigation_controller.o 
 	@${FIXDEPS} "${OBJECTDIR}/navigation_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I"." -I"../" -MMD -MF "${OBJECTDIR}/navigation_controller.o.d" -o ${OBJECTDIR}/navigation_controller.o navigation_controller.c   
 	
+${OBJECTDIR}/lighting_controller.o: lighting_controller.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/lighting_controller.o.d 
+	@${RM} ${OBJECTDIR}/lighting_controller.o 
+	@${FIXDEPS} "${OBJECTDIR}/lighting_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I"." -I"../" -MMD -MF "${OBJECTDIR}/lighting_controller.o.d" -o ${OBJECTDIR}/lighting_controller.o lighting_controller.c   
+	
 else
 ${OBJECTDIR}/empl/inv_mpu.o: empl/inv_mpu.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/empl 
@@ -356,6 +362,12 @@ ${OBJECTDIR}/navigation_controller.o: navigation_controller.c  nbproject/Makefil
 	@${RM} ${OBJECTDIR}/navigation_controller.o 
 	@${FIXDEPS} "${OBJECTDIR}/navigation_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I"." -I"../" -MMD -MF "${OBJECTDIR}/navigation_controller.o.d" -o ${OBJECTDIR}/navigation_controller.o navigation_controller.c   
 	
+${OBJECTDIR}/lighting_controller.o: lighting_controller.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/lighting_controller.o.d 
+	@${RM} ${OBJECTDIR}/lighting_controller.o 
+	@${FIXDEPS} "${OBJECTDIR}/lighting_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"../../../Microchip/Include" -I"." -I"../" -MMD -MF "${OBJECTDIR}/lighting_controller.o.d" -o ${OBJECTDIR}/lighting_controller.o lighting_controller.c   
+	
 endif
 
 # ------------------------------------------------------------------------------------
@@ -369,12 +381,12 @@ endif
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
 dist/${CND_CONF}/${IMAGE_TYPE}/BB-8.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk    procdef.ld
 	@${MKDIR} dist/${CND_CONF}/${IMAGE_TYPE} 
-	${MP_CC} $(MP_EXTRA_LD_PRE)    -mprocessor=$(MP_PROCESSOR_OPTION)  -o dist/${CND_CONF}/${IMAGE_TYPE}/BB-8.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"
+	${MP_CC} $(MP_EXTRA_LD_PRE)    -mprocessor=$(MP_PROCESSOR_OPTION)  -o dist/${CND_CONF}/${IMAGE_TYPE}/BB-8.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=_min_heap_size=4096,--defsym=_min_stack_size=4096,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"
 	
 else
 dist/${CND_CONF}/${IMAGE_TYPE}/BB-8.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk   procdef.ld
 	@${MKDIR} dist/${CND_CONF}/${IMAGE_TYPE} 
-	${MP_CC} $(MP_EXTRA_LD_PRE)  -mprocessor=$(MP_PROCESSOR_OPTION)  -o dist/${CND_CONF}/${IMAGE_TYPE}/BB-8.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"
+	${MP_CC} $(MP_EXTRA_LD_PRE)  -mprocessor=$(MP_PROCESSOR_OPTION)  -o dist/${CND_CONF}/${IMAGE_TYPE}/BB-8.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=_min_heap_size=4096,--defsym=_min_stack_size=4096,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"
 	${MP_CC_DIR}\\xc32-bin2hex dist/${CND_CONF}/${IMAGE_TYPE}/BB-8.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} 
 endif
 

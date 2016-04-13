@@ -46,6 +46,7 @@
       <itemPath>audio_controller.h</itemPath>
       <itemPath>serial_controller.h</itemPath>
       <itemPath>navigation_controller.h</itemPath>
+      <itemPath>lighting_controller.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -83,6 +84,7 @@
       <itemPath>audio_controller.c</itemPath>
       <itemPath>serial_controller.c</itemPath>
       <itemPath>navigation_controller.c</itemPath>
+      <itemPath>lighting_controller.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -178,7 +180,7 @@
         <property key="extra-lib-directories" value=""/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
-        <property key="heap-size" value=""/>
+        <property key="heap-size" value="4096"/>
         <property key="input-libraries" value=""/>
         <property key="linker-symbols" value=""/>
         <property key="map-file" value="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"/>
@@ -188,7 +190,7 @@
         <property key="preprocessor-macros" value=""/>
         <property key="remove-unused-sections" value="false"/>
         <property key="report-memory-usage" value="false"/>
-        <property key="stack-size" value=""/>
+        <property key="stack-size" value="4096"/>
         <property key="symbol-stripping" value=""/>
         <property key="trace-symbols" value=""/>
         <property key="warn-section-align" value="false"/>

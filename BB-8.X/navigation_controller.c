@@ -240,6 +240,10 @@ void NavigationProcess(void)
     else if(headAngleValues[1][0] < -500)
         headAngleValues[1][0] = -500;
 
+    // CTS TEST - try scaling user input -90,90 to -45,45
+    headAngleValues[0][0] /= 2;
+    headAngleValues[1][0] /= 2;
+
     if(loadingAverageCnt < 10)
     {
         loadingAverageCnt ++;

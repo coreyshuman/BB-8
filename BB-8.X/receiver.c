@@ -46,8 +46,9 @@ volatile char rcLastState[RX_INPUT_COUNT];
 void ReceiverInit(void)
 {
     int i;
-    OpenTimer4(T4_ON | T4_PS_1_1, RX_TIMER_PERIOD);
-    ConfigIntTimer4(T4_INT_ON | T4_INT_PRIOR_2 | T4_INT_SUB_PRIOR_3);
+    // timer 4 now used for neopixels
+    //OpenTimer4(T4_ON | T4_PS_1_1, RX_TIMER_PERIOD);
+    //ConfigIntTimer4(T4_INT_ON | T4_INT_PRIOR_2 | T4_INT_SUB_PRIOR_3);
 
     for(i=0; i<RX_INPUT_COUNT; i++)
     {
@@ -84,6 +85,8 @@ void ReceiverInit(void)
 #endif
 }
 
+// timer 4 now used for neopixels
+/*
 // Interrupt Timer Process
 void __attribute((interrupt(ipl2), vector(_TIMER_4_VECTOR), nomips16)) _T4Interrupt(void)
 {
@@ -232,7 +235,7 @@ void __attribute((interrupt(ipl2), vector(_TIMER_4_VECTOR), nomips16)) _T4Interr
     // Reset interrupt flag
     IFS0CLR = _IFS0_T4IF_MASK;
 }
-
+*/
 WORD ReceiverGetPulse(WORD chan)
 {
     if(chan < 1 || chan > RX_INPUT_COUNT)

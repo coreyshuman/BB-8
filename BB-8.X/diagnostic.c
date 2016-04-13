@@ -39,6 +39,7 @@
 #include "motor_controller.h"
 #include "usb_support.h"
 #include "console.h"
+#include "lighting_controller.h"
 
 // enums
 enum SM_DIAG {
@@ -50,6 +51,7 @@ enum SM_DIAG {
 
 enum DIAGNOSTIC_STATE {
     DS_INIT = 0,
+    DS_NEO,
     DS_M1F,
     DS_M1B,
     DS_M2F,
@@ -82,6 +84,8 @@ void DiagInit(void)
     dArmed = FALSE;
     dAccelEnabled = FALSE;
     sm = SM_DIAG_CLEAR;
+
+    
     
 }
 
@@ -182,6 +186,7 @@ BOOL DiagnosticTestMode(void)
     static BOOL dsWait = FALSE;
     static BOOL btnPressed = TRUE;
     static DWORD dsTick = 0;
+    static BYTE dsCount = 0;
 
     // delay for debouncing
     if(TickGet() - dsTick < TICK_SECOND/5)
@@ -209,8 +214,35 @@ BOOL DiagnosticTestMode(void)
     {
         case DS_INIT:
             DiagnosticUpdateTestScreen(TRUE, "");
-            dsWait = TRUE;
+            dsWait = FALSE;
             dsState++;
+            break;
+        case DS_NEO:
+            dsCount++;
+            if(dsCount == 5)
+            {
+                SetLedColor(1, 128,0,0);
+                SetLedColor(2, 0,128,0);
+                UpdateLighting();
+                DiagnosticUpdateTestScreen(TRUE, "Neopixel RED");
+            }
+            else if(dsCount == 10)
+            {
+                SetLedColor(1, 0,128,0);
+                SetLedColor(2, 0,0,128);
+                UpdateLighting();
+                DiagnosticUpdateTestScreen(TRUE, "Neopixel GREEN");
+            }
+            else if(dsCount == 15)
+            {
+                SetLedColor(1, 0,0,128);
+                SetLedColor(2, 128,0,0);
+                UpdateLighting();
+                DiagnosticUpdateTestScreen(TRUE, "Neopixel BLUE");
+                dsCount = 0;
+            }
+            if(btnPressed && dsCount == 10)
+                dsState++;
             break;
         case DS_M1F:
             DiagnosticUpdateTestScreen(TRUE, "Motor 1 Forward");

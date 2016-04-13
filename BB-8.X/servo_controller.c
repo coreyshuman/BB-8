@@ -39,14 +39,16 @@
 
 
 
-WORD servoValues[2];     // -1000 to 1000
+int servoValues[2];     // -1000 to 1000
 
 
 void ServoInit(void)
 {
     // head servos
-    OpenOC4(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
-    OpenOC5(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
+    // CTS DEBUG - disable servos for now
+    // CTS TODO - add arm/disarm for servos
+    //OpenOC4(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
+    //OpenOC5(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE,1875,1875);
     OpenTimer2(T2_ON | T2_PS_1_64, 25000);
     servoValues[0] = 0; // center
     servoValues[1] = 0; // center
@@ -55,7 +57,7 @@ void ServoInit(void)
 void ServoProcess(void)
 {
     SetModule(MOD_SERVO);
-
+    
     // scale from -1000,1000 to 1000,2000
     WORD s1Value = servoValues[0]/2 + 1500;
     WORD s2Value = servoValues[1]/2 + 1500;
@@ -66,7 +68,7 @@ void ServoProcess(void)
     
 }
 
-void ServoUpdate(WORD s1, WORD s2)
+void ServoUpdate(int s1, int s2)
 {
     if(s1 <= 1000 && s1 >= -1000)
         servoValues[0] = s1;

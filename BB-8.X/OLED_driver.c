@@ -193,39 +193,32 @@ void OLED_write(INT slave_addr)
 
 void  OLED_init(void)
 {
-    // I2CSetFrequency(I2C1, GetPeripheralClock(), I2C1_CLOCK_FREQ);
-    I2CConfigure ( I2C1, I2C_ENABLE_SLAVE_CLOCK_STRETCHING);
-    //I2CSetFrequency ( I2C1, 48000000, 300000);
-    I2CSetFrequency(I2C1, GetPeripheralClock(), I2C1_CLOCK_FREQ);
-    I2CEnable(I2C1, TRUE);
-
-    delay(500);
     int add = OLED_ADDR;
-   OLED_command (add, 0xae) ;
-   OLED_command (add, 0xa8);
-   OLED_command (add, 0x3f);
-   OLED_command (add, 0xd3);
-   OLED_command (add, 0x00);
-   OLED_command (add, 0x40);
+    OLED_command (add, 0xae) ;
+    OLED_command (add, 0xa8);
+    OLED_command (add, 0x3f);
+    OLED_command (add, 0xd3);
+    OLED_command (add, 0x00);
+    OLED_command (add, 0x40);
 
-   OLED_command (add, 0xa0);
-   OLED_command (add, 0xa1);
-   OLED_command (add, 0xc0);
+    OLED_command (add, 0xa0);
+    OLED_command (add, 0xa1);
+    OLED_command (add, 0xc0);
 
-   OLED_command (add, 0xc8);
-   OLED_command (add, 0xda);
-   OLED_command (add, 0x12);
-   OLED_command (add, 0x81);
-   OLED_command (add, 0xfF);
-   OLED_command (add, 0xa4);
-   OLED_command (add, 0xa6) ;
-   OLED_command (add, 0xd5);
-   OLED_command (add, 0x80);
-   OLED_command (add, 0x8d);
-   OLED_command (add, 0x14) ;
-   OLED_command (add, 0xAF) ;
-   OLED_command (add, 0x20) ;
-   OLED_command (add, 0x00) ;
+    OLED_command (add, 0xc8);
+    OLED_command (add, 0xda);
+    OLED_command (add, 0x12);
+    OLED_command (add, 0x81);
+    OLED_command (add, 0xfF);
+    OLED_command (add, 0xa4);
+    OLED_command (add, 0xa6) ;
+    OLED_command (add, 0xd5);
+    OLED_command (add, 0x80);
+    OLED_command (add, 0x8d);
+    OLED_command (add, 0x14) ;
+    OLED_command (add, 0xAF) ;
+    OLED_command (add, 0x20) ;
+    OLED_command (add, 0x00) ;
 }
 
 void OLED_pixel(LONG x,long y)

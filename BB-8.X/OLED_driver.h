@@ -14,7 +14,6 @@ extern "C" {
 
     //#define OLED 0x78
 #define OLED_ADDR 0x3C
-#define I2C1_CLOCK_FREQ 400000
 
 void OLED_init();
 void OLED_clear();

@@ -33,7 +33,8 @@ enum DIAG_MOD {
     MOD_SERIAL,
     MOD_SERVO,
     MOD_USB,
-    MOD_NAV
+    MOD_NAV,
+    MOD_NEO
 
 };
 extern enum DIAG_MOD debugModule;

@@ -86,6 +86,7 @@
 #include "audio_controller.h"
 #include "serial_controller.h"
 #include "navigation_controller.h"
+#include "lighting_controller.h"
 
 /** V A R I A B L E S ********************************************************/
 #if defined(__18CXX)
@@ -144,6 +145,7 @@ int main(void)
         ServoProcess();
         DiagProcess();
         AudioProcess();
+        LightingProcess();
     }//end while
 }//end main
 
@@ -210,6 +212,8 @@ void InitializeSystem(void)
     debug( " AUD_OK");
     NavigationInit();
     debug(" NAV_OK");
+    LightingInit();
+    debug(" NEO_OK");
     
     OLED_init();
     debug(" OLED_INIT");
@@ -268,6 +272,11 @@ void IOInit(void)
 {
     PORT_G7_TRIS = INPUT_PIN;
     PORT_G8_TRIS = OUTPUT_PIN;
+
+    // Initialize I2C1 used by OLED and Top Board
+    I2CConfigure ( I2C1, I2C_ENABLE_SLAVE_CLOCK_STRETCHING);
+    I2CSetFrequency(I2C1, GetPeripheralClock(), I2C1_CLOCK_FREQ);
+    I2CEnable(I2C1, TRUE);
 }
 
 /********************************************************************

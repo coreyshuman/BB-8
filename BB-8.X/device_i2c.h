@@ -12,7 +12,7 @@ typedef enum
     SLAVE
 }i2cmode;
 
-void i2c_init(I2C_MODULE i2cnum, i2cmode mode, BYTE address);
+void i2c_init(I2C_MODULE i2cnum, i2cmode mode, BYTE address, DWORD speed);
 BOOL i2c_begin_transmission(I2C_MODULE i2cnum, BOOL restart);
 void i2c_end_transmission(I2C_MODULE i2cnum);
 I2C_RESULT i2c_restart_transmission(I2C_MODULE i2cnum);

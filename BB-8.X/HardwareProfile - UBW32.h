@@ -80,8 +80,9 @@
 //#define DEMO_BOARD PIC32MX795F512L_PIM
 #define DEMO_BOARD UBW32
 
-#define SYS_FREQ 80000000L
-#define BAUD_RATE	 115200
+#define SYS_FREQ            80000000L
+#define BAUD_RATE           115200
+#define I2C1_CLOCK_FREQ     400000
 
 /** LED ************************************************************/
 #define mInitAllLEDs()      LATE = 0xFFFF; TRISE = 0xFFF0;
@@ -177,5 +178,9 @@
 #define M4_FORWARD_TRIS         TRISDbits.TRISD7
 #define M4_BACKWARD_IO          LATFbits.LATF0
 #define M4_BACKWARD_TRIS        TRISFbits.TRISF0
+
+// neopixel pin
+#define NEOPIXEL_PIN_TRIS       TRISCbits.TRISC3
+#define NEOPIXEL_PIN            LATCbits.LATC3
 
 #endif  //HARDWARE_PROFILE_UBW32_H

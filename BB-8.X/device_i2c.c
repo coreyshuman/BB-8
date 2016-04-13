@@ -1,20 +1,22 @@
+
+
+#include "TCPIPConfig.h"
 #include "device_i2c.h"
 #include <peripheral/i2c.h>
 #include "hardwareprofile.h"
 
 /*
  * Initialize i2c module:
- * I2C clock is 100KHz
  * If mode parameter is SLAVE, uses address to set slave address for the module
  * Enable module
  */
-void i2c_init(I2C_MODULE i2cnum, i2cmode mode, BYTE address)
+void i2c_init(I2C_MODULE i2cnum, i2cmode mode, BYTE address, DWORD speed)
 {
 	//enabling i2c module doesnt need changing port
 	//direction/value etc, and is not a pin muxed peripheral
 
 	I2CConfigure ( i2cnum, I2C_ENABLE_SLAVE_CLOCK_STRETCHING);
-	I2CSetFrequency ( i2cnum, 48000000, 300000);
+	I2CSetFrequency ( i2cnum, GetPeripheralClock(), speed);
 
 	if(mode == SLAVE)
 	{
@@ -205,7 +207,7 @@ void i2c_nack(I2C_MODULE i2cnum)
 BOOL mpu_i2c_init()
 {
 	//open i2cin master mode
-	i2c_init(MPU_I2C, MASTER, 0);
+	i2c_init(MPU_I2C, MASTER, 0, 300000);
 }
 
 // TODO timeouts in waiting for bus free
