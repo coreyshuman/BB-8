@@ -71,6 +71,7 @@ enum DIAG_MOD debugModule;
 static double pry[3];
 BOOL dArmed;
 BOOL dAccelEnabled;
+BYTE ledColors[] = {4,90,10,5,40,5,0,0,30,10,80,5,64,30,64};
 
 // function declerations
 void OledReceiverBar(int idx, int val);
@@ -181,6 +182,7 @@ void OledReceiverBar(int idx, int val)
  */
 BOOL DiagnosticTestMode(void)
 {
+    int i;
     int ret = FALSE;
     static enum DIAGNOSTIC_STATE dsState = DS_INIT;
     static BOOL dsWait = FALSE;
@@ -221,24 +223,56 @@ BOOL DiagnosticTestMode(void)
             dsCount++;
             if(dsCount == 5)
             {
-                SetLedColor(1, 128,0,0);
-                SetLedColor(2, 0,128,0);
+                for(i=0; i<5; i++)
+                {
+                    BYTE idx = (dsCount-1)/5 + i;
+                    SetLedColor(i+1, ledColors[3*(idx%5)+1],ledColors[3*(idx%5)],ledColors[3*(idx%5)+2]);
+                }
+                SetLedColor(1,64,64,64);
                 UpdateLighting();
-                DiagnosticUpdateTestScreen(TRUE, "Neopixel RED");
+                DiagnosticUpdateTestScreen(TRUE, "Neopixel 1");
             }
             else if(dsCount == 10)
             {
-                SetLedColor(1, 0,128,0);
-                SetLedColor(2, 0,0,128);
+                for(i=0; i<5; i++)
+                {
+                    BYTE idx = (dsCount-1)/5 + i + 1;
+                    SetLedColor(i+1, ledColors[3*(idx%5)+1],ledColors[3*(idx%5)],ledColors[3*(idx%5)+2]);
+                }
                 UpdateLighting();
-                DiagnosticUpdateTestScreen(TRUE, "Neopixel GREEN");
+                DiagnosticUpdateTestScreen(TRUE, "Neopixel 2");
             }
             else if(dsCount == 15)
             {
-                SetLedColor(1, 0,0,128);
-                SetLedColor(2, 128,0,0);
+                for(i=0; i<5; i++)
+                {
+                    BYTE idx = (dsCount-1)/5 + i + 2;
+                    SetLedColor(i+1, ledColors[3*(idx%5)+1],ledColors[3*(idx%5)],ledColors[3*(idx%5)+2]);
+                }
                 UpdateLighting();
-                DiagnosticUpdateTestScreen(TRUE, "Neopixel BLUE");
+                DiagnosticUpdateTestScreen(TRUE, "Neopixel 3");
+                
+            }
+            else if(dsCount == 20)
+            {
+                for(i=0; i<5; i++)
+                {
+                    BYTE idx = (dsCount-1)/5 + i + 3;
+                    SetLedColor(i+1, ledColors[3*(idx%5)+1],ledColors[3*(idx%5)],ledColors[3*(idx%5)+2]);
+                }
+                UpdateLighting();
+                DiagnosticUpdateTestScreen(TRUE, "Neopixel 4");
+                
+            }
+            else if(dsCount == 25)
+            {
+                for(i=0; i<5; i++)
+                {
+                    BYTE idx = (dsCount-1)/5 + i + 4;
+                    SetLedColor(i+1, ledColors[3*(idx%5)+1],ledColors[3*(idx%5)],ledColors[3*(idx%5)+2]);
+                }
+                UpdateLighting();
+                DiagnosticUpdateTestScreen(TRUE, "Neopixel 5");
                 dsCount = 0;
             }
             if(btnPressed && dsCount == 10)

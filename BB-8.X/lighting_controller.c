@@ -69,16 +69,22 @@ void SendLightingData(void)
 void UpdateLighting(void)
 {
     SendLightingData();
+    delay(10);
     TopBoard_Command(TOPBOARD_CMD_UPDATE_LED);
 }
 
 /* Update local LED map data for a single LED */
 void SetLedColor(BYTE n, BYTE r, BYTE g, BYTE b)
 {
-    BYTE index = n*3;
-    ledMap[index] = g;
-    ledMap[index+1] = r;
-    ledMap[index+2] = b;
+    if(n > 0 && n <= 5)
+    {
+        n--;
+        BYTE index = n*3;
+        ledMap[index] = g;
+        ledMap[index+1] = r;
+        ledMap[index+2] = b;
+    }
+    
 }
 
 

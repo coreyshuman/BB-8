@@ -17,7 +17,7 @@
 const long interval = 500;           // interval at which to blink (milliseconds)
 const int statusLed =  13;      // the number of the LED pin
 const int pixelPin = 2;         // the pin number for neopixel led
-const byte i2cAddress = 33;
+const byte i2cAddress = 0x33;
 
 int ledState = LOW;             // ledState used to set the LED
 unsigned long previousMillis = 0;        // will store last time LED was updated
@@ -84,6 +84,8 @@ void setup() {
   Wire.onRequest(requestEvent);       // register event
 
   pixel.Init(PIXEL_PIN, PIXEL_COUNT);
+
+  Serial.begin(115200);
   
 }
 
@@ -102,7 +104,7 @@ void loop() {
 
     // set the LED with the ledState of the variable:
     digitalWrite(statusLed, ledState);
-    //Serial.print("abcdefg\n");
+    Serial.print("a\n");
   }
 }
 
@@ -113,11 +115,14 @@ void receiveEvent(int len)
   {
     regPointer = Wire.read();
   }
-
+  Serial.print("rx: ");
+  Serial.print(regPointer);
+  Serial.print(" - ");
   if(len)
   {
     if(regPointer >= 0x20)
     {
+      Serial.print("write scratch\n");
       while(Wire.available())
       {
         data = Wire.read();
@@ -130,6 +135,7 @@ void receiveEvent(int len)
     }
     else if(regPointer >= 0x11)
     {
+      Serial.print("write led\n");
       while(Wire.available())
       {
         data = Wire.read();
@@ -142,6 +148,7 @@ void receiveEvent(int len)
     }
     else
     {
+      Serial.print("command\n");
       switch(regPointer)
       {
         case 0x00: // control register
@@ -184,7 +191,8 @@ void updateLEDs(void)
   int i;
   for(i=0; i<PIXEL_COUNT; i++)
   {
-    pixel.SetPixel(i+1, ledRegister[i*3], ledRegister[i*3+1], ledRegister[i*3+2]);
+    // grb to rgb ordering
+    pixel.SetPixel(i+1, ledRegister[i*3+1], ledRegister[i*3], ledRegister[i*3+2]);
   }
   pixel.Show();
 }
