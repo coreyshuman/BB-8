@@ -71,7 +71,7 @@ enum DIAG_MOD debugModule;
 static double pry[3];
 BOOL dArmed;
 BOOL dAccelEnabled;
-BYTE ledColors[] = {4,90,10,5,40,5,0,0,30,10,80,5,64,30,64};
+BYTE ledColorsDebug[] = {4,90,10,5,40,5,0,0,30,10,80,5,64,30,64};
 
 // function declerations
 void OledReceiverBar(int idx, int val);
@@ -226,7 +226,7 @@ BOOL DiagnosticTestMode(void)
                 for(i=0; i<5; i++)
                 {
                     BYTE idx = (dsCount-1)/5 + i;
-                    SetLedColor(i+1, ledColors[3*(idx%5)+1],ledColors[3*(idx%5)],ledColors[3*(idx%5)+2]);
+                    SetLedColor(i+1, ledColorsDebug[3*(idx%5)+1],ledColorsDebug[3*(idx%5)],ledColorsDebug[3*(idx%5)+2]);
                 }
                 SetLedColor(1,64,64,64);
                 UpdateLighting();
@@ -237,7 +237,7 @@ BOOL DiagnosticTestMode(void)
                 for(i=0; i<5; i++)
                 {
                     BYTE idx = (dsCount-1)/5 + i + 1;
-                    SetLedColor(i+1, ledColors[3*(idx%5)+1],ledColors[3*(idx%5)],ledColors[3*(idx%5)+2]);
+                    SetLedColor(i+1, ledColorsDebug[3*(idx%5)+1],ledColorsDebug[3*(idx%5)],ledColorsDebug[3*(idx%5)+2]);
                 }
                 UpdateLighting();
                 DiagnosticUpdateTestScreen(TRUE, "Neopixel 2");
@@ -247,7 +247,7 @@ BOOL DiagnosticTestMode(void)
                 for(i=0; i<5; i++)
                 {
                     BYTE idx = (dsCount-1)/5 + i + 2;
-                    SetLedColor(i+1, ledColors[3*(idx%5)+1],ledColors[3*(idx%5)],ledColors[3*(idx%5)+2]);
+                    SetLedColor(i+1, ledColorsDebug[3*(idx%5)+1],ledColorsDebug[3*(idx%5)],ledColorsDebug[3*(idx%5)+2]);
                 }
                 UpdateLighting();
                 DiagnosticUpdateTestScreen(TRUE, "Neopixel 3");
@@ -258,7 +258,7 @@ BOOL DiagnosticTestMode(void)
                 for(i=0; i<5; i++)
                 {
                     BYTE idx = (dsCount-1)/5 + i + 3;
-                    SetLedColor(i+1, ledColors[3*(idx%5)+1],ledColors[3*(idx%5)],ledColors[3*(idx%5)+2]);
+                    SetLedColor(i+1, ledColorsDebug[3*(idx%5)+1],ledColorsDebug[3*(idx%5)],ledColorsDebug[3*(idx%5)+2]);
                 }
                 UpdateLighting();
                 DiagnosticUpdateTestScreen(TRUE, "Neopixel 4");
@@ -269,7 +269,7 @@ BOOL DiagnosticTestMode(void)
                 for(i=0; i<5; i++)
                 {
                     BYTE idx = (dsCount-1)/5 + i + 4;
-                    SetLedColor(i+1, ledColors[3*(idx%5)+1],ledColors[3*(idx%5)],ledColors[3*(idx%5)+2]);
+                    SetLedColor(i+1, ledColorsDebug[3*(idx%5)+1],ledColorsDebug[3*(idx%5)],ledColorsDebug[3*(idx%5)+2]);
                 }
                 UpdateLighting();
                 DiagnosticUpdateTestScreen(TRUE, "Neopixel 5");

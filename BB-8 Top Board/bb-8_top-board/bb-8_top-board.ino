@@ -83,7 +83,7 @@ void setup() {
   Wire.onReceive(receiveEvent);       // register event
   Wire.onRequest(requestEvent);       // register event
 
-  pixel.Init(PIXEL_PIN, PIXEL_COUNT);
+  pixel.Init(PIXEL_PIN, PIXEL_COUNT, ledRegister);
 
   Serial.begin(115200);
   
@@ -106,6 +106,8 @@ void loop() {
     digitalWrite(statusLed, ledState);
     Serial.print("a\n");
   }
+
+  pixel.Proc();
 }
 
 void receiveEvent(int len)
@@ -132,6 +134,12 @@ void receiveEvent(int len)
           regPointer++;
         }
       }
+    }
+    else if(regPointer == 0x10)
+    {
+      Serial.print("set tran\n");
+      data = Wire.read();
+      pixel.SetTransition(data);
     }
     else if(regPointer >= 0x11)
     {
@@ -174,7 +182,11 @@ void handleControl(int len)
   len --;
   switch(data) {
     case 0x01: // update LEDs
-      updateLEDs();
+      Serial.print("LED Update\n");
+      pixel.BeginUpdate();
+      break;
+    case 0x02: // led effect
+      ledEffect();
       break;
     case 0x09: // calc CRC
       break;
@@ -184,17 +196,6 @@ void handleControl(int len)
       break;
     
   }
-}
-
-void updateLEDs(void)
-{
-  int i;
-  for(i=0; i<PIXEL_COUNT; i++)
-  {
-    // grb to rgb ordering
-    pixel.SetPixel(i+1, ledRegister[i*3+1], ledRegister[i*3], ledRegister[i*3+2]);
-  }
-  pixel.Show();
 }
 
 void requestEvent(void)
@@ -216,6 +217,11 @@ void requestEvent(void)
     Wire.write(0x00);
   }
   regPointer++;
+}
+
+void ledEffect(void)
+{
+  
 }
 
 unsigned long CRC(unsigned int len) {
