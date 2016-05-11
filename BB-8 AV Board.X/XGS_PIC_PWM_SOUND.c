@@ -262,6 +262,8 @@ void PWM_Task()
             p->sendEnd = FALSE;
             sprintf(str, "e %u\r", chan+1);
             UART_puts(str);
+            // reset play buffer
+            PWM_Stop(chan+1);
         }
         if(!p->open || !p->playing)
             continue;

@@ -31,15 +31,19 @@
 #include "XGS_PIC_SYSTEM_V010.h"
 #include "XGS_PIC_UART_DRV_V010.h"
 #include "XGS_PIC_PWM_SOUND.h"
+#include "volume_control.h"
 #include "exception.h"
 
 void COMM_Task(void);
 
 int main (void)
 {
-    int z;
+    //int z;
     // Always call ConfigureClock first
     SYS_ConfigureClock(FCY_VGA);
+
+    // call early to mute amplifier
+    Volume_Init();
 
     UART_Init(38400);
 
@@ -54,6 +58,9 @@ int main (void)
 
         // process messages
         PWM_Task();
+
+        // process volume job
+        Volume_Proc();
 
     }
 
@@ -76,6 +83,9 @@ enum COMM_CMD {
     CCMD_PAUSE,
     CCMD_STOP,
     CCMD_CLOSE,
+    CCMD_VOL,
+    CCMD_MUTE,
+    CCMD_UNMUTE,
     CCMD_DEBUG
 };
 enum COMM_SM {
@@ -153,11 +163,29 @@ void COMM_Task(void)
                 }
                 else if(strcmp(command,"c") == 0)
                 {
-                   cmd = CCMD_CLOSE;
+                    cmd = CCMD_CLOSE;
                     if(c == ' ')
                         sm = CSM_PARAM1;
                     else
                         sm = CSM_EXECUTE;
+                }
+                else if(strcmp(command,"v") == 0)
+                {
+                    cmd = CCMD_VOL;
+                    if(c == ' ')
+                        sm = CSM_PARAM1;
+                    else
+                        sm = CSM_EXECUTE;
+                }
+                else if(strcmp(command,"m") == 0)
+                {
+                   cmd = CCMD_MUTE;
+                   sm = CSM_EXECUTE;
+                }
+                else if(strcmp(command,"u") == 0)
+                {
+                   cmd = CCMD_UNMUTE;
+                   sm = CSM_EXECUTE;
                 }
                 else if(strcmp(command,"d") == 0)
                 {
@@ -195,7 +223,7 @@ void COMM_Task(void)
                 }
                 else if(c == ' ')
                 {
-                    if(cmd = CCMD_OPEN)
+                    if(cmd == CCMD_OPEN)
                         sm = CSM_PARAM2;
                     else
                         sm = CSM_ERROR;
@@ -266,6 +294,27 @@ void COMM_Task(void)
             else if(cmd == CCMD_CLOSE)
             {
                 if(PWM_Close(chan))
+                    UART_puts("ok\r");
+                else
+                    UART_puts("err\r");
+            }
+            else if(cmd == CCMD_VOL)
+            {
+                if(Volume_Write(chan))
+                    UART_puts("ok\r");
+                else
+                    UART_puts("err\r");
+            }
+            else if(cmd == CCMD_MUTE)
+            {
+                if(Volume_Mute(TRUE))
+                    UART_puts("ok\r");
+                else
+                    UART_puts("err\r");
+            }
+            else if(cmd == CCMD_UNMUTE)
+            {
+                if(Volume_Mute(FALSE))
                     UART_puts("ok\r");
                 else
                     UART_puts("err\r");
