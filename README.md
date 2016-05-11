@@ -1,5 +1,5 @@
-# BB8_Body
-Motor and central control unit for BB8 robot.
+# BB-8
+Fully functioning BB-8 robotic project.
 
 Work in progress...
 
@@ -10,6 +10,8 @@ Main Board
 - Requires Microchip Legacy Stack for USB drivers
 - Memory allocation is setup to use USB bootloader
 - Implements MPU-9150 9 DOF driver
+- PMW Output to motors (3 wheel platform) and 2 servos for head movement
+- Remote control via custom serial protocol over XBEE radio
 
 BB-8 Audio:
 - Built on XGS 16-bit PIC development board
@@ -30,4 +32,4 @@ Requires:
 - MPLAB XC32 Compiler v1.20
 - Arduino IDE
 
-TODO: Detailed documentation and link to writeup
+Visit my webiste for build photos and more information: http://technicalwizardry.coreyshuman.com/
