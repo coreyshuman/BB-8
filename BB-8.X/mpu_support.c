@@ -115,7 +115,6 @@ void get_quat(long *val)
     for(i=0; i<4; i++)
     {
         val[i] = QUAT[i];
-        
     }
 }
 

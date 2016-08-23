@@ -40,7 +40,7 @@ extern "C" {
 void MpuInit(void);
 void MpuProcess(void);
 
-void get_quat(QWORD *val);
+void get_quat(long *val);
 
 
 #ifdef	__cplusplus

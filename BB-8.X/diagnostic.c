@@ -30,7 +30,6 @@
 #include "GenericTypeDefs.h"
 #include "console.h"
 #include "lib/time/Tick.h"
-//#include "time.h"
 #include "HardwareProfile.h"
 #include "OLED_driver.h"
 #include "receiver.h"
@@ -48,6 +47,13 @@ enum SM_DIAG {
     SM_DIAG_WRITE
 
 } sm;
+
+enum SM_BATT {
+    SM_READ_VOLT,
+    SM_PROC_VOLT,
+    SM_READ_CURR,
+    SM_PROC_CURR
+} sm_batt;
 
 enum DIAGNOSTIC_STATE {
     DS_INIT = 0,
@@ -71,26 +77,41 @@ enum DIAG_MOD debugModule;
 static double pry[3];
 BOOL dArmed;
 BOOL dAccelEnabled;
+BOOL dAutoVoiceEnabled;
 BYTE ledColorsDebug[] = {4,90,10,5,40,5,0,0,30,10,80,5,64,30,64};
+WORD batteryVoltageRaw[10]; // arrays used for averaging samples
+double batteryVoltage;
+WORD batteryCurrentRaw[10];
+double batteryCurrent;
+BYTE batteryWriteIdx;
 
 // function declerations
 void OledReceiverBar(BYTE idx, WORD WORD);
 void DiagnosticUpdateTestScreen(BOOL showTest, const char* str);
+void BatteryADCInit(void);
+void BatteryADCProcess(void);
+void ConvertBatteryReadings(void);
 
 // functions
 void DiagInit(void)
 {
+    int i;
     debugMap = 0ul;
     pry[0] = pry[1] = pry[2] = 0;
     dArmed = FALSE;
     dAccelEnabled = FALSE;
     sm = SM_DIAG_CLEAR;
 
-    
-    
+    BatteryADCInit();
+    sm_batt = SM_READ_VOLT;
+    for(i=0; i<10; i++) {
+        batteryVoltageRaw[i] = 0;
+        batteryCurrentRaw[i] = 0;
+    }
+    batteryWriteIdx = 0;
+    batteryVoltage = 0.0;
+    batteryCurrent = 0.0;
 }
-
-
 
 void DiagProcess(void)
 {
@@ -98,6 +119,9 @@ void DiagProcess(void)
     static BOOL diagEnabled = FALSE;
 
     SetModule(MOD_DIAG);
+
+    BatteryADCProcess();
+
     if(!diagEnabled && TickGet() - tick >= TICK_SECOND*5)
     {
         OLED_clear();
@@ -115,21 +139,33 @@ void DiagProcess(void)
         {
             case SM_DIAG_CLEAR: OLED_clear(); sm++; break;
             case SM_DIAG_UPDATE:
+                // update battery readings
+                ConvertBatteryReadings();
+                sprintf(str, "V:%2.3f", batteryVoltage);
+                OLED_text(5,0,str,1);
+                sprintf(str, "I:%2.3f", batteryCurrent);
+                OLED_text(5,8,str,1);
                 // update accelerometer readings
                 sprintf(str, "P%6.1f", (double)pry[0]);
-                OLED_text(5,0,str,1);
-                sprintf(str, "R%6.1f", (double)pry[1]);
-                OLED_text(5,8,str,1);
-                sprintf(str, "Y%6.1f", (double)pry[2]);
                 OLED_text(5,16,str,1);
+                sprintf(str, "R%6.1f", (double)pry[1]);
+                OLED_text(5,24,str,1);
+                sprintf(str, "Y%6.1f", (double)pry[2]);
+                OLED_text(5,32,str,1);
                 if(dArmed)
-                    OLED_text(5,24, "ARMED ",1);
+                    OLED_text(5,40, "ARMED ",1);
                 else
-                    OLED_text(5,24, "DISARM",1);
-                if(dAccelEnabled)
-                    OLED_text(5,32, "ACCEL ",1);
-                else
-                    OLED_text(5,32, "STATIC",1);
+                    OLED_text(5,40, "DISARM",1);
+                if(dAccelEnabled) {
+                    OLED_text(5,48, "ACCEL ",1);
+                } else {
+                    OLED_text(5,48, "STATIC",1);
+                }
+                if(dAutoVoiceEnabled) {
+                    OLED_text(5,56, "TALKING",1);
+                } else {
+                    OLED_text(5,56, "SILENT ",1);
+                }
                 // update receiver readings
                 for(i=1; i<=8; i++)
                 {
@@ -144,13 +180,14 @@ void DiagProcess(void)
     }
 }
 
-void PrintAccelToOled(double vpry[], BOOL armed, BOOL accelEnabled)
+void PrintAccelToOled(double vpry[], BOOL armed, BOOL accelEnabled, BOOL autoVoiceEnabled)
 {
     pry[0] = vpry[0];
     pry[1] = vpry[1];
     pry[2] = vpry[2];
     dArmed = armed;
     dAccelEnabled = accelEnabled;
+    dAutoVoiceEnabled = autoVoiceEnabled;
 }
 
 /* Take value of 0 - 255 and map to 9 bar graph*/
@@ -174,7 +211,86 @@ void OledReceiverBar(BYTE idx, WORD val)
         bar[val] = '|';
     }
 
-    OLED_text(70,idx*8-9,bar,1);
+    OLED_text(70,idx*8+8,bar,1);
+}
+
+/* ADC Setup for Battery Voltage and Current monitoring.
+ * Voltage is on AN8 using MUXA, Current is on AN9 using MUXB.
+ */
+void BatteryADCInit(void)
+{
+    CloseADC10();
+    ConfigIntADC10(ADC_INT_OFF); // disable ADC interrupt
+
+    OpenADC10(
+        /* Config 1 - 16-bit integer format, internal counter auto conversion */
+        ADC_FORMAT_INTG | ADC_CLK_AUTO,
+        /* Config 2 - Use internal vref, alternate MUXA/MUXB */
+        ADC_VREF_AVDD_AVSS | ADC_ALT_INPUT_ON,
+        /* Config 3 - 31Td sample time, internal conversion clock */
+        ADC_SAMPLE_TIME_31 | ADC_CONV_CLK_INTERNAL_RC,
+        /* Config Port - Enable analog on AN8 and AN9 */
+        ENABLE_AN8_ANA | ENABLE_AN9_ANA,
+        /*Config Scan - Not using scan mode */
+        0
+    );
+
+    // set channels: AN8 on MUXA, AN9 on MUXB. Use NVREF as negative input for both
+    SetChanADC10( ADC_CH0_NEG_SAMPLEB_NVREF | ADC_CH0_POS_SAMPLEB_AN9 | ADC_CH0_NEG_SAMPLEA_NVREF | ADC_CH0_POS_SAMPLEA_AN8 );
+
+    EnableADC10();
+}
+
+/* Process for reading and averaging voltage and current measurements.
+ */
+void BatteryADCProcess(void)
+{
+    switch(sm_batt) {
+        case SM_READ_VOLT:
+            AcquireADC10(); // start acquisition
+            sm_batt++;
+            break;
+        case SM_PROC_VOLT:
+            if(BusyADC10()) { // check if DONE flag set
+                batteryVoltageRaw[batteryWriteIdx] = ReadADC10(0);
+                sm_batt++;
+            }
+            break;
+        case SM_READ_CURR:
+            AcquireADC10(); // ADC will automatically switch to MUXB
+            sm_batt++;
+            break;
+        case SM_PROC_CURR:
+            if(BusyADC10()) { // check if DONE flag set
+                batteryCurrentRaw[batteryWriteIdx] = ReadADC10(0);
+                if(++ batteryWriteIdx >= 10) {
+                    batteryWriteIdx = 0;
+                }
+                sm_batt = SM_READ_VOLT;
+            }
+            break;
+    }
+}
+
+/* Average Battery readings and convert to human-readable values
+ * ADC reading is 0-1023 = 0-3.3v
+ * Voltage is 63.69mV/Volt
+ * Current is 36.60mV/Amp
+ */
+void ConvertBatteryReadings(void)
+{
+    WORD volt = 0;
+    WORD curr = 0;
+    int i;
+    for(i=0; i<10; i++) {
+        volt += batteryVoltageRaw[i];
+        curr += batteryCurrentRaw[i];
+    }
+    volt /= 10;
+    curr /= 10;
+
+    batteryVoltage = ((double)volt) * 0.0506486; // 3.3/1023.0/.06369;
+    batteryCurrent = ((double)curr) * 0.0888652; // 3.3/1023.0/.03630;
 }
 
 /* Test mode to walk through hardware tests

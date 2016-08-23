@@ -124,7 +124,7 @@ void NavigationProcess(void)
     BOOL accelLastState = FALSE;
     long q[4];
     double qd[4];
-    char string[50];
+    //char string[50];
 
     SetModule(MOD_NAV);
 
@@ -342,7 +342,7 @@ void NavigationProcess(void)
             imuSpeed[i] = 0;
         }
     }
-    PrintAccelToOled(val, navArmed, accelEnabled);
+    PrintAccelToOled(val, navArmed, accelEnabled, autoVoice);
 
     // don't run motors if not armed
     if(!navArmed)

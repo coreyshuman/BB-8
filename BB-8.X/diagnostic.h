@@ -45,7 +45,7 @@ extern DWORD debugMap;
 
 void DiagInit(void);
 void DiagProcess(void);
-void PrintAccelToOled(double vpry[], BOOL armed, BOOL accelEnabled);
+void PrintAccelToOled(double vpry[], BOOL armed, BOOL accelEnabled, BOOL autoVoiceEnabled);
 BOOL DiagnosticTestMode(void);
 
 
