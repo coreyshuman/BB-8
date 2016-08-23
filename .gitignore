@@ -40,3 +40,6 @@ private/
 
 # disassembly folder
 disassembly/
+
+#Mac BS
+.DS_Store

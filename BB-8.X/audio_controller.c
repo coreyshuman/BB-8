@@ -42,14 +42,23 @@ BYTE AUD_UART_RX_EndPtr;
 int  resIdx = 0;
 char response[20];
 
+BOOL autoVoiceEnabled;
+// variables used to open file as commanded
+char fileName[MAX_ARGUMENT_LENGTH];
+BYTE channel;
+bool playPending = false;
+
 char BB8_Sample_Names[MAX_FILES][10] = {
     "bb01", "bb02", "bb03", "bb04", "bb05", "bb06", "bb07", "bb08", "bb09",
     "bb10", "bb11"
 };
 
 enum AUDIO_CONTROLLER_STATE {
-    ACS_DELAY,
+    ACS_DISPATCH,
+    ACS_DELAY, // delay for autovoice
     ACS_DELAY_WAIT,
+    ACS_IDLE, // idle and open for commanded voice
+    ACS_OPEN_AUTO, // open for autovoice
     ACS_OPEN,
     ACS_OPEN_ACK,
     ACS_PLAY,
@@ -67,7 +76,7 @@ enum AUDIO_RESPONSE {
     AR_END2
 };
 
-enum AUDIO_CONTROLLER_STATE acs = ACS_DELAY;
+enum AUDIO_CONTROLLER_STATE acs = ACS_DISPATCH;
 int delaySeconds = 0;
 DWORD tick = 0;
 
@@ -100,6 +109,14 @@ void AudioInit(void)
 
     //setbuf(stdout, NULL );
 
+    // get commands from telemetry data (controller)
+    SerialAddHandler("ply", 2, RxPlayCommand);
+    SerialAddHandler("pau", 1, RxPauseCommand);
+    SerialAddHandler("stp", 1, RxStopCommand);
+    SerialAddHandler("vol", 1, RxVolumeCommand);
+
+    autoVoiceEnabled = false;
+
     // cts debug
     enableDiagFilter(DBG_AUDIO);
 }
@@ -109,13 +126,18 @@ void AudioProcess(void)
     enum AUDIO_RESPONSE arx;
     switch(acs)
     {
+        case ACS_DISPATCH:
+            if(autoVoiceEnabled && !playPending) {
+                acs = ACS_DELAY;
+            } else {
+                acs = ACS_IDLE;
+            }
+            break;
         case ACS_DELAY:
             delaySeconds = 0;
             // get delay between 3 and 15 seconds
-            while(delaySeconds<3)
-            {
-                delaySeconds = rand()%15;
-            }
+            delaySeconds = rand()%12 + 3;
+            
             tick  = TickGet();
             acs++;
             if(isDiagFilterOn(DBG_AUDIO)) {
@@ -125,20 +147,33 @@ void AudioProcess(void)
         case ACS_DELAY_WAIT:
             if(TickGet() - tick >= delaySeconds*TICK_SECOND)
             {
-                acs++;
+                acs = ACS_OPEN_AUTO;
+            }
+            break;
+        
+        case ACS_IDLE:
+            if(playPending) {
+                acs = ACS_OPEN;
+                playPending = false;
+            }
+            break;
+        case ACS_OPEN_AUTO:
+            int fileIdx = rand()%MAX_FILES;
+            AudioCommandOpen(BB8_Sample_Names[fileIdx], 1);
+            tick = TickGet();
+            acs++;
+            if(isDiagFilterOn(DBG_AUDIO)) {
+                debug("AUD auto open %s ", BB8_Sample_Names[fileIdx]);
             }
             break;
         case ACS_OPEN:
-        {
-            int fileIdx = rand()%MAX_FILES;
-            AudioCommandOpen(BB8_Sample_Names[fileIdx], 1);
+            AudioCommandOpen(fileName, channel);
             tick = TickGet();
             acs++;
             if(isDiagFilterOn(DBG_AUDIO)) {
                 debug("AUD open %s ", BB8_Sample_Names[fileIdx]);
             }
             break;
-        }
         case ACS_OPEN_ACK:
             arx = AudioGetResponse();
             if(arx == AR_OK)
@@ -166,7 +201,11 @@ void AudioProcess(void)
             }
             break;
         case ACS_PLAY:
-            AudioCommandPlay(1);
+            if(autoVoiceEnabled) {
+                AudioCommandPlay(1);
+            } else {
+                AudioCommandPlay(channel);
+            }
             tick = TickGet();
             acs++;
             if(isDiagFilterOn(DBG_AUDIO)) {
@@ -226,8 +265,13 @@ void AudioProcess(void)
             }
             break;
         case ACS_CLOSE:
-            AudioCommandClose(1);
-            acs = 0;
+            if(autoVoiceEnabled) {
+                AudioCommandClose(1);
+            } else {
+                AudioCommandClose(channel);
+            }
+            acs = ACS_CLOSE_WAIT;
+            tick = TickGet();
             if(isDiagFilterOn(DBG_AUDIO)) {
                 debug("AUD close\r\n");
             }
@@ -236,7 +280,7 @@ void AudioProcess(void)
             arx = AudioGetResponse();
             if(arx == AR_OK)
             {
-                acs=ACS_DELAY;
+                acs=ACS_DISPATCH;
                 tick = TickGet();
                 if(isDiagFilterOn(DBG_AUDIO)) {
                     debug("ok\r\n");
@@ -244,7 +288,7 @@ void AudioProcess(void)
             }
             else if(arx == AR_ERROR)
             {
-                acs = ACS_DELAY;
+                acs = ACS_DISPATCH;
                 if(isDiagFilterOn(DBG_AUDIO)) {
                     debug("err\r\n");
                 }
@@ -252,7 +296,7 @@ void AudioProcess(void)
             if(TickGet() - tick > 3*TICK_SECOND)
             {
                 // error
-                acs = ACS_DELAY;
+                acs = ACS_DISPATCH;
                 if(isDiagFilterOn(DBG_AUDIO)) {
                     debug("tmo\r\n");
                 }
@@ -281,6 +325,16 @@ void AudioCommandClose(int chan)
 {
     char buf[10];
     sprintf(buf, "c %i\r", chan);
+    
+    AudioSendData(buf, strlen(buf));
+}
+
+void AudioCommandVolume(BYTE vol)
+{
+    if(vol > 0x3F)
+        vol = 0x3F;
+
+    sprintf(buf, "v %i\r", vol);
     
     AudioSendData(buf, strlen(buf));
 }
@@ -413,5 +467,46 @@ void __ISR(_UART_3A_VECTOR, ipl5) _UART3AISRHandler(void) {
     // We don't care about TX interrupt
     if (INTGetFlag(INT_U3ARX)) {
         INTClearFlag(INT_U3ARX);
+    }
+}
+
+/* Callback handler for Play Command from Controller */
+void RxPlayCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc) {
+    int i;
+
+    if(argc == 2)
+    {
+        if(ACS <= ACS_IDLE) {
+            ACS = ACS_IDLE;
+        } else {
+            ACS = ACS_CLOSE;
+        }
+        playPending = true;
+        channel = strtol(arg[0], NULL, 10);
+        if(channel > 1) {
+            channel = 1;
+        }
+        for(i=0; i<MAX_ARGUMENT_LENGTH; i++) {
+            fileName[i] = arg[1][i];
+        }
+    }
+}
+
+/* Callback handler for Pause Command from Controller */
+void RxPauseCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc) {
+    // todo: implement
+}
+
+/* Callback handler for Stop Command from Controller */
+void RxStopCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc) {
+    if(ACS > ACS_IDLE) {
+        ACS = ACS_CLOSE;
+    } 
+}
+
+/* Callback handler for Volume Command from Controller */
+void RxVolumeCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc) {
+    if(argc == 1) {
+        AudioCommandVolume(strtol(arg[0], NULL, 16));
     }
 }

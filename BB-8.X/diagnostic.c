@@ -74,7 +74,7 @@ BOOL dAccelEnabled;
 BYTE ledColorsDebug[] = {4,90,10,5,40,5,0,0,30,10,80,5,64,30,64};
 
 // function declerations
-void OledReceiverBar(int idx, int val);
+void OledReceiverBar(BYTE idx, int WORD);
 void DiagnosticUpdateTestScreen(BOOL showTest, const char* str);
 
 // functions
@@ -154,8 +154,9 @@ void PrintAccelToOled(double vpry[], BOOL armed, BOOL accelEnabled)
 }
 
 /* Take value of 0 - 255 and map to 9 bar graph*/
-void OledReceiverBar(int idx, int val)
+void OledReceiverBar(BYTE idx, WORD val)
 {
+    val = val / 0x101; // map 0xFFFF to 255
     char bar[10] = ".........";
 
     if(val < 23)

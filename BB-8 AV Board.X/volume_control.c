@@ -49,7 +49,7 @@ void Volume_Init(void)
     Volume_Mute(TRUE);
 }
 
-// delay for a bit, then unmute and set to max volume
+// delay for a bit, then unmute
 void Volume_Proc(void)
 {
     static WORD sm = 0;

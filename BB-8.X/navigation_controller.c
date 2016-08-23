@@ -41,7 +41,8 @@
 
 // defines
 #define M_180_PI            57.2958 // 180/pi
-#define NAV_SCALE           2 // 255 to 500 (510, close enough)
+#define NAV_SCALE           500/0xFFFF // FFFF to 500
+#define NAV_NEUTRAL         0x8000
 #define SPEED_SCALE         2 // 500 to 1000
 #define MAX_SPEED           500     // max speed in nav scale
 #define NAV_DATA_TIMEOUT    TICK_SECOND/5 // data is only valid for 200ms
@@ -49,10 +50,14 @@
                                     // used to convert 1000 resolution to 180 degrees
 
 // global variables
-// nav command values are range 0 to 255, where 128 is neutral
-WORD navData[8];
+// nav command values are range 0 to FFFF, where 8000 is neutral
+WORD navData[8]; // x,y,yaw,headpitch,headyaw,---,---,digital
 BOOL navArmed;
 BOOL navAccelArmed; // allow accelerometer data to influence motors
+BOOL autoVoice; // BB-8 speaking by itself
+BOOL autoHeadMovement; // BB-8 looks around by itself
+BOOL sleepMode; // disable all other modes
+BOOL enableProjector: // BB-8 head projector
 DWORD lastNavTick;
 BOOL newNavData;
 double pry_offset[3];
@@ -78,10 +83,11 @@ void NavigationInit(void)
     lastNavTick = 0;
     newNavData = FALSE;
     navAccelArmed = FALSE;
+    autoVoice = FALSE;
 
     for(i = 0; i < 8; i++)
     {
-        navData[i] = 0x80;
+        navData[i] = NAV_NEUTRAL;
     }
 
     for(i = 0; i < 3; i++)
@@ -99,9 +105,9 @@ void NavigationInit(void)
         }
     }
 
-    SerialAddHandler("navtel", 4, ReadTelemetry);
-    SerialAddHandler("navarm", 1, ReadNavArm);
-    SerialAddHandler("navacl", 1, ReadAccelArm);
+    SerialAddHandler("tell", 8, ReadTelemetry);
+    //SerialAddHandler("navarm", 1, ReadNavArm);
+    //SerialAddHandler("navacl", 1, ReadAccelArm);
 }
 
 /* process */
@@ -126,21 +132,56 @@ void NavigationProcess(void)
     {
         lastNavTick = TickGet();
         newNavData = FALSE;
+
+        // update digital states
+        if(navData[7] & 0x8000) {
+            navArmed = true;
+        } else {
+            navArmed = false;
+        }
+        if(navData[7] & 0x4000) {
+            navAccelArmed = true;
+        } else {
+            navAccelArmed = false;
+        }
+        if(navData[7] & 0x2000 && !autoVoice) {
+            autoVoice = true;
+            //todo: call auto voice function
+        } else if(!(navData[7] & 0x2000) && autoVoice) {
+            autoVoice = false;
+            // todo: call stop auto voice function
+        }
+        if(navData[7] & 0x1000) {
+            autoHeadMovement = true;
+        } else {
+            autoHeadMovement = false;
+        }
+        if(navData[7] & 0x0800) {
+            sleepMode = true; // todo: implement
+        } else {
+            sleepMode = false;
+        }
+        if(navData[7] & 0x0400) {
+            enableProjector = true; // todo: implement
+        } else {
+            enableProjector = false;
+        }
     }
 
     // if last nav data is expired, reset to neutral
     if(TickGet() - lastNavTick > NAV_DATA_TIMEOUT)
     {
-        for(i = 0; i < 8; i++)
+        for(i = 0; i < 7; i++)
         {
-            navData[i] = 0x80;
+            navData[i] = NAV_NEUTRAL;
         }
+        navData[7] = 0; // digital
     }
 
     // get nav control data, scaled from -500 to +500
-    xSpeed = (navData[1]-0x80) * NAV_SCALE;
-    ySpeed = (navData[0]-0x80) * NAV_SCALE;
-    rotation = (navData[2]-0x80) * NAV_SCALE;
+    xSpeed = (navData[1]-NAV_NEUTRAL) * NAV_SCALE;
+    ySpeed = (navData[0]-NAV_NEUTRAL) * NAV_SCALE;
+    rotation = (navData[2]-NAV_NEUTRAL) * NAV_SCALE;
 
     if(navArmed)
     {
@@ -167,11 +208,9 @@ void NavigationProcess(void)
         mLED_3_Off();
     }
 
-
     // get IMU data, quaternion format
     get_quat(q);
 
-    // send quat values to PC over serial, will use this later
     //sprintf(string, "%08X,%08X,%08X,%08X\r\n", (long)q[0], (long)q[1], (long)q[2], (long)q[3]);
     //debug(string);
 
@@ -229,8 +268,8 @@ void NavigationProcess(void)
     }
 
     // get values, scaled from -500 to 500
-    headAngleValues[0][0] = (navData[3]-0x80) * NAV_SCALE;
-    headAngleValues[1][0] = (navData[4]-0x80) * NAV_SCALE;
+    headAngleValues[0][0] = (navData[3]-NAV_NEUTRAL) * NAV_SCALE;
+    headAngleValues[1][0] = (navData[4]-NAV_NEUTRAL) * NAV_SCALE;
     if(headAngleValues[0][0] > 500)
         headAngleValues[0][0] = 500;
     else if(headAngleValues[0][0] < -500)
@@ -240,7 +279,7 @@ void NavigationProcess(void)
     else if(headAngleValues[1][0] < -500)
         headAngleValues[1][0] = -500;
 
-    // CTS TEST - try scaling user input -90,90 to -45,45
+    // CTS TEST - try scaling user input -90,90 deg to -45,45 deg
     headAngleValues[0][0] /= 2;
     headAngleValues[1][0] /= 2;
 
@@ -336,7 +375,7 @@ void NavigationProcess(void)
     angle = (WORD)((atan2(xSpeed, ySpeed) * M_180_PI) + 360) % 360;
 
     //apply polar data to the 3 motors
-    for(i=1;i<=3; i++)
+    for(i=1; i<=3; i++)
     {
         motorSpeed = calcSpeed(angle + 120*(i-1), speed);
 
@@ -371,22 +410,26 @@ WORD NavigationGetTelemetry(WORD chan)
 /* Get Navigation Commands from wireless receiver*/
 void ReadTelemetry(char arg[][MAX_ARGUMENT_LENGTH], int argc)
 {
+    int i;
     if(isDiagFilterOn(DBG_NAV)) {
         debug("READ TELEMETRY\r\n");
     }
 
-    if(argc == 4)
+    if(argc == 8)
     {
-        navData[0] = strtol(arg[0], NULL, 16);
-        navData[1] = strtol(arg[1], NULL, 16);
-        navData[2] = strtol(arg[2], NULL, 16);
-        navData[3] = strtol(arg[3], NULL, 16);
+        for (i=0; i<8; i++)
+        {
+            navData[i] = strtol(arg[i], NULL, 16);
+        }
         newNavData = TRUE;
-        debug("throttle=%d, yaw=%d, pitch=%d, roll=%d\r\n", navData[0], navData[1], navData[2], navData[3]);
+        if(isDiagFilterOn(DBG_NAV)) {
+            debug("throttle=%d, yaw=%d, pitch=%d, roll=%d\r\n", navData[0], navData[1], navData[2], navData[3]);
+        }
     }
 }
 
 /* Get Navigation Arm/Disarm Command from wireless receiver*/
+/*
 void ReadNavArm(char arg[][MAX_ARGUMENT_LENGTH], int argc)
 {
     if(isDiagFilterOn(DBG_NAV)) {
@@ -402,8 +445,9 @@ void ReadNavArm(char arg[][MAX_ARGUMENT_LENGTH], int argc)
         debug("arm=%d\r\n", navArmed);
     }
 }
-
+*/
 /* Get Navigation Arm/Disarm Command from wireless receiver*/
+/*
 void ReadAccelArm(char arg[][MAX_ARGUMENT_LENGTH], int argc)
 {
     if(isDiagFilterOn(DBG_NAV)) {
@@ -419,7 +463,7 @@ void ReadAccelArm(char arg[][MAX_ARGUMENT_LENGTH], int argc)
         debug("accelArm=%d\r\n", navArmed);
     }
 }
-
+*/
 /* convert polar angle/magnitude to indvidual motor scaled speed */
 WORD calcSpeed(WORD angle, WORD speed)
 {
