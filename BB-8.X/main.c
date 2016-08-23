@@ -76,7 +76,7 @@
 #include "HardwareProfile.h"
 
 #include "usb_support.h"
-#include "TCPIP Stack/Tick.h"
+#include "lib/time/Tick.h"
 #include "console.h"
 #include "receiver.h"
 #include "motor_controller.h"

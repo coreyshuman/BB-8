@@ -32,7 +32,6 @@
 #include <plib.h>
 #include <math.h>
 #include "HardwareProfile.h"
-#include "TCPIPConfig.h"
 #include "OLED_driver.h"
 #include "device_i2c.h"
 #include "diagnostic.h"

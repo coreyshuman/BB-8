@@ -27,11 +27,11 @@
 ********************************************************************/
 #include <plib.h>
 #include "HardwareProfile.h"
-#include "TCPIPConfig.h"
-#include "TCPIP Stack/Tick.h"
+#include "lib/time/Tick.h"
 #include "audio_controller.h"
 #include "console.h"
 #include "diagnostic.h"
+#include "serial_controller.h"
 
 #define MAX_FILES 11
 
@@ -46,7 +46,7 @@ BOOL autoVoiceEnabled;
 // variables used to open file as commanded
 char fileName[MAX_ARGUMENT_LENGTH];
 BYTE channel;
-bool playPending = false;
+BOOL playPending = FALSE;
 
 char BB8_Sample_Names[MAX_FILES][10] = {
     "bb01", "bb02", "bb03", "bb04", "bb05", "bb06", "bb07", "bb08", "bb09",
@@ -89,6 +89,10 @@ unsigned char AudioRxGetCount(void);
 void AudioRxPutByte(char c);
 char AudioRxGetByte(void);
 void AudioRxClearBuffer(void);
+void RxPlayCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc);
+void RxPauseCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc);
+void RxStopCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc);
+void RxVolumeCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc);
 
 void AudioInit(void)
 {
@@ -115,7 +119,7 @@ void AudioInit(void)
     SerialAddHandler("stp", 1, RxStopCommand);
     SerialAddHandler("vol", 1, RxVolumeCommand);
 
-    autoVoiceEnabled = false;
+    autoVoiceEnabled = FALSE;
 
     // cts debug
     enableDiagFilter(DBG_AUDIO);
@@ -154,10 +158,11 @@ void AudioProcess(void)
         case ACS_IDLE:
             if(playPending) {
                 acs = ACS_OPEN;
-                playPending = false;
+                playPending = FALSE;
             }
             break;
         case ACS_OPEN_AUTO:
+        {
             int fileIdx = rand()%MAX_FILES;
             AudioCommandOpen(BB8_Sample_Names[fileIdx], 1);
             tick = TickGet();
@@ -166,12 +171,13 @@ void AudioProcess(void)
                 debug("AUD auto open %s ", BB8_Sample_Names[fileIdx]);
             }
             break;
+        }
         case ACS_OPEN:
             AudioCommandOpen(fileName, channel);
             tick = TickGet();
             acs++;
             if(isDiagFilterOn(DBG_AUDIO)) {
-                debug("AUD open %s ", BB8_Sample_Names[fileIdx]);
+                debug("AUD open %s ", fileName);
             }
             break;
         case ACS_OPEN_ACK:
@@ -331,6 +337,7 @@ void AudioCommandClose(int chan)
 
 void AudioCommandVolume(BYTE vol)
 {
+    char buf[10];
     if(vol > 0x3F)
         vol = 0x3F;
 
@@ -476,12 +483,12 @@ void RxPlayCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc) {
 
     if(argc == 2)
     {
-        if(ACS <= ACS_IDLE) {
-            ACS = ACS_IDLE;
+        if(acs <= ACS_IDLE) {
+            acs = ACS_IDLE;
         } else {
-            ACS = ACS_CLOSE;
+            acs = ACS_CLOSE;
         }
-        playPending = true;
+        playPending = TRUE;
         channel = strtol(arg[0], NULL, 10);
         if(channel > 1) {
             channel = 1;
@@ -499,8 +506,8 @@ void RxPauseCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc) {
 
 /* Callback handler for Stop Command from Controller */
 void RxStopCommand(char arg[][MAX_ARGUMENT_LENGTH], int argc) {
-    if(ACS > ACS_IDLE) {
-        ACS = ACS_CLOSE;
+    if(acs > ACS_IDLE) {
+        acs = ACS_CLOSE;
     } 
 }
 

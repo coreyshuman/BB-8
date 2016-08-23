@@ -29,8 +29,8 @@
 #include <stdio.h>
 #include "GenericTypeDefs.h"
 #include "console.h"
-#include "TCPIP Stack/Tick.h"
-#include "time.h"
+#include "lib/time/Tick.h"
+//#include "time.h"
 #include "HardwareProfile.h"
 #include "OLED_driver.h"
 #include "receiver.h"
@@ -74,7 +74,7 @@ BOOL dAccelEnabled;
 BYTE ledColorsDebug[] = {4,90,10,5,40,5,0,0,30,10,80,5,64,30,64};
 
 // function declerations
-void OledReceiverBar(BYTE idx, int WORD);
+void OledReceiverBar(BYTE idx, WORD WORD);
 void DiagnosticUpdateTestScreen(BOOL showTest, const char* str);
 
 // functions

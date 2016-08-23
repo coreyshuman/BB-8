@@ -34,7 +34,7 @@
 #include "diagnostic.h"
 #include "lighting_controller.h"
 #include "device_i2c.h"
-#include "TCPIP Stack/Tick.h"
+#include "lib/time/Tick.h"
 
 // definitions
 #define TOPBOARD_ADDRESS    0x33

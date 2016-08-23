@@ -29,7 +29,7 @@
 #include <plib.h>
 #include <math.h>
 #include "HardwareProfile.h"
-#include "TCPIP Stack/Tick.h"
+#include "lib/time/Tick.h"
 #include "motor_controller.h"
 #include "receiver.h"
 #include "mpu_support.h"
@@ -57,7 +57,7 @@ BOOL navAccelArmed; // allow accelerometer data to influence motors
 BOOL autoVoice; // BB-8 speaking by itself
 BOOL autoHeadMovement; // BB-8 looks around by itself
 BOOL sleepMode; // disable all other modes
-BOOL enableProjector: // BB-8 head projector
+BOOL enableProjector; // BB-8 head projector
 DWORD lastNavTick;
 BOOL newNavData;
 double pry_offset[3];
@@ -135,36 +135,36 @@ void NavigationProcess(void)
 
         // update digital states
         if(navData[7] & 0x8000) {
-            navArmed = true;
+            navArmed = TRUE;
         } else {
-            navArmed = false;
+            navArmed = FALSE;
         }
         if(navData[7] & 0x4000) {
-            navAccelArmed = true;
+            navAccelArmed = TRUE;
         } else {
-            navAccelArmed = false;
+            navAccelArmed = FALSE;
         }
         if(navData[7] & 0x2000 && !autoVoice) {
-            autoVoice = true;
+            autoVoice = TRUE;
             //todo: call auto voice function
         } else if(!(navData[7] & 0x2000) && autoVoice) {
-            autoVoice = false;
+            autoVoice = FALSE;
             // todo: call stop auto voice function
         }
         if(navData[7] & 0x1000) {
-            autoHeadMovement = true;
+            autoHeadMovement = TRUE;
         } else {
-            autoHeadMovement = false;
+            autoHeadMovement = FALSE;
         }
         if(navData[7] & 0x0800) {
-            sleepMode = true; // todo: implement
+            sleepMode = TRUE; // todo: implement
         } else {
-            sleepMode = false;
+            sleepMode = FALSE;
         }
         if(navData[7] & 0x0400) {
-            enableProjector = true; // todo: implement
+            enableProjector = TRUE; // todo: implement
         } else {
-            enableProjector = false;
+            enableProjector = FALSE;
         }
     }
 

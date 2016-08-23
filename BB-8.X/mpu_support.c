@@ -41,7 +41,6 @@
 #include "GenericTypeDefs.h"
 #include "device_i2c.h"
 #include "console.h"
-#include "time.h"
 #include "HardwareProfile.h"
 #include "diagnostic.h"
 

@@ -27,7 +27,6 @@
 ********************************************************************/
 #include <plib.h>
 #include "HardwareProfile.h"
-#include "TCPIPConfig.h"
 #include "usb_support.h"
 #include "diagnostic.h"
 

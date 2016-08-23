@@ -9,8 +9,8 @@
 #define	USB_SUPPORT_H
 
 #include "usb_config.h"
-#include "./USB/usb.h"
-#include "./USB/usb_function_cdc.h"
+#include "lib/usb/usb.h"
+#include "lib/usb/usb_function_cdc.h"
 
 #ifdef	__cplusplus
 extern "C" {

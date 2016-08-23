@@ -45,10 +45,10 @@
 #elif defined FOOTSENSE_TARGET_PIC32
 
 #include "../device_i2c.h"
-#include "../time.h"
+#include "../lib/time/Tick.h"
 #include "../console.h"
-#define delay_ms    delay
-#define get_ms      get_ms
+#define delay_ms    TickDelay
+#define get_ms(a)      (*a = TickGet())
 #define log_i(MSG)     do {Printf("Info: ");Printf(MSG);Printf("\r\n");} while (0)
 #define log_e(MSG)     do {Printf("Error: ");Printf(MSG);Printf("\r\n");} while (0)
 #define __no_operation()	Nop()

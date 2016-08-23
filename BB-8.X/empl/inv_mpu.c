@@ -65,11 +65,11 @@ static inline int reg_int_cb(struct int_param_s *int_param)
 
 #include <plib.h>
 #include "../device_i2c.h"
-#include "../time.h"
+#include "../lib/time/Tick.h"
 #define i2c_write   i2c_write
 #define i2c_read    i2c_read
-#define delay_ms    delay
-#define get_ms      get_ms
+#define delay_ms    TickDelay
+#define get_ms(a)   (*a = TickGet())
 // TODO
 static inline int reg_int_cb(struct int_param_s *int_param)
 {

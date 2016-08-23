@@ -28,7 +28,7 @@
 #include <plib.h>
 //#include <stdio.h>
 #include "HardwareProfile.h"
-#include "TCPIP Stack/Tick.h"
+#include "lib/time/Tick.h"
 #include "serial_controller.h"
 #include "console.h"
 #include "diagnostic.h"

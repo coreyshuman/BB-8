@@ -1,6 +1,30 @@
+/********************************************************************
+ FileName:      device_i2c.c
+ Dependencies:  See INCLUDES section
+ Processor:		PIC32 USB Microcontrollers
+ Hardware:		Designed for use on UBW32 "Bit Whacker"
+                           development boards.
+ Complier:  	XC32 (for PIC32)
+
+ I2C Utility functions.
+
+ THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
+ WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
+ TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
+ IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
+ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+
+********************************************************************
+ File Description:
+
+ Change History:
+  Rev   Description                                Name and date
+  ----  -----------------------------------------  ----------------
+  1.0   Initial release                            Corey Shuman 9/30/15
 
 
-#include "TCPIPConfig.h"
+********************************************************************/
 #include "device_i2c.h"
 #include <peripheral/i2c.h>
 #include "hardwareprofile.h"

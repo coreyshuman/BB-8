@@ -5,8 +5,8 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="Common" projectFiles="true">
-        <itemPath>../../../Microchip/Include/GenericTypeDefs.h</itemPath>
-        <itemPath>../../../Microchip/Include/Compiler.h</itemPath>
+        <itemPath>Compiler.h</itemPath>
+        <itemPath>GenericTypeDefs.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="empl" projectFiles="true">
         <itemPath>empl/dmpKey.h</itemPath>
@@ -14,29 +14,29 @@
         <itemPath>empl/inv_mpu.h</itemPath>
         <itemPath>empl/inv_mpu_dmp_motion_driver.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f4" displayName="TCPIP" projectFiles="true">
-        <itemPath>../../../Microchip/Include/TCPIP Stack/Tick.h</itemPath>
-        <itemPath>../../../Microchip/Include/TCPIP Stack/TCPIP.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f2" displayName="USB" projectFiles="true">
-        <itemPath>../../../Microchip/Include/USB/usb.h</itemPath>
-        <itemPath>../../../Microchip/Include/USB/usb_ch9.h</itemPath>
-        <itemPath>../../../Microchip/Include/USB/usb_common.h</itemPath>
-        <itemPath>../../../Microchip/Include/USB/usb_device.h</itemPath>
-        <itemPath>../../../Microchip/USB/usb_device_local.h</itemPath>
-        <itemPath>../../../Microchip/Include/USB/usb_function_cdc.h</itemPath>
-        <itemPath>../../../Microchip/Include/USB/usb_hal.h</itemPath>
-        <itemPath>../../../Microchip/USB/usb_hal_local.h</itemPath>
-        <itemPath>../../../Microchip/Include/USB/usb_hal_pic32.h</itemPath>
+      <logicalFolder name="f2" displayName="lib" projectFiles="true">
+        <logicalFolder name="f1" displayName="time" projectFiles="true">
+          <itemPath>lib/time/Tick.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="usb" projectFiles="true">
+          <itemPath>lib/usb/usb.h</itemPath>
+          <itemPath>lib/usb/usb_ch9.h</itemPath>
+          <itemPath>lib/usb/usb_common.h</itemPath>
+          <itemPath>lib/usb/usb_device.h</itemPath>
+          <itemPath>lib/usb/usb_device_local.h</itemPath>
+          <itemPath>lib/usb/usb_function_cdc.h</itemPath>
+          <itemPath>lib/usb/usb_hal.h</itemPath>
+          <itemPath>lib/usb/usb_hal_local.h</itemPath>
+          <itemPath>lib/usb/usb_hal_pic32.h</itemPath>
+          <itemPath>lib/usb/usb_pic32.h</itemPath>
+        </logicalFolder>
       </logicalFolder>
       <itemPath>usb_config.h</itemPath>
       <itemPath>HardwareProfile.h</itemPath>
       <itemPath>HardwareProfile - UBW32.h</itemPath>
       <itemPath>usb_support.h</itemPath>
-      <itemPath>TCPIPConfig.h</itemPath>
       <itemPath>console.h</itemPath>
       <itemPath>device_i2c.h</itemPath>
-      <itemPath>time.h</itemPath>
       <itemPath>mpu_support.h</itemPath>
       <itemPath>receiver.h</itemPath>
       <itemPath>motor_controller.h</itemPath>
@@ -47,6 +47,7 @@
       <itemPath>serial_controller.h</itemPath>
       <itemPath>navigation_controller.h</itemPath>
       <itemPath>lighting_controller.h</itemPath>
+      <itemPath>config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -60,19 +61,19 @@
         <itemPath>empl/inv_mpu.c</itemPath>
         <itemPath>empl/inv_mpu_dmp_motion_driver.c</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="TCPIP" projectFiles="true">
-        <itemPath>../../../Microchip/TCPIP Stack/Tick.c</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f1" displayName="USB" projectFiles="true">
-        <itemPath>../../../Microchip/USB/CDC Device Driver/usb_function_cdc.c</itemPath>
-        <itemPath>../../../Microchip/USB/usb_device.c</itemPath>
+      <logicalFolder name="f1" displayName="lib" projectFiles="true">
+        <logicalFolder name="f1" displayName="time" projectFiles="true">
+          <itemPath>lib/time/Tick.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="usb" projectFiles="true">
+          <itemPath>lib/usb/usb_device.c</itemPath>
+          <itemPath>lib/usb/usb_function_cdc.c</itemPath>
+        </logicalFolder>
       </logicalFolder>
       <itemPath>main.c</itemPath>
-      <itemPath>usb_descriptors.c</itemPath>
       <itemPath>usb_support.c</itemPath>
       <itemPath>console.c</itemPath>
       <itemPath>device_i2c.c</itemPath>
-      <itemPath>time.c</itemPath>
       <itemPath>mpu_support.c</itemPath>
       <itemPath>receiver.c</itemPath>
       <itemPath>motor_controller.c</itemPath>
@@ -85,6 +86,7 @@
       <itemPath>serial_controller.c</itemPath>
       <itemPath>navigation_controller.c</itemPath>
       <itemPath>lighting_controller.c</itemPath>
+      <itemPath>usb_descriptors.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -98,6 +100,8 @@
     <Elem>../../../Libraries/mpu-9150</Elem>
     <Elem>empl</Elem>
     <Elem>../../../Microchip/TCPIP Stack</Elem>
+    <Elem>lib/time</Elem>
+    <Elem>lib/usb</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -109,7 +113,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>Simulator</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>1.42</languageToolchainVersion>
+        <languageToolchainVersion>1.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -117,11 +121,8 @@
           <linkerLibItems>
           </linkerLibItems>
         </linkerTool>
-        <archiverTool>
-        </archiverTool>
         <loading>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
-          <parseOnProdLoad>false</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
         </loading>
       </compileType>
@@ -141,8 +142,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
-        <property key="extra-include-directories"
-                  value="..\..\..\Microchip\Include;.;..\"/>
+        <property key="extra-include-directories" value=".;..\"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
         <property key="make-warnings-into-errors" value="false"/>
@@ -210,7 +210,6 @@
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories" value=""/>
         <property key="generate-16-bit-code" value="false"/>
-        <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
         <property key="make-warnings-into-errors" value="false"/>
         <property key="optimization-level" value=""/>
