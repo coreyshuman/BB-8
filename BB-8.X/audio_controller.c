@@ -43,6 +43,7 @@ int  resIdx = 0;
 char response[20];
 
 BOOL autoVoiceEnabled;
+int autoVoicePending; // 0=no change, 1=enable, 2=disable
 // variables used to open file as commanded
 char fileName[MAX_ARGUMENT_LENGTH];
 BYTE channel;
@@ -120,6 +121,7 @@ void AudioInit(void)
     SerialAddHandler("vol", 1, RxVolumeCommand);
 
     autoVoiceEnabled = FALSE;
+    autoVoicePending = FALSE;
 
     // cts debug
     enableDiagFilter(DBG_AUDIO);
@@ -275,6 +277,18 @@ void AudioProcess(void)
                 AudioCommandClose(1);
             } else {
                 AudioCommandClose(channel);
+            }
+            if(autoVoicePending == 1) {
+                autoVoicePending = 0;
+                autoVoiceEnabled = TRUE;
+                acs = ACS_OPEN_AUTO;
+                if(isDiagFilterOn(DBG_AUDIO)) {
+                    debug("AUD close->auto\r\n");
+                }
+                break;
+            } else if(autoVoicePending == 2) {
+                autoVoicePending = 0;
+                autoVoiceEnabled = FALSE;
             }
             acs = ACS_CLOSE_WAIT;
             tick = TickGet();
@@ -474,6 +488,26 @@ void __ISR(_UART_3A_VECTOR, ipl5) _UART3AISRHandler(void) {
     // We don't care about TX interrupt
     if (INTGetFlag(INT_U3ARX)) {
         INTClearFlag(INT_U3ARX);
+    }
+}
+
+void EnableAutoVoice(BOOL enable) {
+    if(enable) {
+        if(acs == ACS_IDLE || acs == ACS_CLOSE_WAIT) {
+            acs = ACS_OPEN_AUTO;
+            autoVoiceEnabled = TRUE;
+            autoVoicePending = 0;
+        } else {
+            autoVoicePending = 1;
+        }
+    } else {
+        if(acs == ACS_DELAY || acs == ACS_DELAY_WAIT || acs == ACS_OPEN_AUTO) {
+            acs = ACS_DISPATCH;
+            autoVoiceEnabled = FALSE;
+            autoVoicePending = 0;
+        } else {
+            autoVoicePending = 2;
+        }
     }
 }
 

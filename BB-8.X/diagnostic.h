@@ -12,6 +12,7 @@
 #define DBG_AUDIO       0x00000002
 #define DBG_SERIAL      0x00000004
 #define DBG_NAV         0x00000008
+#define DBG_IMU         0x00000010
 
 
 #define enableDiagFilter(x)      (debugMap |= x)

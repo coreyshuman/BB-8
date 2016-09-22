@@ -105,7 +105,7 @@ void NavigationInit(void)
         }
     }
 
-    SerialAddHandler("tell", 8, ReadTelemetry);
+    SerialAddHandler("tel", 8, ReadTelemetry);
     //SerialAddHandler("navarm", 1, ReadNavArm);
     //SerialAddHandler("navacl", 1, ReadAccelArm);
 }
@@ -146,10 +146,10 @@ void NavigationProcess(void)
         }
         if(navData[7] & 0x2000 && !autoVoice) {
             autoVoice = TRUE;
-            //todo: call auto voice function
+            EnableAutoVoice(TRUE);
         } else if(!(navData[7] & 0x2000) && autoVoice) {
             autoVoice = FALSE;
-            // todo: call stop auto voice function
+            EnableAutoVoice(FALSE);
         }
         if(navData[7] & 0x1000) {
             autoHeadMovement = TRUE;
@@ -255,7 +255,7 @@ void NavigationProcess(void)
 
     }
 
-    if(isDiagFilterOn(DBG_NAV)) {
+    if(isDiagFilterOn(DBG_IMU)) {
         debug("pitch: %3f roll: %3f yaw: %3f\r\n", pry[0], pry[1], pry[2]);
     }
 

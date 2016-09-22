@@ -16,7 +16,7 @@ extern "C" {
 
 void AudioInit(void);
 void AudioProcess(void);
-
+void EnableAutoVoice(BOOL enable);
 
 #ifdef	__cplusplus
 }

@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c main.c usb_support.c console.c device_i2c.c mpu_support.c receiver.c motor_controller.c quaternion.c servo_controller.c exception_handler.c OLED_driver.c diagnostic.c audio_controller.c serial_controller.c navigation_controller.c lighting_controller.c lib/time/Tick.c lib/usb/usb_device.c lib/usb/usb_function_cdc.c usb_descriptors.c
+SOURCEFILES_QUOTED_IF_SPACED=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c lib/time/Tick.c lib/usb/usb_device.c lib/usb/usb_function_cdc.c main.c usb_support.c console.c device_i2c.c mpu_support.c receiver.c motor_controller.c quaternion.c servo_controller.c exception_handler.c OLED_driver.c diagnostic.c audio_controller.c serial_controller.c navigation_controller.c lighting_controller.c usb_descriptors.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o ${OBJECTDIR}/motor_controller.o ${OBJECTDIR}/quaternion.o ${OBJECTDIR}/servo_controller.o ${OBJECTDIR}/exception_handler.o ${OBJECTDIR}/OLED_driver.o ${OBJECTDIR}/diagnostic.o ${OBJECTDIR}/audio_controller.o ${OBJECTDIR}/serial_controller.o ${OBJECTDIR}/navigation_controller.o ${OBJECTDIR}/lighting_controller.o ${OBJECTDIR}/lib/time/Tick.o ${OBJECTDIR}/lib/usb/usb_device.o ${OBJECTDIR}/lib/usb/usb_function_cdc.o ${OBJECTDIR}/usb_descriptors.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/empl/inv_mpu.o.d ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/usb_support.o.d ${OBJECTDIR}/console.o.d ${OBJECTDIR}/device_i2c.o.d ${OBJECTDIR}/mpu_support.o.d ${OBJECTDIR}/receiver.o.d ${OBJECTDIR}/motor_controller.o.d ${OBJECTDIR}/quaternion.o.d ${OBJECTDIR}/servo_controller.o.d ${OBJECTDIR}/exception_handler.o.d ${OBJECTDIR}/OLED_driver.o.d ${OBJECTDIR}/diagnostic.o.d ${OBJECTDIR}/audio_controller.o.d ${OBJECTDIR}/serial_controller.o.d ${OBJECTDIR}/navigation_controller.o.d ${OBJECTDIR}/lighting_controller.o.d ${OBJECTDIR}/lib/time/Tick.o.d ${OBJECTDIR}/lib/usb/usb_device.o.d ${OBJECTDIR}/lib/usb/usb_function_cdc.o.d ${OBJECTDIR}/usb_descriptors.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/lib/time/Tick.o ${OBJECTDIR}/lib/usb/usb_device.o ${OBJECTDIR}/lib/usb/usb_function_cdc.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o ${OBJECTDIR}/motor_controller.o ${OBJECTDIR}/quaternion.o ${OBJECTDIR}/servo_controller.o ${OBJECTDIR}/exception_handler.o ${OBJECTDIR}/OLED_driver.o ${OBJECTDIR}/diagnostic.o ${OBJECTDIR}/audio_controller.o ${OBJECTDIR}/serial_controller.o ${OBJECTDIR}/navigation_controller.o ${OBJECTDIR}/lighting_controller.o ${OBJECTDIR}/usb_descriptors.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/empl/inv_mpu.o.d ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d ${OBJECTDIR}/lib/time/Tick.o.d ${OBJECTDIR}/lib/usb/usb_device.o.d ${OBJECTDIR}/lib/usb/usb_function_cdc.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/usb_support.o.d ${OBJECTDIR}/console.o.d ${OBJECTDIR}/device_i2c.o.d ${OBJECTDIR}/mpu_support.o.d ${OBJECTDIR}/receiver.o.d ${OBJECTDIR}/motor_controller.o.d ${OBJECTDIR}/quaternion.o.d ${OBJECTDIR}/servo_controller.o.d ${OBJECTDIR}/exception_handler.o.d ${OBJECTDIR}/OLED_driver.o.d ${OBJECTDIR}/diagnostic.o.d ${OBJECTDIR}/audio_controller.o.d ${OBJECTDIR}/serial_controller.o.d ${OBJECTDIR}/navigation_controller.o.d ${OBJECTDIR}/lighting_controller.o.d ${OBJECTDIR}/usb_descriptors.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o ${OBJECTDIR}/motor_controller.o ${OBJECTDIR}/quaternion.o ${OBJECTDIR}/servo_controller.o ${OBJECTDIR}/exception_handler.o ${OBJECTDIR}/OLED_driver.o ${OBJECTDIR}/diagnostic.o ${OBJECTDIR}/audio_controller.o ${OBJECTDIR}/serial_controller.o ${OBJECTDIR}/navigation_controller.o ${OBJECTDIR}/lighting_controller.o ${OBJECTDIR}/lib/time/Tick.o ${OBJECTDIR}/lib/usb/usb_device.o ${OBJECTDIR}/lib/usb/usb_function_cdc.o ${OBJECTDIR}/usb_descriptors.o
+OBJECTFILES=${OBJECTDIR}/empl/inv_mpu.o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/lib/time/Tick.o ${OBJECTDIR}/lib/usb/usb_device.o ${OBJECTDIR}/lib/usb/usb_function_cdc.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_support.o ${OBJECTDIR}/console.o ${OBJECTDIR}/device_i2c.o ${OBJECTDIR}/mpu_support.o ${OBJECTDIR}/receiver.o ${OBJECTDIR}/motor_controller.o ${OBJECTDIR}/quaternion.o ${OBJECTDIR}/servo_controller.o ${OBJECTDIR}/exception_handler.o ${OBJECTDIR}/OLED_driver.o ${OBJECTDIR}/diagnostic.o ${OBJECTDIR}/audio_controller.o ${OBJECTDIR}/serial_controller.o ${OBJECTDIR}/navigation_controller.o ${OBJECTDIR}/lighting_controller.o ${OBJECTDIR}/usb_descriptors.o
 
 # Source Files
-SOURCEFILES=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c main.c usb_support.c console.c device_i2c.c mpu_support.c receiver.c motor_controller.c quaternion.c servo_controller.c exception_handler.c OLED_driver.c diagnostic.c audio_controller.c serial_controller.c navigation_controller.c lighting_controller.c lib/time/Tick.c lib/usb/usb_device.c lib/usb/usb_function_cdc.c usb_descriptors.c
+SOURCEFILES=empl/inv_mpu.c empl/inv_mpu_dmp_motion_driver.c lib/time/Tick.c lib/usb/usb_device.c lib/usb/usb_function_cdc.c main.c usb_support.c console.c device_i2c.c mpu_support.c receiver.c motor_controller.c quaternion.c servo_controller.c exception_handler.c OLED_driver.c diagnostic.c audio_controller.c serial_controller.c navigation_controller.c lighting_controller.c usb_descriptors.c
 
 
 CFLAGS=
@@ -102,6 +102,24 @@ ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o: empl/inv_mpu_dmp_motion_driver.c 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o 
 	@${FIXDEPS} "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" -o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o empl/inv_mpu_dmp_motion_driver.c   
+	
+${OBJECTDIR}/lib/time/Tick.o: lib/time/Tick.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/lib/time 
+	@${RM} ${OBJECTDIR}/lib/time/Tick.o.d 
+	@${RM} ${OBJECTDIR}/lib/time/Tick.o 
+	@${FIXDEPS} "${OBJECTDIR}/lib/time/Tick.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/time/Tick.o.d" -o ${OBJECTDIR}/lib/time/Tick.o lib/time/Tick.c   
+	
+${OBJECTDIR}/lib/usb/usb_device.o: lib/usb/usb_device.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/lib/usb 
+	@${RM} ${OBJECTDIR}/lib/usb/usb_device.o.d 
+	@${RM} ${OBJECTDIR}/lib/usb/usb_device.o 
+	@${FIXDEPS} "${OBJECTDIR}/lib/usb/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/usb/usb_device.o.d" -o ${OBJECTDIR}/lib/usb/usb_device.o lib/usb/usb_device.c   
+	
+${OBJECTDIR}/lib/usb/usb_function_cdc.o: lib/usb/usb_function_cdc.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/lib/usb 
+	@${RM} ${OBJECTDIR}/lib/usb/usb_function_cdc.o.d 
+	@${RM} ${OBJECTDIR}/lib/usb/usb_function_cdc.o 
+	@${FIXDEPS} "${OBJECTDIR}/lib/usb/usb_function_cdc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/usb/usb_function_cdc.o.d" -o ${OBJECTDIR}/lib/usb/usb_function_cdc.o lib/usb/usb_function_cdc.c   
 	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR} 
@@ -199,24 +217,6 @@ ${OBJECTDIR}/lighting_controller.o: lighting_controller.c  nbproject/Makefile-${
 	@${RM} ${OBJECTDIR}/lighting_controller.o 
 	@${FIXDEPS} "${OBJECTDIR}/lighting_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lighting_controller.o.d" -o ${OBJECTDIR}/lighting_controller.o lighting_controller.c   
 	
-${OBJECTDIR}/lib/time/Tick.o: lib/time/Tick.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/lib/time 
-	@${RM} ${OBJECTDIR}/lib/time/Tick.o.d 
-	@${RM} ${OBJECTDIR}/lib/time/Tick.o 
-	@${FIXDEPS} "${OBJECTDIR}/lib/time/Tick.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/time/Tick.o.d" -o ${OBJECTDIR}/lib/time/Tick.o lib/time/Tick.c   
-	
-${OBJECTDIR}/lib/usb/usb_device.o: lib/usb/usb_device.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/lib/usb 
-	@${RM} ${OBJECTDIR}/lib/usb/usb_device.o.d 
-	@${RM} ${OBJECTDIR}/lib/usb/usb_device.o 
-	@${FIXDEPS} "${OBJECTDIR}/lib/usb/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/usb/usb_device.o.d" -o ${OBJECTDIR}/lib/usb/usb_device.o lib/usb/usb_device.c   
-	
-${OBJECTDIR}/lib/usb/usb_function_cdc.o: lib/usb/usb_function_cdc.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/lib/usb 
-	@${RM} ${OBJECTDIR}/lib/usb/usb_function_cdc.o.d 
-	@${RM} ${OBJECTDIR}/lib/usb/usb_function_cdc.o 
-	@${FIXDEPS} "${OBJECTDIR}/lib/usb/usb_function_cdc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/usb/usb_function_cdc.o.d" -o ${OBJECTDIR}/lib/usb/usb_function_cdc.o lib/usb/usb_function_cdc.c   
-	
 ${OBJECTDIR}/usb_descriptors.o: usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/usb_descriptors.o.d 
@@ -235,6 +235,24 @@ ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o: empl/inv_mpu_dmp_motion_driver.c 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d 
 	@${RM} ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o 
 	@${FIXDEPS} "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o.d" -o ${OBJECTDIR}/empl/inv_mpu_dmp_motion_driver.o empl/inv_mpu_dmp_motion_driver.c   
+	
+${OBJECTDIR}/lib/time/Tick.o: lib/time/Tick.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/lib/time 
+	@${RM} ${OBJECTDIR}/lib/time/Tick.o.d 
+	@${RM} ${OBJECTDIR}/lib/time/Tick.o 
+	@${FIXDEPS} "${OBJECTDIR}/lib/time/Tick.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/time/Tick.o.d" -o ${OBJECTDIR}/lib/time/Tick.o lib/time/Tick.c   
+	
+${OBJECTDIR}/lib/usb/usb_device.o: lib/usb/usb_device.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/lib/usb 
+	@${RM} ${OBJECTDIR}/lib/usb/usb_device.o.d 
+	@${RM} ${OBJECTDIR}/lib/usb/usb_device.o 
+	@${FIXDEPS} "${OBJECTDIR}/lib/usb/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/usb/usb_device.o.d" -o ${OBJECTDIR}/lib/usb/usb_device.o lib/usb/usb_device.c   
+	
+${OBJECTDIR}/lib/usb/usb_function_cdc.o: lib/usb/usb_function_cdc.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/lib/usb 
+	@${RM} ${OBJECTDIR}/lib/usb/usb_function_cdc.o.d 
+	@${RM} ${OBJECTDIR}/lib/usb/usb_function_cdc.o 
+	@${FIXDEPS} "${OBJECTDIR}/lib/usb/usb_function_cdc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/usb/usb_function_cdc.o.d" -o ${OBJECTDIR}/lib/usb/usb_function_cdc.o lib/usb/usb_function_cdc.c   
 	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR} 
@@ -331,24 +349,6 @@ ${OBJECTDIR}/lighting_controller.o: lighting_controller.c  nbproject/Makefile-${
 	@${RM} ${OBJECTDIR}/lighting_controller.o.d 
 	@${RM} ${OBJECTDIR}/lighting_controller.o 
 	@${FIXDEPS} "${OBJECTDIR}/lighting_controller.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lighting_controller.o.d" -o ${OBJECTDIR}/lighting_controller.o lighting_controller.c   
-	
-${OBJECTDIR}/lib/time/Tick.o: lib/time/Tick.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/lib/time 
-	@${RM} ${OBJECTDIR}/lib/time/Tick.o.d 
-	@${RM} ${OBJECTDIR}/lib/time/Tick.o 
-	@${FIXDEPS} "${OBJECTDIR}/lib/time/Tick.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/time/Tick.o.d" -o ${OBJECTDIR}/lib/time/Tick.o lib/time/Tick.c   
-	
-${OBJECTDIR}/lib/usb/usb_device.o: lib/usb/usb_device.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/lib/usb 
-	@${RM} ${OBJECTDIR}/lib/usb/usb_device.o.d 
-	@${RM} ${OBJECTDIR}/lib/usb/usb_device.o 
-	@${FIXDEPS} "${OBJECTDIR}/lib/usb/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/usb/usb_device.o.d" -o ${OBJECTDIR}/lib/usb/usb_device.o lib/usb/usb_device.c   
-	
-${OBJECTDIR}/lib/usb/usb_function_cdc.o: lib/usb/usb_function_cdc.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/lib/usb 
-	@${RM} ${OBJECTDIR}/lib/usb/usb_function_cdc.o.d 
-	@${RM} ${OBJECTDIR}/lib/usb/usb_function_cdc.o 
-	@${FIXDEPS} "${OBJECTDIR}/lib/usb/usb_function_cdc.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION) -DPIC32MX795F512L_UBW32 -I"." -I"../" -MMD -MF "${OBJECTDIR}/lib/usb/usb_function_cdc.o.d" -o ${OBJECTDIR}/lib/usb/usb_function_cdc.o lib/usb/usb_function_cdc.c   
 	
 ${OBJECTDIR}/usb_descriptors.o: usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR} 

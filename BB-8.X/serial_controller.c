@@ -109,8 +109,7 @@ void SerialInit(void)
     SerialReset();
     UART_RX_ClearBuffer();
 
-    // cts debug
-    enableDiagFilter(DBG_SERIAL);
+    
     
 }
 

@@ -111,6 +111,10 @@ void DiagInit(void)
     batteryWriteIdx = 0;
     batteryVoltage = 0.0;
     batteryCurrent = 0.0;
+
+    // enable diag filters here for now
+    enableDiagFilter(DBG_NAV);
+    enableDiagFilter(DBG_SERIAL);
 }
 
 void DiagProcess(void)
