@@ -61,6 +61,7 @@ enum AUDIO_CONTROLLER_STATE {
     ACS_IDLE, // idle and open for commanded voice
     ACS_OPEN_AUTO, // open for autovoice
     ACS_OPEN,
+    ACS_OPEN_DELAY,
     ACS_OPEN_ACK,
     ACS_PLAY,
     ACS_PLAY_ACK,
@@ -123,8 +124,6 @@ void AudioInit(void)
     autoVoiceEnabled = FALSE;
     autoVoicePending = FALSE;
 
-    // cts debug
-    enableDiagFilter(DBG_AUDIO);
 }
 
 void AudioProcess(void)
@@ -168,7 +167,7 @@ void AudioProcess(void)
             int fileIdx = rand()%MAX_FILES;
             AudioCommandOpen(BB8_Sample_Names[fileIdx], 1);
             tick = TickGet();
-            acs++;
+            acs = ACS_OPEN_DELAY;
             if(isDiagFilterOn(DBG_AUDIO)) {
                 debug("AUD auto open %s ", BB8_Sample_Names[fileIdx]);
             }
@@ -177,9 +176,15 @@ void AudioProcess(void)
         case ACS_OPEN:
             AudioCommandOpen(fileName, channel);
             tick = TickGet();
-            acs++;
+            acs = ACS_OPEN_DELAY;
             if(isDiagFilterOn(DBG_AUDIO)) {
                 debug("AUD open %s ", fileName);
+            }
+            break;
+        case ACS_OPEN_DELAY:
+            if(TickGet() - tick >= TICK_SECOND/4)
+            {
+                acs = ACS_OPEN_ACK;
             }
             break;
         case ACS_OPEN_ACK:

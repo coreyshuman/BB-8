@@ -37,6 +37,7 @@ const unsigned char CharacterArray[]={'0','1','2','3','4','5','6','7','8','9','A
 char Console_In_Buffer[1024];
 char Console_Out_Buffer[1024];
 char USB_Out_Buffer[sizeof(Console_Out_Buffer)]; // buffer must not change while usb operation is on-going
+char USB_In_Buffer[64];
 unsigned int Console_RX_Start_Pointer;
 unsigned int Console_RX_End_Pointer;
 unsigned int Console_TX_Start_Pointer;
@@ -120,6 +121,7 @@ void ConsoleInit(void)
 void ConsoleProcess(void)
 {
     int txCount;
+    int rxCount;
     int i = 0;
     int j = 0;
 
@@ -138,6 +140,16 @@ void ConsoleProcess(void)
             USB_Out_Buffer[i++] = ConsoleTxGetByte();
 
         putUSBUSART(USB_Out_Buffer, txCount);
+    }
+
+    if(mUSBUSARTIsTxTrfReady()) {
+        rxCount = getsUSBUSART(USB_In_Buffer, sizeof(USB_In_Buffer));
+        if(rxCount > 0) {
+            j = rxCount;
+            i = 0;
+            while(j --)
+                ConsoleRxPutByte(USB_In_Buffer[i++]);
+        }
     }
 }
 

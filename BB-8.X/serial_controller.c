@@ -56,11 +56,18 @@ enum SERIAL_RESPONSE {
 };
 
 // Structs
+/*
 struct HandlerDef {
-  char command[MAX_COMMAND_LENGTH];
-  BYTE maxArguments;
-  void (*func)(char[][MAX_ARGUMENT_LENGTH] , int);
+    void (*func)(char[][MAX_ARGUMENT_LENGTH] , int);
+    char command[MAX_COMMAND_LENGTH];
+    BYTE maxArguments;
 };
+*/
+char commandArray[MAX_HANDLERS][MAX_COMMAND_LENGTH];
+BYTE maxArgumentsArray[MAX_HANDLERS];
+void (*funcArray[MAX_HANDLERS])(char[][MAX_ARGUMENT_LENGTH] , int);
+
+
 
 // Constants
 const char DELIM1 = ' ';
@@ -86,7 +93,7 @@ char serArguments[MAX_ARGUMENT_COUNT][MAX_ARGUMENT_LENGTH];
 BYTE serArgumentCount;
 
 // variable to hold command handler definitions
-struct HandlerDef serHandlers[MAX_HANDLERS];
+//struct HandlerDef serHandlers[MAX_HANDLERS];
 BYTE serHandlerCount;
 
 void SerialInit(void)
@@ -135,7 +142,7 @@ void SerialProcess(void)
         else
         {
             if(isDiagFilterOn(DBG_SERIAL)) {
-                debug("SER EXEC NOT FOUND\r\n");
+                debug("SER EXEC NOT FOUND (%s)\r\n", serCommand);
             }
         }
 
@@ -233,7 +240,8 @@ void SerialExecuteHandler(BYTE handle)
 {
     if(handle >= 0 && handle < MAX_HANDLERS)
     {
-        serHandlers[handle].func(serArguments, serArgumentCount);
+        //serHandlers[handle].func(serArguments, serArgumentCount);
+        funcArray[handle](serArguments, serArgumentCount);
     }
 }
 
@@ -245,9 +253,15 @@ int SerialFindHandler(char* command)
 
     for(i = 0; i < serHandlerCount; i++)
     {
-        struct HandlerDef *thisHandler = &serHandlers[i];
+        //struct HandlerDef *thisHandler = &serHandlers[i];
 
-        if(strncmp(thisHandler->command, command, MAX_COMMAND_LENGTH) == 0)
+        if(isDiagFilterOn(DBG_SERIAL2)) {
+            //debug("*(%s)(%s)", thisHandler->command, command);
+            debug("*(%s)(%s)", commandArray[i], command);
+        }
+
+        //if(strncmp(thisHandler->command, command, MAX_COMMAND_LENGTH) == 0)
+        if(strncmp(commandArray[i], command, MAX_COMMAND_LENGTH) == 0)
         {
             ret = i;
             break;
@@ -263,11 +277,15 @@ int SerialAddHandler(char* command, BYTE maxArguments, void (*func)(char[][MAX_A
     {
         return -1;
     }
-    struct HandlerDef *thisHandler = &serHandlers[serHandlerCount];
+    //struct HandlerDef *thisHandler = &serHandlers[serHandlerCount];
+    //strncpy(thisHandler->command, command, MAX_COMMAND_LENGTH-1);
+    //thisHandler->maxArguments = maxArguments;
+    //thisHandler->func = func;
 
-    strncpy(thisHandler->command, command, MAX_COMMAND_LENGTH);
-    thisHandler->maxArguments = maxArguments;
-    thisHandler->func = func;
+    strncpy(commandArray[serHandlerCount], command, MAX_COMMAND_LENGTH-1);
+    maxArgumentsArray[serHandlerCount]= maxArguments;
+    funcArray[serHandlerCount] = func;
+
     return serHandlerCount++;
 }
 

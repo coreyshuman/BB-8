@@ -112,19 +112,41 @@ void DiagInit(void)
     batteryVoltage = 0.0;
     batteryCurrent = 0.0;
 
-    // enable diag filters here for now
-    enableDiagFilter(DBG_NAV);
-    enableDiagFilter(DBG_SERIAL);
 }
 
 void DiagProcess(void)
 {
     static QWORD tick = TICK_SECOND;
     static BOOL diagEnabled = FALSE;
+    char c;
 
     SetModule(MOD_DIAG);
 
     BatteryADCProcess();
+
+    while(ConsoleRxGetCount()) {
+        c = ConsoleRxGetByte();
+        // cts todo - use a table to save diag, char pairs and provide feedback
+        if(c == 'm') {
+            debugMap ^= DBG_MPU;
+            debug("MPU Debug %s\r\n", isDiagFilterOn(DBG_MPU) ? "ENABLED" : "DISABLED");
+        } else if(c == 'a') {
+            debugMap ^= DBG_AUDIO;
+            debug("Audio Debug %s\r\n", isDiagFilterOn(DBG_AUDIO) ? "ENABLED" : "DISABLED");
+        } else if(c == 's') {
+            debugMap ^= DBG_SERIAL;
+            debug("Serial Debug %s\r\n", isDiagFilterOn(DBG_SERIAL) ? "ENABLED" : "DISABLED");
+        } else if(c == 'n') {
+            debugMap ^= DBG_NAV;
+            debug("Nav Debug %s\r\n", isDiagFilterOn(DBG_NAV) ? "ENABLED" : "DISABLED");
+        } else if(c == 'i') {
+            debugMap ^= DBG_IMU;
+            debug("IMU Debug %s\r\n", isDiagFilterOn(DBG_IMU) ? "ENABLED" : "DISABLED");
+        } else if(c == 'S') {
+            debugMap ^= DBG_SERIAL2;
+            debug("Serial2 Debug %s\r\n", isDiagFilterOn(DBG_SERIAL2) ? "ENABLED" : "DISABLED");
+        }
+    }
 
     if(!diagEnabled && TickGet() - tick >= TICK_SECOND*5)
     {
